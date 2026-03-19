@@ -116,7 +116,7 @@ export default async function DashboardPage() {
                     <p className="text-sm text-gray-500 mt-1">
                       Vence:{" "}
                       {new Date(b.fechaExpiracion).toLocaleDateString("es-AR")}
-                      {b.maxUsos && ` · ${b._count.reclamos}/${b.maxUsos} usos`}
+                      {b.maxUsos && ` · ${canjeados}/${b.maxUsos} usos`}
                     </p>
                     <p className="text-sm text-gray-500">
                       {b._count.reclamos} reclamos · {canjeados} canjeados

@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
   const redirectTo = isNew || local.nombre === null ? "/onboarding" : "/dashboard";
   const response = NextResponse.json({ redirect: redirectTo });
 
-  setSessionCookie(response, session.token);
+  setSessionCookie(response, session.token, "LOCAL");
 
   return response;
 }

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   const { error, session } = await requireLocalAuth(req);
   if (error) return error;
 
-  const { descripcion, fechaExpiracion, maxUsos } = await req.json();
+  const { descripcion, fechaExpiracion, maxUsos, diasValidos } = await req.json();
 
   if (!descripcion || !fechaExpiracion) {
     return NextResponse.json(
@@ -41,11 +41,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const dias: number[] = Array.isArray(diasValidos)
+    ? diasValidos.filter((d: unknown) => typeof d === "number" && d >= 0 && d <= 6)
+    : [];
+
   const beneficio = await prisma.beneficio.create({
     data: {
       descripcion,
       fechaExpiracion: new Date(fechaExpiracion),
       maxUsos: maxUsos || null,
+      diasValidos: dias,
       localId: session!.userId,
     },
   });

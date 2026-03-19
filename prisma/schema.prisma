@@ -34,6 +34,7 @@ model Beneficio {
   descripcion     String
   fechaExpiracion DateTime
   maxUsos         Int?
+  diasValidos     Int[]     @default([])
   localId         String
   local           Local     @relation(fields: [localId], references: [id])
   createdAt       DateTime  @default(now())

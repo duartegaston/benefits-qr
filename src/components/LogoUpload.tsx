@@ -48,6 +48,7 @@ export default function LogoUpload({ currentLogoUrl, nombre }: LogoUploadProps) 
   return (
     <div className="relative group">
       <button
+        type="button"
         onClick={() => inputRef.current?.click()}
         className="relative w-24 h-24 rounded-2xl overflow-hidden bg-violet-100 flex items-center justify-center focus:outline-none"
         title="Cambiar logo"

@@ -22,5 +22,5 @@ export async function GET(req: NextRequest) {
   }
 
   const response = NextResponse.redirect(new URL(redirect, req.url));
-  return setSessionCookie(response, token);
+  return setSessionCookie(response, token, "CLIENTE");
 }

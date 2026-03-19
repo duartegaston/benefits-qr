@@ -27,6 +27,15 @@ export default async function BeneficioPublicoPage({
   const canjeados = beneficio.reclamos.length;
   const isAgotado = beneficio.maxUsos !== null && canjeados >= beneficio.maxUsos;
 
+  const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+  const DIAS_FULL = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  const todayIndex = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })
+  ).getDay();
+  const diasValidos: number[] = beneficio.diasValidos as number[];
+  const tieneRestriccion = diasValidos.length > 0;
+  const isWrongDay = tieneRestriccion && !diasValidos.includes(todayIndex);
+
   const initials = (beneficio.local.nombre ?? "")
     .split(" ")
     .map((w: string) => w[0])
@@ -71,7 +80,10 @@ export default async function BeneficioPublicoPage({
             <div className="flex gap-2 flex-wrap">
               {isExpired && <Badge color="red">Vencido</Badge>}
               {isAgotado && <Badge color="red">Agotado</Badge>}
-              {!isExpired && !isAgotado && (
+              {isWrongDay && !isExpired && !isAgotado && (
+                <Badge color="red">No disponible hoy</Badge>
+              )}
+              {!isExpired && !isAgotado && !isWrongDay && (
                 <Badge color="green">Disponible</Badge>
               )}
               <Badge color="gray">
@@ -83,15 +95,30 @@ export default async function BeneficioPublicoPage({
                   {canjeados}/{beneficio.maxUsos} usos
                 </Badge>
               )}
+              {tieneRestriccion && (
+                <Badge color="gray">
+                  {diasValidos
+                    .sort((a, b) => a - b)
+                    .map((d) => DIAS_LABELS[d])
+                    .join(" · ")}
+                </Badge>
+              )}
             </div>
           </div>
 
-          {!isExpired && !isAgotado ? (
+          {!isExpired && !isAgotado && !isWrongDay ? (
             <ReclamarForm beneficioId={beneficio.id} />
           ) : (
             <div className="bg-red-50 rounded-xl p-4 text-center">
               <p className="text-red-600 font-medium">
-                {isExpired ? "Este beneficio ya expiró" : "Este beneficio está agotado"}
+                {isExpired
+                  ? "Este beneficio ya expiró"
+                  : isAgotado
+                  ? "Este beneficio está agotado"
+                  : `Este beneficio no está disponible los ${DIAS_FULL[todayIndex]}s. Aplica los: ${diasValidos
+                      .sort((a, b) => a - b)
+                      .map((d) => DIAS_FULL[d])
+                      .join(", ")}`}
               </p>
             </div>
           )}

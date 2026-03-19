@@ -33,6 +33,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (beneficio.diasValidos.length > 0) {
+      const hoy = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })
+      ).getDay();
+      if (!beneficio.diasValidos.includes(hoy)) {
+        const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const nombres = beneficio.diasValidos
+          .sort((a: number, b: number) => a - b)
+          .map((d: number) => DIAS[d])
+          .join(", ");
+        return NextResponse.json(
+          { error: `Este beneficio solo aplica los: ${nombres}` },
+          { status: 400 }
+        );
+      }
+    }
+
     if (
       beneficio.maxUsos !== null &&
       beneficio.reclamos.length >= beneficio.maxUsos

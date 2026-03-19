@@ -1,11 +1,11 @@
-import { getSessionFromCookies } from "@/lib/auth";
+import { getClienteSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import MisBeneficiosList from "@/components/MisBeneficiosList";
 import ClienteLoginForm from "@/components/ClienteLoginForm";
 
 export default async function MisBeneficiosPage() {
-  const session = await getSessionFromCookies();
+  const session = await getClienteSessionFromCookies();
 
   // Sin sesión → mostrar formulario de acceso
   if (!session || session.userType !== "CLIENTE") {
