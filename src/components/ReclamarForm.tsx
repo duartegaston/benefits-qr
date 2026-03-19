@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
 
-type Channel = "email" | "sms";
+type Channel = "email" | "whatsapp";
 type Step = "form" | "otp" | "done";
 
 export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
@@ -42,11 +42,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
       return;
     }
 
-    if (data.requiresOtp) {
-      setStep("otp");
-    } else {
-      setStep("done");
-    }
+    setStep("otp");
   }
 
   async function handleVerifyOtp(e: React.FormEvent) {
@@ -54,10 +50,15 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
     setError("");
     setLoading(true);
 
+    const body =
+      channel === "email"
+        ? { email, code: otp }
+        : { phone, code: otp };
+
     const res = await fetch("/api/auth/cliente/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, code: otp }),
+      body: JSON.stringify(body),
     });
 
     const data = await res.json();
@@ -71,26 +72,15 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
     router.push(data.redirect || "/mis-beneficios");
   }
 
-  if (step === "done") {
-    return (
-      <div className="bg-green-50 rounded-xl p-6 text-center">
-        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <svg aria-hidden="true" className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <p className="font-semibold text-green-800">¡Beneficio reclamado!</p>
-        <p className="text-green-600 text-sm mt-1">Revisá tu email para acceder a tu QR</p>
-      </div>
-    );
-  }
-
   if (step === "otp") {
+    const contact = channel === "email" ? email : phone;
+    const via = channel === "email" ? "email" : "WhatsApp";
+
     return (
       <form onSubmit={handleVerifyOtp} className="space-y-4">
         <div className="text-center mb-2">
           <p className="text-sm text-gray-600">
-            Te enviamos un código por WhatsApp a <strong>{phone}</strong>
+            Te enviamos un código por {via} a <strong>{contact}</strong>
           </p>
         </div>
         <Input
@@ -135,9 +125,9 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         </button>
         <button
           type="button"
-          onClick={() => { setChannel("sms"); setError(""); }}
+          onClick={() => { setChannel("whatsapp"); setError(""); }}
           className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            channel === "sms"
+            channel === "whatsapp"
               ? "bg-violet-600 text-white"
               : "bg-white text-gray-600 hover:bg-gray-50"
           }`}

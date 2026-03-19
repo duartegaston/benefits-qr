@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createSession } from "@/lib/auth";
-import { sendMagicLink } from "@/lib/email";
 import { createAndSendOtp } from "@/lib/otp";
 
 export async function POST(req: NextRequest) {
@@ -21,17 +19,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (!beneficio) {
-      return NextResponse.json(
-        { error: "Beneficio no encontrado" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Beneficio no encontrado" }, { status: 404 });
     }
 
     if (beneficio.fechaExpiracion < new Date()) {
-      return NextResponse.json(
-        { error: "Este beneficio ya expiró" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Este beneficio ya expiró" }, { status: 400 });
     }
 
     if (beneficio.diasValidos.length > 0) {
@@ -51,10 +43,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    if (
-      beneficio.maxUsos !== null &&
-      beneficio.reclamos.length >= beneficio.maxUsos
-    ) {
+    if (beneficio.maxUsos !== null && beneficio.reclamos.length >= beneficio.maxUsos) {
       return NextResponse.json(
         { error: "Este beneficio ya alcanzó el máximo de usos" },
         { status: 400 }
@@ -70,7 +59,7 @@ export async function POST(req: NextRequest) {
     } else {
       if (!nombre) {
         return NextResponse.json(
-          { error: "El nombre es requerido para registrarse con teléfono" },
+          { error: "El nombre es requerido para registrarse con WhatsApp" },
           { status: 400 }
         );
       }
@@ -86,34 +75,20 @@ export async function POST(req: NextRequest) {
 
     if (existingReclamo) {
       if (existingReclamo.estado === "CANJEADO") {
-        return NextResponse.json(
-          { error: "Ya canjeaste este beneficio" },
-          { status: 409 }
-        );
+        return NextResponse.json({ error: "Ya canjeaste este beneficio" }, { status: 409 });
       }
-      // Reclamo existente pero no canjeado → reenviar acceso
-      if (cliente.email) {
-        const session = await createSession(cliente.id, "CLIENTE", 24);
-        await sendMagicLink(cliente.email, session.token, "/mis-beneficios");
-        return NextResponse.json({ success: true, reclamoId: existingReclamo.id });
-      } else {
-        await createAndSendOtp(cliente.phone!);
-        return NextResponse.json({ success: true, reclamoId: existingReclamo.id, requiresOtp: true });
-      }
+      // Reclamo existente pero no canjeado → reenviar código
+      await createAndSendOtp(email ? { email } : { phone });
+      return NextResponse.json({ success: true, reclamoId: existingReclamo.id });
     }
 
     const reclamo = await prisma.reclamo.create({
       data: { beneficioId, clienteId: cliente.id },
     });
 
-    if (cliente.email) {
-      const session = await createSession(cliente.id, "CLIENTE", 24);
-      await sendMagicLink(cliente.email, session.token, "/mis-beneficios");
-      return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
-    } else {
-      await createAndSendOtp(cliente.phone!);
-      return NextResponse.json({ success: true, reclamoId: reclamo.id, requiresOtp: true }, { status: 201 });
-    }
+    await createAndSendOtp(email ? { email } : { phone });
+
+    return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
