@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Local {
+  id         String      @id @default(cuid())
+  nombre     String?
+  email      String      @unique
+  password   String?
+  googleId   String?     @unique
+  logoUrl    String?
+  direccion  String?
+  telefono   String?
+  createdAt  DateTime    @default(now())
+  beneficios Beneficio[]
+}
+
+model LocalOtp {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Beneficio {
+  id              String    @id @default(cuid())
+  descripcion     String
+  fechaExpiracion DateTime
+  maxUsos         Int?
+  localId         String
+  local           Local     @relation(fields: [localId], references: [id])
+  createdAt       DateTime  @default(now())
+  reclamos        Reclamo[]
+}
+
+model Cliente {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  reclamos  Reclamo[]
+}
+
+enum EstadoReclamo {
+  PENDIENTE
+  CANJEADO
+  VENCIDO
+}
+
+model Reclamo {
+  id            String        @id @default(cuid())
+  beneficioId   String
+  beneficio     Beneficio     @relation(fields: [beneficioId], references: [id])
+  clienteId     String
+  cliente       Cliente       @relation(fields: [clienteId], references: [id])
+  fechaReclamo  DateTime      @default(now())
+  fechaCanje    DateTime?
+  qrToken       String?       @unique
+  qrTokenExpira DateTime?
+  estado        EstadoReclamo @default(PENDIENTE)
+}
+
+enum UserType {
+  LOCAL
+  CLIENTE
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  userType  UserType
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
