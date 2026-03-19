@@ -55,7 +55,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
 
   if (loading && !qrDataURL) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-48 sm:h-64">
         <div role="status" aria-label="Cargando código QR">
           <div aria-hidden="true" className="animate-spin h-8 w-8 border-4 border-violet-600 border-t-transparent rounded-full" />
         </div>
@@ -67,7 +67,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
     <div className="flex flex-col items-center gap-4">
       {qrDataURL && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={qrDataURL} alt="QR Code" className="w-64 h-64 rounded-xl" />
+        <img src={qrDataURL} alt="QR Code" className="w-full max-w-[256px] aspect-square rounded-xl" />
       )}
       <div
         className={`text-2xl font-mono font-bold tabular-nums ${

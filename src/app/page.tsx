@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8">
+    <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8">
       <div className="max-w-2xl w-full text-center">
         <div className="mb-8">
           <h1 className="text-5xl font-bold text-violet-600 mb-3">BenefitQR</h1>

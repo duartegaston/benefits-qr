@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 const QRScanner = dynamic(() => import("@/components/QRScanner"), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-64">
+    <div className="flex items-center justify-center h-48 sm:h-64">
       <div className="animate-spin h-8 w-8 border-4 border-violet-600 border-t-transparent rounded-full" />
     </div>
   ),
@@ -68,7 +68,7 @@ export default function EscanearPage() {
   }
 
   return (
-    <main className="min-h-screen p-6 max-w-xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-6 max-w-xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/dashboard" className="text-gray-400 hover:text-gray-600 text-sm">
           ← Dashboard

@@ -35,7 +35,7 @@ export default async function BeneficioStatsPage({
   ).length;
 
   return (
-    <main className="min-h-screen p-6 max-w-4xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-3 mb-8">
         <Link href="/dashboard" className="text-gray-400 hover:text-gray-600 text-sm">
           ← Dashboard
@@ -61,7 +61,7 @@ export default async function BeneficioStatsPage({
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           <div className="text-center p-4 bg-gray-50 rounded-xl">
             <p className="text-2xl font-bold text-gray-900">
               {beneficio.reclamos.length}

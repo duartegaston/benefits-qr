@@ -59,8 +59,8 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-violet-50 via-white to-slate-50 relative overflow-hidden">
       {/* Decorative blobs */}
-      <div className="pointer-events-none absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-violet-200/40 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-violet-100/50 blur-3xl" />
+      <div className="hidden sm:block pointer-events-none absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-violet-200/40 blur-3xl" />
+      <div className="hidden sm:block pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-violet-100/50 blur-3xl" />
 
       <div className="w-full max-w-md relative animate-[fade-up_0.45s_ease-out_both]">
         {/* Brand mark */}
@@ -74,7 +74,7 @@ export default function LoginPage() {
           <p className="text-gray-500 text-sm mt-1">Accedé al dashboard de tu local</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/60 p-8">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/60 p-6 sm:p-8">
           {step === "email" ? (
             <form onSubmit={handleRequestOtp} className="space-y-4">
               <Input

@@ -26,7 +26,7 @@ export default async function MisBeneficiosPage() {
   });
 
   return (
-    <main className="min-h-screen p-6 max-w-2xl mx-auto">
+    <main className="min-h-screen p-4 sm:p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Mis beneficios</h1>
       <MisBeneficiosList reclamos={reclamos} />
     </main>

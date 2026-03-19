@@ -42,7 +42,7 @@ export default function NuevoBeneficioPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md p-8">
+      <Card className="w-full max-w-md p-6 sm:p-8">
         <div className="flex items-center gap-3 mb-8">
           <Link
             href="/dashboard"

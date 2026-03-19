@@ -38,7 +38,7 @@ export default async function BeneficioPublicoPage({
     <main className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="h-2 rounded-t-2xl bg-violet-600" />
-        <Card className="rounded-t-none p-8">
+        <Card className="rounded-t-none p-6 sm:p-8">
           <div className="mb-6">
             {/* Logo del local */}
             <div className="flex items-center gap-3 mb-4">
