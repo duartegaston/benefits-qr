@@ -95,6 +95,7 @@ export default async function DashboardPage() {
         <div className="space-y-3">
           {beneficios.map((b) => {
             const isExpired = b.fechaExpiracion < new Date();
+            const isAgotado = b.maxUsos !== null && b._count.reclamos >= b.maxUsos;
             const canjeados = b.reclamos.filter(
               (r: { estado: string }) => r.estado === "CANJEADO"
             ).length;
@@ -108,8 +109,8 @@ export default async function DashboardPage() {
                       <h3 className="font-medium text-gray-900 truncate">
                         {b.descripcion}
                       </h3>
-                      <Badge color={isExpired ? "red" : "green"}>
-                        {isExpired ? "Vencido" : "Activo"}
+                      <Badge color={isExpired ? "red" : isAgotado ? "yellow" : "green"}>
+                        {isExpired ? "Vencido" : isAgotado ? "Agotado" : "Activo"}
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-500 mt-1">
