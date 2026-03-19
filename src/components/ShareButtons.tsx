@@ -4,11 +4,14 @@ import { useState } from "react";
 interface ShareButtonsProps {
   url: string;
   descripcion: string;
+  nombreLocal: string;
+  fechaExpiracion: Date | string;
 }
 
-export default function ShareButtons({ url, descripcion }: ShareButtonsProps) {
+export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpiracion }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const texto = `¡Aprovechá este beneficio: ${descripcion}! 🎁\n${url}`;
+  const fechaStr = new Date(fechaExpiracion).toLocaleDateString("es-AR");
+  const texto = `Tenés este cupón para canjear en ${nombreLocal}: ${descripcion}\nVence el ${fechaStr}\n${url}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(url);

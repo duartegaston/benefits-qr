@@ -123,7 +123,7 @@ export default async function DashboardPage() {
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
-                    <ShareButtons url={shareUrl} descripcion={b.descripcion} />
+                    <ShareButtons url={shareUrl} descripcion={b.descripcion} nombreLocal={local.nombre!} fechaExpiracion={b.fechaExpiracion} />
                     <Link
                       href={`/dashboard/beneficios/${b.id}`}
                       className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
