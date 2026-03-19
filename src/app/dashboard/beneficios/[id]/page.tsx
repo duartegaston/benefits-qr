@@ -18,7 +18,7 @@ export default async function BeneficioStatsPage({
     where: { id, localId: session.userId },
     include: {
       reclamos: {
-        include: { cliente: { select: { email: true } } },
+        include: { cliente: { select: { email: true, phone: true, nombre: true } } },
         orderBy: { fechaReclamo: "desc" },
       },
     },
@@ -93,7 +93,9 @@ export default async function BeneficioStatsPage({
             <Card key={r.id} className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-900">{r.cliente.email}</p>
+                  <p className="font-medium text-gray-900">
+                    {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
+                  </p>
                   <p className="text-xs text-gray-400 mt-0.5">
                     Reclamó:{" "}
                     {new Date(r.fechaReclamo).toLocaleString("es-AR")}

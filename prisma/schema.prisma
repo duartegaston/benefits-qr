@@ -43,9 +43,19 @@ model Beneficio {
 
 model Cliente {
   id        String    @id @default(cuid())
-  email     String    @unique
+  email     String?   @unique
+  phone     String?   @unique
+  nombre    String?
   createdAt DateTime  @default(now())
   reclamos  Reclamo[]
+}
+
+model ClienteOtp {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 enum EstadoReclamo {
