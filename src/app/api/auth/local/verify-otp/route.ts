@@ -17,6 +17,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Código inválido" }, { status: 401 });
   }
 
+  if (otp.pendingApproval) {
+    return NextResponse.json(
+      { error: "Tu acceso aún no ha sido aprobado." },
+      { status: 403 }
+    );
+  }
+
   if (otp.code !== code) {
     return NextResponse.json({ error: "Código incorrecto" }, { status: 401 });
   }

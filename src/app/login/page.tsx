@@ -7,7 +7,7 @@ import Button from "@/components/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [step, setStep] = useState<"email" | "otp">("email");
+  const [step, setStep] = useState<"email" | "pending-approval" | "otp">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -32,6 +32,11 @@ export default function LoginPage() {
       return;
     }
 
+    const data = await res.json();
+    if (data.requiresApproval) {
+      setStep("pending-approval");
+      return;
+    }
     setStep("otp");
   }
 
@@ -73,7 +78,26 @@ export default function LoginPage() {
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-xl shadow-gray-200/60 p-6 sm:p-8">
-          {step === "email" ? (
+          {step === "pending-approval" ? (
+            <div className="space-y-4 text-center">
+              <div className="flex justify-center">
+                <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-2xl">
+                  ⏳
+                </div>
+              </div>
+              <h2 className="font-semibold text-gray-800 text-lg">Solicitud en revisión</h2>
+              <p className="text-sm text-amber-700 bg-amber-50 rounded-xl p-4 leading-relaxed">
+                Tu solicitud está siendo revisada. Recibirás tu código de acceso por email una vez que sea aprobada.
+              </p>
+              <button
+                type="button"
+                onClick={() => { setStep("email"); setEmail(""); setError(""); }}
+                className="w-full text-sm text-gray-500 hover:text-gray-700 underline"
+              >
+                Usar otro email
+              </button>
+            </div>
+          ) : step === "email" ? (
             <form onSubmit={handleRequestOtp} className="space-y-4">
               <Input
                 label="Email"

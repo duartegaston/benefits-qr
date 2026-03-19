@@ -21,11 +21,12 @@ model Local {
 }
 
 model LocalOtp {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  code      String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  email           String   @unique
+  code            String
+  expiresAt       DateTime
+  pendingApproval Boolean  @default(false)
+  createdAt       DateTime @default(now())
 }
 
 model Beneficio {
