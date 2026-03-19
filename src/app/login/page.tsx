@@ -91,6 +91,13 @@ export default function LoginPage() {
               </p>
               <button
                 type="button"
+                onClick={() => { setStep("otp"); setError(""); }}
+                className="w-full py-2.5 px-4 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-xl text-sm transition-colors"
+              >
+                Ya recibí mi código
+              </button>
+              <button
+                type="button"
                 onClick={() => { setStep("email"); setEmail(""); setError(""); }}
                 className="w-full text-sm text-gray-500 hover:text-gray-700 underline"
               >
