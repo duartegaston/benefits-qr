@@ -16,15 +16,15 @@ export default async function BeneficioPublicoPage({
     include: {
       local: { select: { nombre: true, logoUrl: true } },
       _count: { select: { reclamos: true } },
+      reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
     },
   });
 
   if (!beneficio) notFound();
 
   const isExpired = beneficio.fechaExpiracion < new Date();
-  const isAgotado =
-    beneficio.maxUsos !== null &&
-    beneficio._count.reclamos >= beneficio.maxUsos;
+  const canjeados = beneficio.reclamos.length;
+  const isAgotado = beneficio.maxUsos !== null && canjeados >= beneficio.maxUsos;
 
   const initials = (beneficio.local.nombre ?? "")
     .split(" ")
@@ -74,7 +74,7 @@ export default async function BeneficioPublicoPage({
               </Badge>
               {beneficio.maxUsos && (
                 <Badge color="gray">
-                  {beneficio._count.reclamos}/{beneficio.maxUsos} usos
+                  {canjeados}/{beneficio.maxUsos} usos
                 </Badge>
               )}
             </div>

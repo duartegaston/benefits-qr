@@ -95,10 +95,10 @@ export default async function DashboardPage() {
         <div className="space-y-3">
           {beneficios.map((b) => {
             const isExpired = b.fechaExpiracion < new Date();
-            const isAgotado = b.maxUsos !== null && b._count.reclamos >= b.maxUsos;
             const canjeados = b.reclamos.filter(
               (r: { estado: string }) => r.estado === "CANJEADO"
             ).length;
+            const isAgotado = b.maxUsos !== null && canjeados >= b.maxUsos;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
 
             return (
