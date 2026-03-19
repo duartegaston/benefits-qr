@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
@@ -57,20 +58,17 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-violet-50 via-white to-slate-50 relative overflow-hidden">
+    <main className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative blobs */}
-      <div className="hidden sm:block pointer-events-none absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-violet-200/40 blur-3xl" />
-      <div className="hidden sm:block pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-violet-100/50 blur-3xl" />
+      <div className="pointer-events-none absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-violet-300/50 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-violet-200/70 blur-3xl" />
 
       <div className="w-full max-w-md relative animate-[fade-up_0.45s_ease-out_both]">
         {/* Brand mark */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-violet-600 shadow-lg shadow-violet-500/30 mb-4">
-            <svg aria-hidden="true" className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M3 3h7v7H3V3zm2 2v3h3V5H5zm9-2h7v7h-7V3zm2 2v3h3V5h-3zM3 14h7v7H3v-7zm2 2v3h3v-3H5zm11-2h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4-6h2v2h-2v-2zm2 2h2v2h-2v-2z"/>
-            </svg>
+          <div className="flex justify-center mb-4">
+            <Image src="/logo.png" alt="Qupón" width={120} height={120} className="rounded-3xl shadow-xl shadow-violet-300/50" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">BenefitQR</h1>
           <p className="text-gray-500 text-sm mt-1">Accedé al dashboard de tu local</p>
         </div>
 

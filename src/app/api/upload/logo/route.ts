@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Solo se permiten imágenes" }, { status: 400 });
   }
 
-  if (file.size > 2 * 1024 * 1024) {
-    return NextResponse.json({ error: "La imagen no puede superar 2MB" }, { status: 400 });
+  if (file.size > 3 * 1024 * 1024) {
+    return NextResponse.json({ error: "La imagen no puede superar 3MB" }, { status: 400 });
   }
 
   let logoUrl: string;

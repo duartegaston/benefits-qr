@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "BenefitQR",
+  title: "Qupón",
   description: "Plataforma de beneficios y descuentos con QR",
 };
 
@@ -30,9 +30,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="h-full">
+    <html lang="es">
       <body
-        className={`${geist.variable} ${jakarta.variable} ${geist.className} bg-[#f5f4f1] min-h-full antialiased`}
+        className={`${geist.variable} ${jakarta.variable} ${geist.className} bg-gradient-to-br from-violet-200 via-violet-50 to-violet-300 bg-fixed min-h-screen antialiased`}
       >
         {children}
       </body>

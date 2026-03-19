@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const beneficio = await prisma.beneficio.findUnique({
       where: { id: beneficioId },
-      include: { _count: { select: { reclamos: true } } },
+      include: { reclamos: { where: { estado: "CANJEADO" }, select: { id: true } } },
     });
 
     if (!beneficio) {
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     if (
       beneficio.maxUsos !== null &&
-      beneficio._count.reclamos >= beneficio.maxUsos
+      beneficio.reclamos.length >= beneficio.maxUsos
     ) {
       return NextResponse.json(
         { error: "Este beneficio ya alcanzó el máximo de usos" },
@@ -53,9 +53,18 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingReclamo) {
+      if (existingReclamo.estado === "CANJEADO") {
+        return NextResponse.json(
+          { error: "Ya canjeaste este beneficio" },
+          { status: 409 }
+        );
+      }
+      // Reclamo existente pero no canjeado → reenviar magic link
+      const session = await createSession(cliente.id, "CLIENTE", 24);
+      await sendMagicLink(email, session.token, "/mis-beneficios");
       return NextResponse.json(
-        { error: "Ya reclamaste este beneficio" },
-        { status: 409 }
+        { success: true, reclamoId: existingReclamo.id },
+        { status: 200 }
       );
     }
 

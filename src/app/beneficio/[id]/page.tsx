@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import Image from "next/image";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import ReclamarForm from "@/components/ReclamarForm";
@@ -35,8 +36,13 @@ export default async function BeneficioPublicoPage({
     .toUpperCase();
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <main className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="pointer-events-none absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-violet-300/50 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-violet-200/70 blur-3xl" />
+      <div className="w-full max-w-md relative">
+        <div className="flex justify-center mb-5">
+          <Image src="/logo.png" alt="Qupón" width={80} height={80} className="rounded-2xl shadow-lg shadow-violet-300/50" />
+        </div>
         <div className="h-2 rounded-t-2xl bg-violet-600" />
         <Card className="rounded-t-none p-6 sm:p-8">
           <div className="mb-6">

@@ -16,12 +16,12 @@ async function resendFetch(payload: object) {
 
 export async function sendOtpEmail(to: string, code: string) {
   await resendFetch({
-    from: process.env.RESEND_FROM || "noreply@benefitqr.com",
+    from: process.env.RESEND_FROM || "noreply@qupon.app",
     to,
-    subject: `${code} — Tu código de acceso BenefitQR`,
+    subject: `${code} — Tu código de acceso Qupón`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">BenefitQR</h1>
+        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
         <p style="color: #374151; margin-bottom: 24px;">
           Usá este código para ingresar al dashboard de tu local. Expira en 10 minutos.
         </p>
@@ -45,12 +45,12 @@ export async function sendMagicLink(
   const magicLink = `${baseUrl}/api/auth/cliente/verify?token=${token}&redirect=${encodeURIComponent(redirect)}`;
 
   await resendFetch({
-    from: process.env.RESEND_FROM || "noreply@benefitqr.com",
+    from: process.env.RESEND_FROM || "noreply@qupon.app",
     to,
-    subject: "Tu enlace mágico — BenefitQR",
+    subject: "Tu enlace mágico — Qupón",
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">BenefitQR</h1>
+        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
         <p style="color: #374151; margin-bottom: 24px;">
           Haz clic en el siguiente botón para acceder a tus beneficios.
           Este enlace expira en 24 horas.

@@ -41,7 +41,7 @@ export default function ClienteLoginForm() {
         </div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Revisá tu email</h2>
         <p className="text-gray-500 text-sm">
-          Si tenés beneficios reclamados con <strong>{email}</strong>, vas a recibir un enlace de acceso en tu bandeja.
+          Reclamá tu beneficio <strong>{email}</strong>, vas a recibir un enlace de acceso en tu bandeja.
         </p>
         <button
           onClick={() => { setSent(false); setEmail(""); }}
