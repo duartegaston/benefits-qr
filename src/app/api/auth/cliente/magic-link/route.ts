@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createSession } from "@/lib/auth";
-import { sendMagicLink } from "@/lib/email";
-import { sendMagicLinkWhatsapp } from "@/lib/whatsapp";
+import { createAndSendOtp } from "@/lib/otp";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, phone, nombre, redirect } = await req.json();
+    const { email, phone, nombre } = await req.json();
 
     if (!email && !phone) {
       return NextResponse.json({ error: "Email o teléfono requerido" }, { status: 400 });
@@ -25,13 +23,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const session = await createSession(cliente.id, "CLIENTE", 24);
-    const dest = redirect || "/mis-beneficios";
-    if (cliente.email) {
-      await sendMagicLink(cliente.email, session.token, dest);
-    } else {
-      await sendMagicLinkWhatsapp(cliente.phone!, session.token, dest);
-    }
+    await createAndSendOtp(email ? { email } : { phone });
 
     return NextResponse.json({ success: true });
   } catch (error) {
