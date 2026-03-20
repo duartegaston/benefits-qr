@@ -5,6 +5,16 @@ import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 
+const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+
+function formatDias(dias: number[]): string {
+  if (dias.length === 0) return "Válido todos los días";
+  const nombres = [...dias].sort((a, b) => a - b).map((d) => DIAS_LABELS[d]);
+  if (nombres.length === 1) return `Válido los ${nombres[0]}`;
+  const ultimo = nombres.pop();
+  return `Válido los ${nombres.join(", ")} y ${ultimo}`;
+}
+
 export default async function BeneficioStatsPage({
   params,
 }: {
@@ -57,6 +67,7 @@ export default async function BeneficioStatsPage({
               Vence:{" "}
               {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
               {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
+              {" · "}{formatDias(beneficio.diasValidos)}
             </p>
           </div>
         </div>

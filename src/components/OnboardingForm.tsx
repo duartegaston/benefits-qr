@@ -3,25 +3,34 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoUpload from "@/components/LogoUpload";
 import Input from "@/components/ui/Input";
+import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 
 interface OnboardingFormProps {
   localId: string;
+  email: string;
   logoUrl?: string | null;
 }
 
-export default function OnboardingForm({ logoUrl }: OnboardingFormProps) {
+export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) {
   const router = useRouter();
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [telefono, setTelefono] = useState("");
+  const [telefono, setTelefono] = useState("+54");
+  const [hasLogo, setHasLogo] = useState(!!logoUrl);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    if (!hasLogo) {
+      setError("Por favor subí una foto del local");
+      return;
+    }
+
     setLoading(true);
 
     const res = await fetch("/api/local/me", {
@@ -49,8 +58,22 @@ export default function OnboardingForm({ logoUrl }: OnboardingFormProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="flex justify-center mb-2">
-          <LogoUpload currentLogoUrl={logoUrl} nombre={nombre || "?"} />
+        <div className="flex flex-col items-center mb-2 gap-1">
+          <LogoUpload
+            currentLogoUrl={logoUrl}
+            nombre={nombre || "?"}
+            onUploaded={() => setHasLogo(true)}
+          />
+          {!hasLogo && (
+            <p className="text-xs text-gray-400">Foto del local (requerida)</p>
+          )}
+        </div>
+
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">Email</p>
+          <p className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
+            {email}
+          </p>
         </div>
 
         <Input
@@ -70,12 +93,11 @@ export default function OnboardingForm({ logoUrl }: OnboardingFormProps) {
           placeholder="Ej: Av. Corrientes 1234, Buenos Aires"
         />
 
-        <Input
-          label="Teléfono (opcional)"
-          type="tel"
+        <PhoneInput
+          label="Teléfono"
           value={telefono}
-          onChange={(e) => setTelefono(e.target.value)}
-          placeholder="Ej: +54 11 1234-5678"
+          onChange={setTelefono}
+          required
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}

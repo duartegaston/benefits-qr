@@ -25,7 +25,7 @@ export default async function OnboardingPage() {
         <div className="mb-6">
           <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-violet-300/50" />
         </div>
-        <OnboardingForm localId={local.id} logoUrl={local.logoUrl} />
+        <OnboardingForm localId={local.id} email={local.email} logoUrl={local.logoUrl} />
       </div>
     </main>
   );

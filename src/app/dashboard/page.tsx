@@ -8,6 +8,16 @@ import DashboardActions from "@/components/DashboardActions";
 import ShareButtons from "@/components/ShareButtons";
 import LogoUpload from "@/components/LogoUpload";
 
+const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+
+function formatDias(dias: number[]): string {
+  if (dias.length === 0) return "Válido todos los días";
+  const nombres = [...dias].sort((a, b) => a - b).map((d) => DIAS_LABELS[d]);
+  if (nombres.length === 1) return `Válido los ${nombres[0]}`;
+  const ultimo = nombres.pop();
+  return `Válido los ${nombres.join(", ")} y ${ultimo}`;
+}
+
 export default async function DashboardPage() {
   const session = await getSessionFromCookies();
   if (!session || session.userType !== "LOCAL") {
@@ -117,6 +127,7 @@ export default async function DashboardPage() {
                       Vence:{" "}
                       {new Date(b.fechaExpiracion).toLocaleDateString("es-AR")}
                       {b.maxUsos && ` · ${canjeados}/${b.maxUsos} usos`}
+                      {" · "}{formatDias(b.diasValidos)}
                     </p>
                     <p className="text-sm text-gray-500">
                       {b._count.reclamos} reclamos · {canjeados} canjeados

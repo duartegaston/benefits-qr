@@ -4,13 +4,17 @@ import { createAndSendOtp } from "@/lib/otp";
 
 export async function POST(req: NextRequest) {
   try {
-    const { beneficioId, email, phone, nombre } = await req.json();
+    const { beneficioId, nombre, email, phone, channel } = await req.json();
 
-    if (!beneficioId || (!email && !phone)) {
+    if (!beneficioId || !nombre || !email || !phone || !channel) {
       return NextResponse.json(
-        { error: "Beneficio y email o teléfono son requeridos" },
+        { error: "Nombre, email y WhatsApp son requeridos" },
         { status: 400 }
       );
+    }
+
+    if (channel !== "email" && channel !== "whatsapp") {
+      return NextResponse.json({ error: "Canal inválido" }, { status: 400 });
     }
 
     const beneficio = await prisma.beneficio.findUnique({
@@ -50,22 +54,48 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let cliente;
-    if (email) {
-      cliente = await prisma.cliente.findUnique({ where: { email } });
-      if (!cliente) {
-        cliente = await prisma.cliente.create({ data: { email } });
-      }
+    // Deduplication: look up by email and by phone separately
+    const [clienteByEmail, clienteByPhone] = await Promise.all([
+      prisma.cliente.findUnique({ where: { email } }),
+      prisma.cliente.findUnique({ where: { phone } }),
+    ]);
+
+    // Cross-conflict: email already registered with a different phone
+    if (clienteByEmail && clienteByEmail.phone && clienteByEmail.phone !== phone) {
+      return NextResponse.json(
+        { error: "Este email ya está registrado con otro número de WhatsApp" },
+        { status: 400 }
+      );
+    }
+
+    // Cross-conflict: phone already registered with a different email
+    if (clienteByPhone && clienteByPhone.email && clienteByPhone.email !== email) {
+      return NextResponse.json(
+        { error: "Este número de WhatsApp ya está registrado con otro email" },
+        { status: 400 }
+      );
+    }
+
+    // Split-identity: email and phone exist but in separate records → would cause P2002 on update
+    if (clienteByEmail && clienteByPhone && clienteByEmail.id !== clienteByPhone.id) {
+      return NextResponse.json(
+        { error: "El email y el WhatsApp ya están registrados en cuentas separadas. Contactate con el negocio." },
+        { status: 400 }
+      );
+    }
+
+    // Use existing record or create a new unified one
+    let cliente = clienteByEmail ?? clienteByPhone;
+    if (!cliente) {
+      cliente = await prisma.cliente.create({ data: { nombre, email, phone } });
     } else {
-      if (!nombre) {
-        return NextResponse.json(
-          { error: "El nombre es requerido para registrarse con WhatsApp" },
-          { status: 400 }
-        );
-      }
-      cliente = await prisma.cliente.findUnique({ where: { phone } });
-      if (!cliente) {
-        cliente = await prisma.cliente.create({ data: { phone, nombre } });
+      // Update missing fields if any
+      const updates: Record<string, string> = {};
+      if (!cliente.nombre) updates.nombre = nombre;
+      if (!cliente.email) updates.email = email;
+      if (!cliente.phone) updates.phone = phone;
+      if (Object.keys(updates).length > 0) {
+        cliente = await prisma.cliente.update({ where: { id: cliente.id }, data: updates });
       }
     }
 
@@ -77,8 +107,8 @@ export async function POST(req: NextRequest) {
       if (existingReclamo.estado === "CANJEADO") {
         return NextResponse.json({ error: "Ya canjeaste este beneficio" }, { status: 409 });
       }
-      // Reclamo existente pero no canjeado → reenviar código
-      await createAndSendOtp(email ? { email } : { phone });
+      // Reclamo exists but not redeemed → resend OTP
+      await createAndSendOtp(channel === "email" ? { email } : { phone });
       return NextResponse.json({ success: true, reclamoId: existingReclamo.id });
     }
 
@@ -86,7 +116,7 @@ export async function POST(req: NextRequest) {
       data: { beneficioId, clienteId: cliente.id },
     });
 
-    await createAndSendOtp(email ? { email } : { phone });
+    await createAndSendOtp(channel === "email" ? { email } : { phone });
 
     return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
   } catch (error) {

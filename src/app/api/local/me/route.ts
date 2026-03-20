@@ -12,6 +12,10 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "El nombre es requerido" }, { status: 400 });
   }
 
+  if (!telefono || typeof telefono !== "string" || telefono.trim() === "") {
+    return NextResponse.json({ error: "El teléfono es requerido" }, { status: 400 });
+  }
+
   const local = await prisma.local.update({
     where: { id: session!.userId },
     data: {

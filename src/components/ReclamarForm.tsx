@@ -3,35 +3,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
+import PhoneInput from "./ui/PhoneInput";
 
 type Channel = "email" | "whatsapp";
-type Step = "form" | "otp" | "done";
+type Step = "form" | "otp";
 
 export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   const router = useRouter();
-  const [channel, setChannel] = useState<Channel>("email");
   const [step, setStep] = useState<Step>("form");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [channel, setChannel] = useState<Channel>("email");
   const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("+54");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(selectedChannel: Channel) {
     setError("");
     setLoading(true);
-
-    const body =
-      channel === "email"
-        ? { beneficioId, email }
-        : { beneficioId, phone, nombre };
+    setChannel(selectedChannel);
 
     const res = await fetch("/api/reclamos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ beneficioId, nombre, email, phone, channel: selectedChannel }),
     });
 
     const data = await res.json();
@@ -50,10 +46,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
     setError("");
     setLoading(true);
 
-    const body =
-      channel === "email"
-        ? { email, code: otp }
-        : { phone, code: otp };
+    const body = channel === "email" ? { email, code: otp } : { phone, code: otp };
 
     const res = await fetch("/api/auth/cliente/verify-otp", {
       method: "POST",
@@ -109,68 +102,53 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Channel tabs */}
-      <div className="flex rounded-lg border border-gray-200 overflow-hidden">
-        <button
+    <div className="space-y-4">
+      <Input
+        label="Tu nombre"
+        type="text"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+        placeholder="Juan Pérez"
+        required
+      />
+      <Input
+        label="Tu email"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="tu@email.com"
+        required
+      />
+      <PhoneInput
+        label="Tu WhatsApp"
+        value={phone}
+        onChange={setPhone}
+        required
+      />
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      <div className="flex gap-3">
+        <Button
           type="button"
-          onClick={() => { setChannel("email"); setError(""); }}
-          className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            channel === "email"
-              ? "bg-violet-600 text-white"
-              : "bg-white text-gray-600 hover:bg-gray-50"
-          }`}
+          loading={loading && channel === "email"}
+          disabled={loading}
+          onClick={() => handleSubmit("email")}
+          className="flex-1"
+          size="lg"
         >
-          Email
-        </button>
-        <button
+          Recibir código por Email
+        </Button>
+        <Button
           type="button"
-          onClick={() => { setChannel("whatsapp"); setError(""); }}
-          className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            channel === "whatsapp"
-              ? "bg-violet-600 text-white"
-              : "bg-white text-gray-600 hover:bg-gray-50"
-          }`}
+          loading={loading && channel === "whatsapp"}
+          disabled={loading}
+          onClick={() => handleSubmit("whatsapp")}
+          className="flex-1"
+          size="lg"
+          variant="secondary"
         >
-          WhatsApp
-        </button>
+          Recibir código por WhatsApp
+        </Button>
       </div>
-
-      {channel === "email" ? (
-        <Input
-          label="Tu email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="tu@email.com"
-          error={error}
-          required
-        />
-      ) : (
-        <>
-          <Input
-            label="Tu nombre"
-            type="text"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            placeholder="Juan Pérez"
-            required
-          />
-          <Input
-            label="Tu WhatsApp"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+5411XXXXXXXX"
-            error={error}
-            required
-          />
-        </>
-      )}
-
-      <Button type="submit" loading={loading} className="w-full" size="lg">
-        Reclamar beneficio
-      </Button>
-    </form>
+    </div>
   );
 }

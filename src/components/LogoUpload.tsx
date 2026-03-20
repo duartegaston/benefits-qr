@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 interface LogoUploadProps {
   currentLogoUrl?: string | null;
   nombre: string;
+  onUploaded?: (url: string) => void;
 }
 
-export default function LogoUpload({ currentLogoUrl, nombre }: LogoUploadProps) {
+export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(currentLogoUrl ?? null);
   const [loading, setLoading] = useState(false);
@@ -30,6 +31,8 @@ export default function LogoUpload({ currentLogoUrl, nombre }: LogoUploadProps) 
     setLoading(false);
 
     if (res.ok) {
+      const data = await res.json();
+      onUploaded?.(data.url ?? "");
       router.refresh();
     } else {
       const data = await res.json();

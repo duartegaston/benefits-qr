@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Card from "./ui/Card";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
+import PhoneInput from "./ui/PhoneInput";
 
 type Channel = "email" | "whatsapp";
 
@@ -11,7 +12,7 @@ export default function ClienteLoginForm() {
   const router = useRouter();
   const [channel, setChannel] = useState<Channel>("email");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+54");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<"form" | "otp">("form");
@@ -161,12 +162,10 @@ export default function ClienteLoginForm() {
             required
           />
         ) : (
-          <Input
+          <PhoneInput
             label="Tu WhatsApp"
-            type="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+5411XXXXXXXX"
+            onChange={setPhone}
             error={error}
             required
           />
