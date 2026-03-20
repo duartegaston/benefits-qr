@@ -24,15 +24,18 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const [local, beneficios] = await Promise.all([
+  const [local, beneficios, totalCanjeados] = await Promise.all([
     prisma.local.findUnique({ where: { id: session.userId } }),
     prisma.beneficio.findMany({
       where: { localId: session.userId },
       include: {
         _count: { select: { reclamos: true } },
-        reclamos: { select: { estado: true } },
+        reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
       },
       orderBy: { createdAt: "desc" },
+    }),
+    prisma.reclamo.count({
+      where: { beneficio: { localId: session.userId }, estado: "CANJEADO" },
     }),
   ]);
 
@@ -41,11 +44,6 @@ export default async function DashboardPage() {
 
   const totalReclamos = beneficios.reduce(
     (sum: number, b) => sum + b._count.reclamos,
-    0
-  );
-  const totalCanjeados = beneficios.reduce(
-    (sum: number, b) =>
-      sum + b.reclamos.filter((r: { estado: string }) => r.estado === "CANJEADO").length,
     0
   );
 
@@ -105,9 +103,7 @@ export default async function DashboardPage() {
         <div className="space-y-3">
           {beneficios.map((b) => {
             const isExpired = b.fechaExpiracion < new Date();
-            const canjeados = b.reclamos.filter(
-              (r: { estado: string }) => r.estado === "CANJEADO"
-            ).length;
+            const canjeados = b.reclamos.length;
             const isAgotado = b.maxUsos !== null && canjeados >= b.maxUsos;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
 

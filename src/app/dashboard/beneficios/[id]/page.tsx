@@ -27,9 +27,11 @@ export default async function BeneficioStatsPage({
   const beneficio = await prisma.beneficio.findFirst({
     where: { id, localId: session.userId },
     include: {
+      _count: { select: { reclamos: true } },
       reclamos: {
         include: { cliente: { select: { email: true, phone: true, nombre: true } } },
         orderBy: { fechaReclamo: "desc" },
+        take: 100,
       },
     },
   });
@@ -43,6 +45,7 @@ export default async function BeneficioStatsPage({
   const pendientes = beneficio.reclamos.filter(
     (r: { estado: string }) => r.estado === "PENDIENTE"
   ).length;
+  const totalReclamos = beneficio._count.reclamos;
 
   return (
     <main className="min-h-screen p-4 sm:p-6 max-w-4xl mx-auto">
@@ -75,7 +78,7 @@ export default async function BeneficioStatsPage({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           <div className="text-center p-4 bg-gray-50 rounded-xl">
             <p className="text-2xl font-bold text-gray-900">
-              {beneficio.reclamos.length}
+              {totalReclamos}
             </p>
             <p className="text-xs text-gray-500 mt-1">Reclamos</p>
           </div>
@@ -91,7 +94,7 @@ export default async function BeneficioStatsPage({
       </Card>
 
       <h2 className="text-lg font-semibold text-gray-900 mb-3">
-        Clientes ({beneficio.reclamos.length})
+        Clientes ({totalReclamos})
       </h2>
 
       {beneficio.reclamos.length === 0 ? (

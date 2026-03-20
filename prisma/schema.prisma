@@ -39,6 +39,8 @@ model Beneficio {
   local           Local     @relation(fields: [localId], references: [id])
   createdAt       DateTime  @default(now())
   reclamos        Reclamo[]
+
+  @@index([localId])
 }
 
 model Cliente {
@@ -76,6 +78,9 @@ model Reclamo {
   qrToken       String?       @unique
   qrTokenExpira DateTime?
   estado        EstadoReclamo @default(PENDIENTE)
+
+  @@index([clienteId])
+  @@index([beneficioId])
 }
 
 enum UserType {
@@ -90,4 +95,6 @@ model Session {
   userType  UserType
   expiresAt DateTime
   createdAt DateTime @default(now())
+
+  @@index([expiresAt])
 }
