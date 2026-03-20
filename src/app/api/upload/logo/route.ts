@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+
 export async function POST(req: NextRequest) {
   const { error, session } = await requireLocalAuth(req);
   if (error) return error;
@@ -13,8 +15,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Archivo requerido" }, { status: 400 });
   }
 
-  if (!file.type.startsWith("image/")) {
-    return NextResponse.json({ error: "Solo se permiten imágenes" }, { status: 400 });
+  // Strict MIME type whitelist — SVG is excluded to prevent XSS
+  if (!ALLOWED_MIME_TYPES.has(file.type)) {
+    return NextResponse.json(
+      { error: "Solo se permiten imágenes JPG, PNG, WebP o GIF" },
+      { status: 400 }
+    );
   }
 
   if (file.size > 3 * 1024 * 1024) {

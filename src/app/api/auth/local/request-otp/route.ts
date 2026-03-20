@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { sendOtpEmail, sendApprovalRequestEmail } from "@/lib/email";
 import { generateApprovalToken } from "@/lib/approvalToken";
+import { checkRequestLimit } from "@/lib/rateLimit";
 
 const OWNER_EMAIL = process.env.OWNER_EMAIL || "duartegaston07@gmail.com";
 
@@ -13,7 +15,16 @@ export async function POST(req: NextRequest) {
   }
 
   const normalized = email.trim().toLowerCase();
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Rate limit: 1 request per email per 2 minutes
+  if (!checkRequestLimit(`otp:local:${normalized}`)) {
+    return NextResponse.json(
+      { error: "Demasiados intentos. Esperá 2 minutos antes de solicitar un nuevo código." },
+      { status: 429 }
+    );
+  }
+
+  const code = randomInt(100000, 1000000).toString();
 
   const existingLocal = await prisma.local.findUnique({ where: { email: normalized } });
 
@@ -30,7 +41,7 @@ export async function POST(req: NextRequest) {
     try {
       await sendOtpEmail(normalized, code);
     } catch (err) {
-      console.error("[request-otp] Error enviando email:", err);
+      console.error("[request-otp] Error enviando email:", err instanceof Error ? err.message : String(err));
       return NextResponse.json(
         { error: "No se pudo enviar el código. Verificá la configuración de email." },
         { status: 500 }
@@ -55,7 +66,7 @@ export async function POST(req: NextRequest) {
     try {
       await sendApprovalRequestEmail(OWNER_EMAIL, normalized, approveUrl);
     } catch (err) {
-      console.error("[request-otp] Error enviando email de aprobación:", err);
+      console.error("[request-otp] Error enviando email de aprobación:", err instanceof Error ? err.message : String(err));
       return NextResponse.json(
         { error: "No se pudo enviar la solicitud. Verificá la configuración de email." },
         { status: 500 }

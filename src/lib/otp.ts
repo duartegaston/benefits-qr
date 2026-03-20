@@ -1,9 +1,11 @@
+import { randomInt } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { sendOtpWhatsapp } from "@/lib/whatsapp";
 import { sendClienteOtpEmail } from "@/lib/email";
 
+/** Generates a cryptographically secure 6-digit OTP code. */
 export function generateOtpCode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return randomInt(100000, 1000000).toString();
 }
 
 export async function createAndSendOtp(contact: { email: string } | { phone: string }) {

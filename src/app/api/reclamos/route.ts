@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createAndSendOtp } from "@/lib/otp";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
+
 export async function POST(req: NextRequest) {
   try {
     const { beneficioId, nombre, email, phone, channel } = await req.json();
@@ -15,6 +18,19 @@ export async function POST(req: NextRequest) {
 
     if (channel !== "email" && channel !== "whatsapp") {
       return NextResponse.json({ error: "Canal inválido" }, { status: 400 });
+    }
+
+    // Input validation
+    if (typeof nombre !== "string" || nombre.trim().length === 0 || nombre.length > 100) {
+      return NextResponse.json({ error: "Nombre inválido (máx. 100 caracteres)" }, { status: 400 });
+    }
+
+    if (typeof email !== "string" || !EMAIL_REGEX.test(email) || email.length > 254) {
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    }
+
+    if (typeof phone !== "string" || !PHONE_REGEX.test(phone)) {
+      return NextResponse.json({ error: "Número de teléfono inválido" }, { status: 400 });
     }
 
     const beneficio = await prisma.beneficio.findUnique({
@@ -120,7 +136,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error("[reclamos]", error instanceof Error ? error.message : String(error));
     return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
   }
 }

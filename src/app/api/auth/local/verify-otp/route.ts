@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqual } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { createSession, setSessionCookie } from "@/lib/auth";
+import { checkVerifyAttempts, clearVerifyAttempts } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
   const { email, code } = await req.json();
@@ -10,6 +12,14 @@ export async function POST(req: NextRequest) {
   }
 
   const normalized = email.trim().toLowerCase();
+
+  // Brute force protection: max 5 attempts per 15 minutes
+  if (!checkVerifyAttempts(`verify:local:${normalized}`)) {
+    return NextResponse.json(
+      { error: "Demasiados intentos fallidos. Solicitá un nuevo código." },
+      { status: 429 }
+    );
+  }
 
   const otp = await prisma.localOtp.findUnique({ where: { email: normalized } });
 
@@ -24,15 +34,21 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (otp.code !== code) {
-    return NextResponse.json({ error: "Código incorrecto" }, { status: 401 });
-  }
-
   if (otp.expiresAt < new Date()) {
     return NextResponse.json({ error: "El código expiró. Solicitá uno nuevo." }, { status: 401 });
   }
 
-  // OTP valid — delete it
+  // Timing-safe comparison to prevent side-channel attacks
+  const codeA = Buffer.from(otp.code, "utf8");
+  const codeB = Buffer.from(String(code), "utf8");
+  const codeMatch = codeA.length === codeB.length && timingSafeEqual(codeA, codeB);
+
+  if (!codeMatch) {
+    return NextResponse.json({ error: "Código incorrecto" }, { status: 401 });
+  }
+
+  // OTP valid — clean up
+  clearVerifyAttempts(`verify:local:${normalized}`);
   await prisma.localOtp.delete({ where: { email: normalized } });
 
   // Find or create local
