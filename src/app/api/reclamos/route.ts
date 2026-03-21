@@ -1,26 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createAndSendOtp } from "@/lib/otp";
+import { createSession } from "@/lib/auth";
+import { sendMagicLink } from "@/lib/email";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
 
 export async function POST(req: NextRequest) {
   try {
-    const { beneficioId, nombre, email, phone, channel } = await req.json();
+    const { beneficioId, nombre, email, phone } = await req.json();
 
-    if (!beneficioId || !nombre || !email || !phone || !channel) {
+    if (!beneficioId || !nombre || !email || !phone) {
       return NextResponse.json(
-        { error: "Nombre, email y WhatsApp son requeridos" },
+        { error: "Nombre, email y teléfono son requeridos" },
         { status: 400 }
       );
     }
 
-    if (channel !== "email" && channel !== "whatsapp") {
-      return NextResponse.json({ error: "Canal inválido" }, { status: 400 });
-    }
-
-    // Input validation
     if (typeof nombre !== "string" || nombre.trim().length === 0 || nombre.length > 100) {
       return NextResponse.json({ error: "Nombre inválido (máx. 100 caracteres)" }, { status: 400 });
     }
@@ -79,7 +75,7 @@ export async function POST(req: NextRequest) {
     // Cross-conflict: email already registered with a different phone
     if (clienteByEmail && clienteByEmail.phone && clienteByEmail.phone !== phone) {
       return NextResponse.json(
-        { error: "Este email ya está registrado con otro número de WhatsApp" },
+        { error: "Este email ya está registrado con otro número de teléfono" },
         { status: 400 }
       );
     }
@@ -87,25 +83,23 @@ export async function POST(req: NextRequest) {
     // Cross-conflict: phone already registered with a different email
     if (clienteByPhone && clienteByPhone.email && clienteByPhone.email !== email) {
       return NextResponse.json(
-        { error: "Este número de WhatsApp ya está registrado con otro email" },
+        { error: "Este número de teléfono ya está registrado con otro email" },
         { status: 400 }
       );
     }
 
-    // Split-identity: email and phone exist but in separate records → would cause P2002 on update
+    // Split-identity: email and phone exist but in separate records
     if (clienteByEmail && clienteByPhone && clienteByEmail.id !== clienteByPhone.id) {
       return NextResponse.json(
-        { error: "El email y el WhatsApp ya están registrados en cuentas separadas. Contactate con el negocio." },
+        { error: "El email y el teléfono ya están registrados en cuentas separadas. Contactate con el negocio." },
         { status: 400 }
       );
     }
 
-    // Use existing record or create a new unified one
     let cliente = clienteByEmail ?? clienteByPhone;
     if (!cliente) {
       cliente = await prisma.cliente.create({ data: { nombre, email, phone } });
     } else {
-      // Update missing fields if any
       const updates: Record<string, string> = {};
       if (!cliente.nombre) updates.nombre = nombre;
       if (!cliente.email) updates.email = email;
@@ -123,8 +117,9 @@ export async function POST(req: NextRequest) {
       if (existingReclamo.estado === "CANJEADO") {
         return NextResponse.json({ error: "Ya canjeaste este beneficio" }, { status: 409 });
       }
-      // Reclamo exists but not redeemed → resend OTP
-      await createAndSendOtp(channel === "email" ? { email } : { phone });
+      // Reclamo exists but not redeemed → resend magic link
+      const session = await createSession(cliente.id, "CLIENTE", 24);
+      await sendMagicLink(email, session.token, "/mis-beneficios");
       return NextResponse.json({ success: true, reclamoId: existingReclamo.id });
     }
 
@@ -132,7 +127,8 @@ export async function POST(req: NextRequest) {
       data: { beneficioId, clienteId: cliente.id },
     });
 
-    await createAndSendOtp(channel === "email" ? { email } : { phone });
+    const session = await createSession(cliente.id, "CLIENTE", 24);
+    await sendMagicLink(email, session.token, "/mis-beneficios");
 
     return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
   } catch (error) {

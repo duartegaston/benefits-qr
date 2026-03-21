@@ -1,57 +1,28 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
 import PhoneInput from "./ui/PhoneInput";
 
-type Channel = "email" | "whatsapp";
-type Step = "form" | "otp";
+type Step = "form" | "sent";
 
 export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
-  const router = useRouter();
   const [step, setStep] = useState<Step>("form");
-  const [channel, setChannel] = useState<Channel>("email");
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("+54");
-  const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(selectedChannel: Channel) {
-    setError("");
-    setLoading(true);
-    setChannel(selectedChannel);
-
-    const res = await fetch("/api/reclamos", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ beneficioId, nombre, email, phone, channel: selectedChannel }),
-    });
-
-    const data = await res.json();
-    setLoading(false);
-
-    if (!res.ok) {
-      setError(data.error);
-      return;
-    }
-
-    setStep("otp");
-  }
-
-  async function handleVerifyOtp(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    const body = channel === "email" ? { email, code: otp } : { phone, code: otp };
-
-    const res = await fetch("/api/auth/cliente/verify-otp", {
+    const res = await fetch("/api/reclamos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ beneficioId, nombre, email, phone }),
     });
 
     const data = await res.json();
@@ -62,47 +33,36 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
       return;
     }
 
-    router.push(data.redirect || "/mis-beneficios");
+    setStep("sent");
   }
 
-  if (step === "otp") {
-    const contact = channel === "email" ? email : phone;
-    const via = channel === "email" ? "email" : "WhatsApp";
-
+  if (step === "sent") {
     return (
-      <form onSubmit={handleVerifyOtp} className="space-y-4">
-        <div className="text-center mb-2">
-          <p className="text-sm text-gray-600">
-            Te enviamos un código por {via} a <strong>{contact}</strong>
+      <div className="text-center space-y-4">
+        <div className="w-14 h-14 bg-violet-100 rounded-full flex items-center justify-center mx-auto">
+          <svg aria-hidden="true" className="w-7 h-7 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <p className="font-semibold text-gray-900">Revisá tu email</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Te enviamos un link a <strong>{email}</strong> para acceder a tu beneficio.
           </p>
         </div>
-        <Input
-          label="Código de verificación"
-          type="text"
-          inputMode="numeric"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          placeholder="123456"
-          error={error}
-          maxLength={6}
-          required
-        />
-        <Button type="submit" loading={loading} className="w-full" size="lg">
-          Verificar código
-        </Button>
         <button
           type="button"
-          onClick={() => { setStep("form"); setOtp(""); setError(""); }}
-          className="w-full text-sm text-gray-500 hover:text-gray-700"
+          onClick={() => { setStep("form"); setError(""); }}
+          className="text-sm text-gray-500 hover:text-gray-700"
         >
-          ← Volver
+          ← Usar otro email
         </button>
-      </form>
+      </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <Input
         label="Tu nombre"
         type="text"
@@ -120,35 +80,15 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         required
       />
       <PhoneInput
-        label="Tu WhatsApp"
+        label="Tu teléfono"
         value={phone}
         onChange={setPhone}
         required
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <div className="flex gap-3">
-        <Button
-          type="button"
-          loading={loading && channel === "email"}
-          disabled={loading}
-          onClick={() => handleSubmit("email")}
-          className="flex-1"
-          size="lg"
-        >
-          Recibir código por Email
-        </Button>
-        <Button
-          type="button"
-          loading={loading && channel === "whatsapp"}
-          disabled={loading}
-          onClick={() => handleSubmit("whatsapp")}
-          className="flex-1"
-          size="lg"
-          variant="secondary"
-        >
-          Recibir código por WhatsApp
-        </Button>
-      </div>
-    </div>
+      <Button type="submit" loading={loading} className="w-full" size="lg">
+        Recibir link de acceso
+      </Button>
+    </form>
   );
 }
