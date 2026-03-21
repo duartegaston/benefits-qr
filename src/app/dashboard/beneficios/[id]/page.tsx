@@ -110,12 +110,16 @@ export default async function BeneficioStatsPage({
                   <p className="font-medium text-gray-900">
                     {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    Reclamó:{" "}
-                    {new Date(r.fechaReclamo).toLocaleString("es-AR")}
-                    {r.fechaCanje &&
-                      ` · Canjeó: ${new Date(r.fechaCanje).toLocaleString("es-AR")}`}
-                  </p>
+                  <div className="text-xs text-gray-500 mt-0.5 space-y-0.5">
+                    {r.cliente.email && <p>{r.cliente.email}</p>}
+                    {r.cliente.phone && <p>{r.cliente.phone}</p>}
+                    <p className="text-gray-400">
+                      Reclamó:{" "}
+                      {new Date(r.fechaReclamo).toLocaleString("es-AR")}
+                      {r.fechaCanje &&
+                        ` · Canjeó: ${new Date(r.fechaCanje).toLocaleString("es-AR")}`}
+                    </p>
+                  </div>
                 </div>
                 <Badge
                   color={

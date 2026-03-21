@@ -86,11 +86,12 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
         />
 
         <Input
-          label="Dirección (opcional)"
+          label="Dirección"
           type="text"
           value={direccion}
           onChange={(e) => setDireccion(e.target.value)}
           placeholder="Ej: Av. Corrientes 1234, Buenos Aires"
+          required
         />
 
         <PhoneInput

@@ -87,15 +87,8 @@ export default function LoginPage() {
               </div>
               <h2 className="font-semibold text-gray-800 text-lg">Solicitud en revisión</h2>
               <p className="text-sm text-amber-700 bg-amber-50 rounded-xl p-4 leading-relaxed">
-                Tu solicitud está siendo revisada. Recibirás tu código de acceso por email una vez que sea aprobada.
+                Tu solicitud está siendo revisada. Te avisaremos por email cuando sea aprobada — ahí recibirás un link directo para completar tu registro.
               </p>
-              <button
-                type="button"
-                onClick={() => { setStep("otp"); setError(""); }}
-                className="w-full py-2.5 px-4 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-xl text-sm transition-colors"
-              >
-                Ya recibí mi código
-              </button>
               <button
                 type="button"
                 onClick={() => { setStep("email"); setEmail(""); setError(""); }}
@@ -116,7 +109,7 @@ export default function LoginPage() {
               />
               {error && <p className="text-sm text-red-500">{error}</p>}
               <Button type="submit" loading={loading} className="w-full" size="lg">
-                Enviar código
+                Acceder
               </Button>
             </form>
           ) : (

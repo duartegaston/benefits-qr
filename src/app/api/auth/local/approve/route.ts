@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyApprovalToken } from "@/lib/approvalToken";
-import { sendOtpEmail } from "@/lib/email";
+import { sendLocalOnboardingMagicLink } from "@/lib/email";
+import { createSession } from "@/lib/auth";
 
 function html(title: string, color: string, message: string) {
   return new NextResponse(
@@ -81,26 +82,32 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  // Approve: mark as not pending, then send OTP to the merchant
-  await prisma.localOtp.update({
-    where: { email: payload.email },
-    data: { pendingApproval: false },
-  });
+  // Crear el registro Local si no existe
+  let local = await prisma.local.findUnique({ where: { email: payload.email } });
+  if (!local) {
+    local = await prisma.local.create({ data: { email: payload.email } });
+  }
+
+  // Crear sesión de 2h como token del magic link
+  const session = await createSession(local.id, "LOCAL", 2);
+
+  // Limpiar LocalOtp — ya no se necesita
+  await prisma.localOtp.delete({ where: { email: payload.email } });
 
   try {
-    await sendOtpEmail(payload.email, otp.code);
+    await sendLocalOnboardingMagicLink(payload.email, session.token);
   } catch (err) {
-    console.error("[approve] Error enviando OTP:", err);
+    console.error("[approve] Error enviando magic link:", err);
     return html(
-      "Error al enviar código",
+      "Error al enviar enlace",
       "#dc2626",
-      "Se aprobó el acceso pero no se pudo enviar el código. Revisá la configuración de email."
+      "Se aprobó el acceso pero no se pudo enviar el email. Revisá la configuración de Resend."
     );
   }
 
   return html(
     "Acceso aprobado",
     "#16a34a",
-    `Se envió el código de acceso a <strong>${payload.email}</strong>. El local ya puede ingresar.`
+    `Se envió el enlace de acceso a <strong>${payload.email}</strong>. El local ya puede completar su registro.`
   );
 }
