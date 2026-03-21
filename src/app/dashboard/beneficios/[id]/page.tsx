@@ -6,6 +6,7 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 
 const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const PAGE_SIZE = 10;
 
 function formatDias(dias: number[]): string {
   if (dias.length === 0) return "Válido todos los días";
@@ -17,35 +18,44 @@ function formatDias(dias: number[]): string {
 
 export default async function BeneficioStatsPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const { id } = await params;
+  const [{ id }, { page: pageParam }] = await Promise.all([params, searchParams]);
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+
   const session = await getSessionFromCookies();
   if (!session || session.userType !== "LOCAL") redirect("/login");
 
-  const beneficio = await prisma.beneficio.findFirst({
-    where: { id, localId: session.userId },
-    include: {
-      _count: { select: { reclamos: true } },
-      reclamos: {
+  const [beneficio, totalReclamos, totalCanjeados, totalPendientes, reclamos] =
+    await Promise.all([
+      prisma.beneficio.findFirst({
+        where: { id, localId: session.userId },
+      }),
+      prisma.reclamo.count({
+        where: { beneficioId: id, beneficio: { localId: session.userId } },
+      }),
+      prisma.reclamo.count({
+        where: { beneficioId: id, beneficio: { localId: session.userId }, estado: "CANJEADO" },
+      }),
+      prisma.reclamo.count({
+        where: { beneficioId: id, beneficio: { localId: session.userId }, estado: "PENDIENTE" },
+      }),
+      prisma.reclamo.findMany({
+        where: { beneficioId: id, beneficio: { localId: session.userId } },
         include: { cliente: { select: { email: true, phone: true, nombre: true } } },
         orderBy: { fechaReclamo: "desc" },
-        take: 100,
-      },
-    },
-  });
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+    ]);
 
   if (!beneficio) redirect("/dashboard");
 
   const isExpired = beneficio.fechaExpiracion < new Date();
-  const canjeados = beneficio.reclamos.filter(
-    (r: { estado: string }) => r.estado === "CANJEADO"
-  ).length;
-  const pendientes = beneficio.reclamos.filter(
-    (r: { estado: string }) => r.estado === "PENDIENTE"
-  ).length;
-  const totalReclamos = beneficio._count.reclamos;
+  const totalPages = Math.ceil(totalReclamos / PAGE_SIZE);
 
   return (
     <main className="min-h-screen p-4 sm:p-6 max-w-4xl mx-auto">
@@ -77,17 +87,15 @@ export default async function BeneficioStatsPage({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
           <div className="text-center p-4 bg-gray-50 rounded-xl">
-            <p className="text-2xl font-bold text-gray-900">
-              {totalReclamos}
-            </p>
+            <p className="text-2xl font-bold text-gray-900">{totalReclamos}</p>
             <p className="text-xs text-gray-500 mt-1">Reclamos</p>
           </div>
           <div className="text-center p-4 bg-green-50 rounded-xl">
-            <p className="text-2xl font-bold text-green-600">{canjeados}</p>
+            <p className="text-2xl font-bold text-green-600">{totalCanjeados}</p>
             <p className="text-xs text-gray-500 mt-1">Canjeados</p>
           </div>
           <div className="text-center p-4 bg-violet-50 rounded-xl">
-            <p className="text-2xl font-bold text-violet-600">{pendientes}</p>
+            <p className="text-2xl font-bold text-violet-600">{totalPendientes}</p>
             <p className="text-xs text-gray-500 mt-1">Pendientes</p>
           </div>
         </div>
@@ -97,13 +105,13 @@ export default async function BeneficioStatsPage({
         Clientes ({totalReclamos})
       </h2>
 
-      {beneficio.reclamos.length === 0 ? (
+      {totalReclamos === 0 ? (
         <Card className="p-8 text-center">
           <p className="text-gray-400">Nadie reclamó este cupón aún</p>
         </Card>
       ) : (
         <div className="space-y-2">
-          {beneficio.reclamos.map((r) => (
+          {reclamos.map((r) => (
             <Card key={r.id} className="p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -135,6 +143,36 @@ export default async function BeneficioStatsPage({
               </div>
             </Card>
           ))}
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-2">
+              <Link
+                href={`/dashboard/beneficios/${id}?page=${page - 1}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  page <= 1
+                    ? "pointer-events-none text-gray-300 bg-gray-50"
+                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                }`}
+                aria-disabled={page <= 1}
+              >
+                ← Anterior
+              </Link>
+              <span className="text-sm text-gray-500">
+                Página {page} de {totalPages}
+              </span>
+              <Link
+                href={`/dashboard/beneficios/${id}?page=${page + 1}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  page >= totalPages
+                    ? "pointer-events-none text-gray-300 bg-gray-50"
+                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                }`}
+                aria-disabled={page >= totalPages}
+              >
+                Siguiente →
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </main>
