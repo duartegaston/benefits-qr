@@ -1,21 +1,13 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Card from "./ui/Card";
 import Input from "./ui/Input";
 import Button from "./ui/Button";
-import PhoneInput from "./ui/PhoneInput";
-
-type Channel = "email" | "whatsapp";
 
 export default function ClienteLoginForm() {
-  const router = useRouter();
-  const [channel, setChannel] = useState<Channel>("email");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("+54");
-  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<"form" | "otp">("form");
+  const [step, setStep] = useState<"form" | "sent">("form");
   const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
@@ -23,94 +15,44 @@ export default function ClienteLoginForm() {
     setError("");
     setLoading(true);
 
-    const body = channel === "email" ? { email } : { phone };
-
-    const res = await fetch("/api/auth/cliente/request-link", {
+    const res = await fetch("/api/auth/cliente/magic-link", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ email }),
     });
 
     setLoading(false);
 
     if (!res.ok) {
-      setError("Hubo un error. Intentá de nuevo.");
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || "Hubo un error. Intentá de nuevo.");
       return;
     }
 
-    setStep("otp");
+    setStep("sent");
   }
 
-  async function handleVerifyOtp(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    const body = channel === "email" ? { email, code: otp } : { phone, code: otp };
-
-    const res = await fetch("/api/auth/cliente/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-
-    const data = await res.json();
-    setLoading(false);
-
-    if (!res.ok) {
-      setError(data.error);
-      return;
-    }
-
-    router.push(data.redirect || "/mis-beneficios");
-  }
-
-  if (step === "otp") {
-    const contact = channel === "email" ? email : phone;
-    const via = channel === "email" ? "email" : "WhatsApp";
-
+  if (step === "sent") {
     return (
       <Card className="w-full max-w-md p-6 sm:p-8">
-        <div className="text-center mb-6">
+        <div className="text-center">
           <div className="w-14 h-14 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            {channel === "email" ? (
-              <svg aria-hidden="true" className="w-7 h-7 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            ) : (
-              <svg aria-hidden="true" className="w-7 h-7 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-            )}
+            <svg aria-hidden="true" className="w-7 h-7 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-1">Ingresá el código</h2>
-          <p className="text-gray-500 text-sm">
-            Te enviamos un código por {via} a <strong>{contact}</strong>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Revisá tu email</h2>
+          <p className="text-gray-500 text-sm mb-6">
+            Te enviamos un link a <strong>{email}</strong>. Hacé clic en él para acceder a tus beneficios.
           </p>
-        </div>
-        <form onSubmit={handleVerifyOtp} className="space-y-4">
-          <Input
-            label="Código de verificación"
-            type="text"
-            inputMode="numeric"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="123456"
-            error={error}
-            maxLength={6}
-            required
-          />
-          <Button type="submit" loading={loading} className="w-full" size="lg">
-            Ingresar
-          </Button>
           <button
             type="button"
-            onClick={() => { setStep("form"); setOtp(""); setError(""); }}
-            className="w-full text-sm text-gray-500 hover:text-gray-700"
+            onClick={() => { setStep("form"); setEmail(""); setError(""); }}
+            className="text-sm text-gray-500 hover:text-gray-700"
           >
-            ← Usar otro {channel === "email" ? "email" : "número"}
+            ← Usar otro email
           </button>
-        </form>
+        </div>
       </Card>
     );
   }
@@ -120,58 +62,21 @@ export default function ClienteLoginForm() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Mis beneficios</h1>
         <p className="text-gray-500 text-sm">
-          Ingresá tu email o WhatsApp para acceder
+          Ingresá tu email para recibir un link de acceso
         </p>
       </div>
-
-      {/* Channel tabs */}
-      <div className="flex rounded-lg border border-gray-200 overflow-hidden mb-4">
-        <button
-          type="button"
-          onClick={() => { setChannel("email"); setError(""); }}
-          className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            channel === "email"
-              ? "bg-violet-600 text-white"
-              : "bg-white text-gray-600 hover:bg-gray-50"
-          }`}
-        >
-          Email
-        </button>
-        <button
-          type="button"
-          onClick={() => { setChannel("whatsapp"); setError(""); }}
-          className={`flex-1 py-2 text-sm font-medium transition-colors ${
-            channel === "whatsapp"
-              ? "bg-violet-600 text-white"
-              : "bg-white text-gray-600 hover:bg-gray-50"
-          }`}
-        >
-          WhatsApp
-        </button>
-      </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
-        {channel === "email" ? (
-          <Input
-            label="Tu email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
-            error={error}
-            required
-          />
-        ) : (
-          <PhoneInput
-            label="Tu WhatsApp"
-            value={phone}
-            onChange={setPhone}
-            error={error}
-            required
-          />
-        )}
+        <Input
+          label="Tu email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="tu@email.com"
+          error={error}
+          required
+        />
         <Button type="submit" loading={loading} className="w-full" size="lg">
-          {channel === "email" ? "Enviar código" : "Enviar código"}
+          Enviar link
         </Button>
       </form>
     </Card>

@@ -1,40 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createAndSendOtp } from "@/lib/otp";
+import { createSession } from "@/lib/auth";
+import { sendMagicLink } from "@/lib/email";
 import { checkRequestLimit } from "@/lib/rateLimit";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, phone, nombre } = await req.json();
+    const { email } = await req.json();
 
-    if (!email && !phone) {
-      return NextResponse.json({ error: "Email o teléfono requerido" }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: "Email requerido" }, { status: 400 });
     }
 
-    const key = email ?? phone;
-
-    // Rate limit: 1 request per email/phone per 2 minutes
-    if (!checkRequestLimit(`otp:cliente:${key}`)) {
+    // Rate limit: 1 request per email per 2 minutes
+    if (!checkRequestLimit(`magic-link:cliente:${email}`)) {
       return NextResponse.json(
-        { error: "Demasiados intentos. Esperá 2 minutos antes de solicitar un nuevo código." },
+        { error: "Demasiados intentos. Esperá 2 minutos antes de solicitar un nuevo link." },
         { status: 429 }
       );
     }
 
-    let cliente;
-    if (email) {
-      cliente = await prisma.cliente.findUnique({ where: { email } });
-      if (!cliente) {
-        cliente = await prisma.cliente.create({ data: { email } });
-      }
-    } else {
-      cliente = await prisma.cliente.findUnique({ where: { phone } });
-      if (!cliente) {
-        cliente = await prisma.cliente.create({ data: { phone, nombre } });
-      }
+    let cliente = await prisma.cliente.findUnique({ where: { email } });
+    if (!cliente) {
+      cliente = await prisma.cliente.create({ data: { email } });
     }
 
-    await createAndSendOtp(email ? { email } : { phone });
+    const session = await createSession(cliente.id, "CLIENTE", 1);
+    await sendMagicLink(email, session.token, "/mis-beneficios");
 
     return NextResponse.json({ success: true });
   } catch (error) {

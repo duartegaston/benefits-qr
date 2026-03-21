@@ -18,8 +18,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-12">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-left max-w-sm mx-auto">
+        <div className="mt-12 flex flex-col items-center gap-4">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-left max-w-sm w-full">
             <h2 className="font-semibold text-gray-900 mb-2">Para Locales</h2>
             <p className="text-gray-500 text-sm mb-4">
               Registrá tu local, creá beneficios y gestioná los canjes.
@@ -29,6 +29,18 @@ export default function Home() {
               className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors inline-block"
             >
               Ingresar
+            </Link>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-left max-w-sm w-full">
+            <h2 className="font-semibold text-gray-900 mb-2">Para Clientes</h2>
+            <p className="text-gray-500 text-sm mb-4">
+              Accedé a todos tus cupones y beneficios en un solo lugar.
+            </p>
+            <Link
+              href="/mis-beneficios"
+              className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors inline-block"
+            >
+              Ver mis beneficios
             </Link>
           </div>
         </div>
