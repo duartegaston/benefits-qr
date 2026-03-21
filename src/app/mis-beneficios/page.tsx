@@ -22,6 +22,11 @@ export default async function MisBeneficiosPage({
     return (
       <main className="min-h-screen flex items-center justify-center p-4">
         <div className="w-full flex flex-col items-center">
+          <div className="w-full max-w-sm mb-2">
+            <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+              ← Inicio
+            </Link>
+          </div>
           <div className="mb-6">
             <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-violet-300/50" />
           </div>
@@ -49,11 +54,19 @@ export default async function MisBeneficiosPage({
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
-    <main className="min-h-screen px-4 pt-4 pb-32 sm:px-6 sm:pt-6 sm:pb-16 max-w-2xl mx-auto">
-      <div className="flex justify-center mb-6">
-        <Image src="/logo.png" alt="Qupón" width={72} height={72} className="rounded-2xl shadow-lg shadow-violet-300/50" />
+    <main className="min-h-screen px-4 pt-6 pb-16 sm:px-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
+      <div className="mb-6">
+        <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+          ← Inicio
+        </Link>
       </div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Mis cupones</h1>
+      <div className="flex items-center gap-4 mb-8">
+        <Image src="/logo.png" alt="Qupón" width={56} height={56} className="rounded-2xl shadow-lg shadow-violet-400/30 ring-2 ring-white/60 shrink-0" />
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Mis cupones</h1>
+          <p className="text-sm text-gray-400">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
+        </div>
+      </div>
       <MisBeneficiosList reclamos={reclamos} />
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4">

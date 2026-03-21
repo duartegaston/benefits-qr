@@ -31,7 +31,7 @@ export default function MisBeneficiosList({
 
   if (reclamos.length === 0) {
     return (
-      <Card className="p-12 text-center">
+      <Card className="p-12 text-center bg-white/75 backdrop-blur-md border-white/70">
         <p className="text-gray-400">No tenés cupones reclamados aún</p>
       </Card>
     );
@@ -48,8 +48,8 @@ export default function MisBeneficiosList({
           .toUpperCase();
 
         return (
-          <Card key={r.id} className="overflow-hidden">
-            <div className="h-1 bg-violet-600" />
+          <Card key={r.id} className="overflow-hidden bg-white/75 backdrop-blur-md border-white/70 hover:-translate-y-0.5 transition-all duration-200">
+            <div className="h-1 bg-gradient-to-r from-violet-600 to-violet-400" />
             <div className="p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">

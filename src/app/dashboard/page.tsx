@@ -75,17 +75,17 @@ export default async function DashboardPage({
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "0ms" }}>
+        <Card className="p-6 bg-white/75 backdrop-blur-md border-white/70 shadow-md shadow-violet-100/40 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "0ms" }}>
           <p className="text-sm text-gray-500 mb-1">Cupones</p>
           <p className="text-3xl font-bold text-gray-900">{totalBeneficios}</p>
         </Card>
-        <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "80ms" }}>
+        <Card className="p-6 bg-white/75 backdrop-blur-md border-white/70 shadow-md shadow-violet-100/40 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "80ms" }}>
           <p className="text-sm text-gray-500 mb-1">Total reclamos</p>
           <p className="text-3xl font-bold text-gray-900">{totalReclamos}</p>
         </Card>
-        <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "160ms" }}>
-          <p className="text-sm text-gray-500 mb-1">Canjeados</p>
-          <p className="text-3xl font-bold text-violet-600">{totalCanjeados}</p>
+        <Card className="p-6 bg-violet-600 border-violet-500/40 shadow-md shadow-violet-300/30 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "160ms" }}>
+          <p className="text-sm text-violet-200 mb-1">Canjeados</p>
+          <p className="text-3xl font-bold text-white">{totalCanjeados}</p>
         </Card>
       </div>
 
@@ -101,7 +101,7 @@ export default async function DashboardPage({
       </div>
 
       {totalBeneficios === 0 ? (
-        <Card className="p-12 text-center">
+        <Card className="p-12 text-center bg-white/75 backdrop-blur-md border-white/70">
           <p className="text-gray-400 mb-4">No tenés cupones aún</p>
           <Link
             href="/dashboard/beneficios/nuevo"
@@ -119,7 +119,7 @@ export default async function DashboardPage({
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
 
             return (
-              <Card key={b.id} className="p-5 hover:shadow-md transition-shadow duration-200">
+              <Card key={b.id} className="p-5 bg-white/75 backdrop-blur-md border-white/70 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">

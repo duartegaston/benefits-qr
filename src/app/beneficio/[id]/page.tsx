@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 export const revalidate = 60;
 import Image from "next/image";
-import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import ReclamarForm from "@/components/ReclamarForm";
 
@@ -47,19 +46,32 @@ export default async function BeneficioPublicoPage({
     .toUpperCase();
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="pointer-events-none absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full bg-violet-300/50 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 w-[400px] h-[400px] rounded-full bg-violet-200/70 blur-3xl" />
-      <div className="w-full max-w-md relative">
-        <div className="flex justify-center mb-5">
-          <Image src="/logo.png" alt="Qupón" width={80} height={80} className="rounded-2xl shadow-lg shadow-violet-300/50" />
+    <main className="min-h-screen flex flex-col items-center px-4 pt-10 pb-16 relative overflow-x-hidden">
+      {/* Decorative blobs */}
+      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl" />
+
+      <div className="w-full max-w-md relative my-auto animate-[fade-up_0.45s_ease-out_both]">
+        {/* Logo Qupón */}
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/logo.png"
+            alt="Qupón"
+            width={72}
+            height={72}
+            className="rounded-2xl shadow-xl shadow-violet-400/30 ring-4 ring-white/60"
+          />
         </div>
-        <div className="h-2 rounded-t-2xl bg-violet-600" />
-        <Card className="rounded-t-none p-6 sm:p-8">
-          <div className="mb-6">
-            {/* Logo del local */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-violet-100 flex items-center justify-center shrink-0">
+
+        {/* Card */}
+        <div className="overflow-hidden rounded-2xl shadow-xl shadow-violet-100/50">
+          {/* Accent bar */}
+          <div className="h-1.5 bg-gradient-to-r from-violet-600 to-violet-400" />
+
+          <div className="bg-white/80 backdrop-blur-md border border-t-0 border-white/80 p-6 sm:p-8">
+            {/* Local info */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-violet-100 flex items-center justify-center shrink-0 shadow-sm">
                 {beneficio.local.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -71,15 +83,17 @@ export default async function BeneficioPublicoPage({
                   <span className="text-violet-600 font-bold text-sm">{initials}</span>
                 )}
               </div>
-              <p className="text-sm font-semibold text-violet-600">
-                {beneficio.local.nombre}
-              </p>
+              <div>
+                <p className="text-xs text-gray-400 leading-none mb-0.5">Cupón de</p>
+                <p className="text-sm font-semibold text-gray-800">{beneficio.local.nombre}</p>
+              </div>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+            <h1 className="text-2xl font-bold text-gray-900 mb-3 leading-tight">
               {beneficio.descripcion}
             </h1>
-            <div className="flex gap-2 flex-wrap">
+
+            <div className="flex gap-2 flex-wrap mb-6">
               {isExpired && <Badge color="red">Vencido</Badge>}
               {isAgotado && <Badge color="red">Agotado</Badge>}
               {isWrongDay && !isExpired && !isAgotado && (
@@ -101,25 +115,30 @@ export default async function BeneficioPublicoPage({
                 </Badge>
               )}
             </div>
-          </div>
 
-          {!isExpired && !isAgotado && !isWrongDay ? (
-            <ReclamarForm beneficioId={beneficio.id} />
-          ) : (
-            <div className="bg-red-50 rounded-xl p-4 text-center">
-              <p className="text-red-600 font-medium">
-                {isExpired
-                  ? "Este cupón ya expiró"
-                  : isAgotado
-                  ? "Este cupón está agotado"
-                  : `Este cupón no está disponible los ${DIAS_FULL[todayIndex]}s. Aplica los: ${diasValidos
-                      .sort((a, b) => a - b)
-                      .map((d) => DIAS_FULL[d])
-                      .join(", ")}`}
-              </p>
-            </div>
-          )}
-        </Card>
+            {!isExpired && !isAgotado && !isWrongDay ? (
+              <ReclamarForm beneficioId={beneficio.id} />
+            ) : (
+              <div className="bg-red-50 rounded-xl p-4 text-center">
+                <p className="text-red-600 font-medium text-sm">
+                  {isExpired
+                    ? "Este cupón ya expiró"
+                    : isAgotado
+                    ? "Este cupón está agotado"
+                    : `Este cupón no está disponible los ${DIAS_FULL[todayIndex]}s. Aplica los: ${diasValidos
+                        .sort((a, b) => a - b)
+                        .map((d) => DIAS_FULL[d])
+                        .join(", ")}`}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer branding */}
+        <p className="text-center text-xs text-gray-400/70 mt-5">
+          Powered by Qupón
+        </p>
       </div>
     </main>
   );
