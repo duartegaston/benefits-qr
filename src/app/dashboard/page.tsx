@@ -18,34 +18,45 @@ function formatDias(dias: number[]): string {
   return `Válido los ${nombres.join(", ")} y ${ultimo}`;
 }
 
-export default async function DashboardPage() {
+const PAGE_SIZE = 10;
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+
   const session = await getSessionFromCookies();
   if (!session || session.userType !== "LOCAL") {
     redirect("/login");
   }
 
-  const [local, beneficios, totalCanjeados] = await Promise.all([
-    prisma.local.findUnique({ where: { id: session.userId } }),
-    prisma.beneficio.findMany({
-      where: { localId: session.userId },
-      include: {
-        _count: { select: { reclamos: true } },
-        reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.reclamo.count({
-      where: { beneficio: { localId: session.userId }, estado: "CANJEADO" },
-    }),
-  ]);
+  const [local, beneficios, totalBeneficios, totalReclamos, totalCanjeados] =
+    await Promise.all([
+      prisma.local.findUnique({ where: { id: session.userId } }),
+      prisma.beneficio.findMany({
+        where: { localId: session.userId },
+        include: {
+          _count: { select: { reclamos: true } },
+          reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+      prisma.beneficio.count({ where: { localId: session.userId } }),
+      prisma.reclamo.count({ where: { beneficio: { localId: session.userId } } }),
+      prisma.reclamo.count({
+        where: { beneficio: { localId: session.userId }, estado: "CANJEADO" },
+      }),
+    ]);
 
   if (!local) redirect("/login");
   if (local.nombre === null) redirect("/onboarding");
 
-  const totalReclamos = beneficios.reduce(
-    (sum: number, b) => sum + b._count.reclamos,
-    0
-  );
+  const totalPages = Math.ceil(totalBeneficios / PAGE_SIZE);
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -66,7 +77,7 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "0ms" }}>
           <p className="text-sm text-gray-500 mb-1">Beneficios</p>
-          <p className="text-3xl font-bold text-gray-900">{beneficios.length}</p>
+          <p className="text-3xl font-bold text-gray-900">{totalBeneficios}</p>
         </Card>
         <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "80ms" }}>
           <p className="text-sm text-gray-500 mb-1">Total reclamos</p>
@@ -89,7 +100,7 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {beneficios.length === 0 ? (
+      {totalBeneficios === 0 ? (
         <Card className="p-12 text-center">
           <p className="text-gray-400 mb-4">No tenés beneficios aún</p>
           <Link
@@ -142,6 +153,35 @@ export default async function DashboardPage() {
               </Card>
             );
           })}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-2">
+              <Link
+                href={`/dashboard?page=${page - 1}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  page <= 1
+                    ? "pointer-events-none text-gray-300 bg-gray-50"
+                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                }`}
+                aria-disabled={page <= 1}
+              >
+                ← Anterior
+              </Link>
+              <span className="text-sm text-gray-500">
+                Página {page} de {totalPages}
+              </span>
+              <Link
+                href={`/dashboard?page=${page + 1}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  page >= totalPages
+                    ? "pointer-events-none text-gray-300 bg-gray-50"
+                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                }`}
+                aria-disabled={page >= totalPages}
+              >
+                Siguiente →
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </main>
