@@ -68,13 +68,11 @@ export default function EscanearPage() {
   }
 
   return (
-    <main className="min-h-screen p-4 sm:p-6 max-w-xl mx-auto">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/dashboard" className="text-gray-400 hover:text-gray-600 text-sm">
-          ← Dashboard
-        </Link>
-        <h1 className="text-2xl font-bold text-gray-900">Escanear QR</h1>
-      </div>
+    <main className="min-h-screen px-4 pt-14 pb-8 sm:px-6 sm:pt-6 max-w-xl mx-auto">
+      <Link href="/dashboard" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        ← Dashboard
+      </Link>
+      <h1 className="text-2xl font-bold text-gray-900 mb-8">Escanear QR</h1>
 
       <Card className="p-6">
         {state === "scanning" && (

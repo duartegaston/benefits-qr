@@ -62,7 +62,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3">
       <Input
         label="Tu nombre"
         type="text"
@@ -86,7 +86,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         required
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
-      <Button type="submit" loading={loading} className="w-full" size="lg">
+      <Button type="submit" loading={loading} className="w-full">
         Recibir link de acceso
       </Button>
     </form>

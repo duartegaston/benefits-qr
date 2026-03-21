@@ -63,16 +63,11 @@ export default function NuevoBeneficioPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">
+      <Link href="/dashboard" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        ← Dashboard
+      </Link>
       <Card className="w-full max-w-md p-6 sm:p-8">
-        <div className="flex items-center gap-3 mb-8">
-          <Link
-            href="/dashboard"
-            className="text-gray-400 hover:text-gray-600 text-sm"
-          >
-            ← Volver
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Nuevo cupón</h1>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">Nuevo cupón</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input

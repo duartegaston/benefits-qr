@@ -12,17 +12,19 @@ export default function DashboardActions() {
   }
 
   return (
-    <div className="flex gap-2 flex-wrap">
-      <Button
-        variant="ghost"
-        size="sm"
+    <>
+      <button
+        onClick={handleLogout}
+        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+      >
+        ← Salir
+      </button>
+      <button
         onClick={() => router.push("/dashboard/escanear")}
+        className="px-4 py-1.5 bg-violet-100 text-violet-700 rounded-lg text-sm font-medium hover:bg-violet-200 transition-colors cursor-pointer"
       >
         Escanear QR
-      </Button>
-      <Button variant="secondary" size="sm" onClick={handleLogout}>
-        Salir
-      </Button>
-    </div>
+      </button>
+    </>
   );
 }

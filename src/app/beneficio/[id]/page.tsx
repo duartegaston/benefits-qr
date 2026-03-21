@@ -46,20 +46,20 @@ export default async function BeneficioPublicoPage({
     .toUpperCase();
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-4 pt-10 pb-16 relative overflow-x-hidden">
-      {/* Decorative blobs */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl" />
+    <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-4 sm:py-8 relative">
+      {/* Decorative blobs — desktop only */}
+      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
 
       <div className="w-full max-w-md relative my-auto animate-[fade-up_0.45s_ease-out_both]">
         {/* Logo Qupón */}
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-3">
           <Image
             src="/logo.png"
             alt="Qupón"
-            width={72}
-            height={72}
-            className="rounded-2xl shadow-xl shadow-violet-400/30 ring-4 ring-white/60"
+            width={52}
+            height={52}
+            className="rounded-2xl shadow-lg shadow-violet-400/30 ring-4 ring-white/60"
           />
         </div>
 
@@ -68,10 +68,10 @@ export default async function BeneficioPublicoPage({
           {/* Accent bar */}
           <div className="h-1.5 bg-gradient-to-r from-violet-600 to-violet-400" />
 
-          <div className="bg-white/80 backdrop-blur-md border border-t-0 border-white/80 p-6 sm:p-8">
+          <div className="bg-white/80 sm:backdrop-blur-md border border-t-0 border-white/80 p-4 sm:p-6">
             {/* Local info */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-violet-100 flex items-center justify-center shrink-0 shadow-sm">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-xl overflow-hidden bg-violet-100 flex items-center justify-center shrink-0 shadow-sm">
                 {beneficio.local.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -89,11 +89,11 @@ export default async function BeneficioPublicoPage({
               </div>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 mb-3 leading-tight">
+            <h1 className="text-xl font-bold text-gray-900 mb-2 leading-tight">
               {beneficio.descripcion}
             </h1>
 
-            <div className="flex gap-2 flex-wrap mb-6">
+            <div className="flex gap-2 flex-wrap mb-3">
               {isExpired && <Badge color="red">Vencido</Badge>}
               {isAgotado && <Badge color="red">Agotado</Badge>}
               {isWrongDay && !isExpired && !isAgotado && (
@@ -136,7 +136,7 @@ export default async function BeneficioPublicoPage({
         </div>
 
         {/* Footer branding */}
-        <p className="text-center text-xs text-gray-400/70 mt-5">
+        <p className="text-center text-xs text-gray-400/70 mt-3">
           Powered by Qupón
         </p>
       </div>

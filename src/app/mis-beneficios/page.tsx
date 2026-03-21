@@ -20,15 +20,16 @@ export default async function MisBeneficiosPage({
   // Sin sesión → mostrar formulario de acceso
   if (!session || session.userType !== "CLIENTE") {
     return (
-      <main className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full flex flex-col items-center">
-          <div className="w-full max-w-sm mb-2">
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
-              ← Inicio
-            </Link>
-          </div>
+      <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
+        {/* Back link — fixed top-left */}
+        <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+          ← Inicio
+        </Link>
+
+        {/* Logo + form — centrado */}
+        <div className="w-full flex-1 flex flex-col items-center justify-center animate-[fade-up_0.45s_ease-out_both]">
           <div className="mb-6">
-            <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-violet-300/50" />
+            <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-violet-300/50 ring-4 ring-white/60" />
           </div>
           <ClienteLoginForm />
         </div>
@@ -54,12 +55,10 @@ export default async function MisBeneficiosPage({
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
-    <main className="min-h-screen px-4 pt-6 pb-16 sm:px-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
-      <div className="mb-6">
-        <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors">
-          ← Inicio
-        </Link>
-      </div>
+    <main className="min-h-screen px-4 pt-16 pb-16 sm:px-6 sm:pt-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
+      <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        ← Inicio
+      </Link>
       <div className="flex items-center gap-4 mb-8">
         <Image src="/logo.png" alt="Qupón" width={56} height={56} className="rounded-2xl shadow-lg shadow-violet-400/30 ring-2 ring-white/60 shrink-0" />
         <div>
