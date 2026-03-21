@@ -67,7 +67,7 @@ const FEATURES = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center px-6 pt-14 pb-24 sm:px-8 sm:py-20 relative overflow-x-hidden">
+    <main className="min-h-screen sm:h-screen flex flex-col items-center px-6 pt-14 pb-24 sm:px-8 sm:py-8 relative overflow-x-hidden sm:overflow-hidden">
       {/* Background blobs */}
       <div className="pointer-events-none absolute -top-56 -left-56 w-[800px] h-[800px] rounded-full bg-violet-400/25 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-56 -right-56 w-[700px] h-[700px] rounded-full bg-violet-300/40 blur-3xl" />
