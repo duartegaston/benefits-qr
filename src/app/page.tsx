@@ -67,11 +67,11 @@ const FEATURES = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen sm:h-screen flex flex-col items-center px-6 pt-14 pb-24 sm:px-8 sm:py-8 relative overflow-x-hidden sm:overflow-hidden">
-      {/* Background blobs */}
-      <div className="pointer-events-none absolute -top-56 -left-56 w-[800px] h-[800px] rounded-full bg-violet-400/25 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-56 -right-56 w-[700px] h-[700px] rounded-full bg-violet-300/40 blur-3xl" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-white/25 blur-3xl" />
+    <main className="min-h-screen sm:h-screen flex flex-col items-center px-6 pt-14 pb-36 sm:px-8 sm:py-8 relative sm:overflow-hidden">
+      {/* Background blobs — desktop only (blur-3xl causes scroll jank on mobile) */}
+      <div className="pointer-events-none absolute -top-56 -left-56 w-[800px] h-[800px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-56 -right-56 w-[700px] h-[700px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-white/25 blur-3xl hidden sm:block" />
 
       <div className="max-w-2xl w-full text-center relative z-10 my-auto">
 
@@ -88,7 +88,7 @@ export default function Home() {
 
         {/* Badge */}
         <div className="animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "60ms" }}>
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/65 backdrop-blur-sm border border-violet-200/70 text-violet-700 text-sm font-medium shadow-sm">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/85 sm:bg-white/65 sm:backdrop-blur-sm border border-violet-200/70 text-violet-700 text-sm font-medium shadow-sm">
             <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse shrink-0" />
             Plataforma de cupones digitales con QR
           </span>
@@ -123,7 +123,7 @@ export default function Home() {
           {FEATURES.map((f) => (
             <span
               key={f.label}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/70 backdrop-blur-sm rounded-full border border-gray-200/60 text-sm text-gray-700 font-medium shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/90 sm:bg-white/70 sm:backdrop-blur-sm rounded-full border border-gray-200/60 text-sm text-gray-700 font-medium shadow-sm"
             >
               {f.icon}
               {f.label}
@@ -137,7 +137,7 @@ export default function Home() {
           style={{ animationDelay: "380ms" }}
         >
           {/* Para Negocios */}
-          <div className="group bg-white/75 backdrop-blur-md rounded-2xl p-6 border border-white/80 shadow-lg shadow-violet-100/60 text-left hover:shadow-xl hover:shadow-violet-200/60 hover:-translate-y-0.5 transition-all duration-300">
+          <div className="group bg-white/90 sm:bg-white/75 sm:backdrop-blur-md rounded-2xl p-6 border border-white/80 shadow-lg shadow-violet-100/60 text-left hover:shadow-xl hover:shadow-violet-200/60 hover:-translate-y-0.5 transition-all duration-300">
             <div className="w-11 h-11 rounded-xl bg-violet-100 flex items-center justify-center mb-4 text-violet-600">
               <IconBuilding />
             </div>

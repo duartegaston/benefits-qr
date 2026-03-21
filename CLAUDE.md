@@ -90,3 +90,29 @@ BLOB_READ_WRITE_TOKEN=          # Vercel Blob (optional — base64 fallback used
 ```
 
 Google OAuth callback URI to register in Google Cloud Console: `http://localhost:3000/api/auth/local/google/callback`
+
+## UI / Mobile performance rules
+
+### backdrop-blur en mobile
+`backdrop-blur` dentro de contenedores con scroll causa jank en mobile (el browser recompone capas GPU en cada frame). Regla:
+- **Nunca** aplicar `backdrop-blur-*` sin prefijo `sm:` en elementos dentro de páginas scrollables.
+- Forma correcta: `bg-white/90 sm:bg-white/75 sm:backdrop-blur-md`
+- En páginas que son `h-screen overflow-hidden` en desktop (sin scroll) sí se puede usar sin prefijo porque no hay scroll.
+
+### blur-3xl decorativo en mobile
+Los blobs decorativos con `blur-3xl` son costosos de renderizar durante el scroll. En páginas con scroll en mobile:
+- Agregar `hidden sm:block` a los blobs decorativos.
+- El gradiente del `body` (`bg-gradient-to-br`) es suficiente fondo en mobile.
+
+### overflow-hidden y position: fixed
+`overflow: hidden` en un ancestro rompe `position: fixed` en sus hijos (el fixed queda relativo al ancestro, no al viewport). Evitar poner `overflow-hidden` en contenedores que tengan hijos `fixed`. Usar `overflow-x-hidden` solo si es estrictamente necesario para evitar scroll horizontal.
+
+### Scroll en páginas centradas
+No usar `justify-center` en un flex column cuando el contenido puede desbordar la pantalla — el overflow va hacia arriba y el usuario no puede scrollear hasta el principio. Patrón correcto:
+```tsx
+// main: flex flex-col items-center py-14 (sin justify-center)
+// inner div: my-auto  ← centra cuando hay espacio, colapsa cuando desborda
+<main className="min-h-screen flex flex-col items-center py-14">
+  <div className="my-auto w-full max-w-md">...</div>
+</main>
+```

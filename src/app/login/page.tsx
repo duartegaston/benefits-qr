@@ -73,10 +73,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center px-4 pt-12 pb-16 relative overflow-x-hidden">
-      {/* Decorative blobs */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl" />
+    <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
+      {/* Decorative blobs — desktop only */}
+      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
 
       <div className="w-full max-w-md relative my-auto animate-[fade-up_0.45s_ease-out_both]">
         {/* Back link */}
