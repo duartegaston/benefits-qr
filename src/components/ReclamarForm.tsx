@@ -47,7 +47,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         <div>
           <p className="font-semibold text-gray-900">Revisá tu email</p>
           <p className="text-sm text-gray-500 mt-1">
-            Te enviamos un link a <strong>{email}</strong> para acceder a tu beneficio.
+            Te enviamos un link a <strong>{email}</strong> para acceder a tu cupón.
           </p>
         </div>
         <button

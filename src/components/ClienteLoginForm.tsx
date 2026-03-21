@@ -43,7 +43,7 @@ export default function ClienteLoginForm() {
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Revisá tu email</h2>
           <p className="text-gray-500 text-sm mb-6">
-            Te enviamos un link a <strong>{email}</strong>. Hacé clic en él para acceder a tus beneficios.
+            Te enviamos un link a <strong>{email}</strong>. Hacé clic en él para acceder a tus cupones.
           </p>
           <button
             type="button"
@@ -60,7 +60,7 @@ export default function ClienteLoginForm() {
   return (
     <Card className="w-full max-w-md p-6 sm:p-8">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Mis beneficios</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Mis cupones</h1>
         <p className="text-gray-500 text-sm">
           Ingresá tu email para recibir un link de acceso
         </p>

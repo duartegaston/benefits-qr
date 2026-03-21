@@ -117,14 +117,14 @@ export async function sendMagicLink(
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
         <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
         <p style="color: #374151; margin-bottom: 24px;">
-          Haz clic en el siguiente botón para acceder a tus beneficios.
+          Haz clic en el siguiente botón para acceder a tus cupones.
           Este enlace expira en 24 horas.
         </p>
         <a href="${magicLink}"
            style="display: inline-block; background: #7c3aed; color: white;
                   padding: 12px 24px; border-radius: 8px; text-decoration: none;
                   font-weight: 600;">
-          Ver mis beneficios
+          Ver mis cupones
         </a>
         <p style="color: #9ca3af; font-size: 12px; margin-top: 24px;">
           Si no solicitaste este enlace, podés ignorar este email.

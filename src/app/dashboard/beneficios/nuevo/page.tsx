@@ -71,7 +71,7 @@ export default function NuevoBeneficioPage() {
           >
             ← Volver
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Nuevo beneficio</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Nuevo cupón</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -142,7 +142,7 @@ export default function NuevoBeneficioPage() {
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           <Button type="submit" loading={loading} className="w-full" size="lg">
-            Crear beneficio
+            Crear cupón
           </Button>
         </form>
       </Card>

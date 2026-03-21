@@ -32,7 +32,7 @@ export default function MisBeneficiosList({
   if (reclamos.length === 0) {
     return (
       <Card className="p-12 text-center">
-        <p className="text-gray-400">No tenés beneficios reclamados aún</p>
+        <p className="text-gray-400">No tenés cupones reclamados aún</p>
       </Card>
     );
   }

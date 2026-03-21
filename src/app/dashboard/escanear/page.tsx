@@ -107,7 +107,7 @@ export default function EscanearPage() {
               QR detectado
             </h2>
             <p className="text-gray-500 text-sm mb-6">
-              ¿Confirmás el canje de este beneficio?
+              ¿Confirmás el canje de este cupón?
             </p>
             <div className="flex gap-3 justify-center">
               <Button variant="secondary" onClick={reset}>

@@ -99,7 +99,7 @@ export default async function BeneficioStatsPage({
 
       {beneficio.reclamos.length === 0 ? (
         <Card className="p-8 text-center">
-          <p className="text-gray-400">Nadie reclamó este beneficio aún</p>
+          <p className="text-gray-400">Nadie reclamó este cupón aún</p>
         </Card>
       ) : (
         <div className="space-y-2">

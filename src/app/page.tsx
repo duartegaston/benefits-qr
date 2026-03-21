@@ -14,7 +14,7 @@ export default function Home() {
             <Image src="/logo.png" alt="Qupón" width={152} height={152} className="rounded-3xl shadow-xl shadow-violet-300/60" />
           </div>
           <p className="text-xl text-gray-600">
-            Crea y gestioná beneficios para tus clientes con códigos QR
+            Bienvenido a Qupón, todos tus cupones en un solo lugar
           </p>
         </div>
 
@@ -22,7 +22,7 @@ export default function Home() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-left max-w-sm w-full">
             <h2 className="font-semibold text-gray-900 mb-2">Para Locales</h2>
             <p className="text-gray-500 text-sm mb-4">
-              Registrá tu local, creá beneficios y gestioná los canjes.
+              Registrá tu local, creá cupones y gestioná los canjes.
             </p>
             <Link
               href="/login"
@@ -34,13 +34,13 @@ export default function Home() {
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-left max-w-sm w-full">
             <h2 className="font-semibold text-gray-900 mb-2">Para Clientes</h2>
             <p className="text-gray-500 text-sm mb-4">
-              Accedé a todos tus cupones y beneficios en un solo lugar.
+              Accedé a todos tus cupones en un solo lugar.
             </p>
             <Link
               href="/mis-beneficios"
               className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors inline-block"
             >
-              Ver mis beneficios
+              Ver mis cupones
             </Link>
           </div>
         </div>

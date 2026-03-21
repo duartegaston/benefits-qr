@@ -35,11 +35,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (!beneficio) {
-      return NextResponse.json({ error: "Beneficio no encontrado" }, { status: 404 });
+      return NextResponse.json({ error: "Cupón no encontrado" }, { status: 404 });
     }
 
     if (beneficio.fechaExpiracion < new Date()) {
-      return NextResponse.json({ error: "Este beneficio ya expiró" }, { status: 400 });
+      return NextResponse.json({ error: "Este cupón ya expiró" }, { status: 400 });
     }
 
     if (beneficio.diasValidos.length > 0) {
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
           .map((d: number) => DIAS[d])
           .join(", ");
         return NextResponse.json(
-          { error: `Este beneficio solo aplica los: ${nombres}` },
+          { error: `Este cupón solo aplica los: ${nombres}` },
           { status: 400 }
         );
       }
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     if (beneficio.maxUsos !== null && beneficio.reclamos.length >= beneficio.maxUsos) {
       return NextResponse.json(
-        { error: "Este beneficio ya alcanzó el máximo de usos" },
+        { error: "Este cupón ya alcanzó el máximo de usos" },
         { status: 400 }
       );
     }
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
 
     if (existingReclamo) {
       if (existingReclamo.estado === "CANJEADO") {
-        return NextResponse.json({ error: "Ya canjeaste este beneficio" }, { status: 409 });
+        return NextResponse.json({ error: "Ya canjeaste este cupón" }, { status: 409 });
       }
       // Reclamo exists but not redeemed → resend magic link
       const session = await createSession(cliente.id, "CLIENTE", 24);

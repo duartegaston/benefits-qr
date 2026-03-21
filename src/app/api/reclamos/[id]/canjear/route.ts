@@ -34,7 +34,7 @@ export async function POST(
 
   if (reclamo.estado === "CANJEADO") {
     return NextResponse.json(
-      { error: "Este beneficio ya fue canjeado" },
+      { error: "Este cupón ya fue canjeado" },
       { status: 400 }
     );
   }

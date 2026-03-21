@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Qupón",
-  description: "Plataforma de beneficios y descuentos con QR",
+  description: "Plataforma de cupones y descuentos con QR",
 };
 
 export default function RootLayout({

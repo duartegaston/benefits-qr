@@ -109,10 +109,10 @@ export default async function BeneficioPublicoPage({
             <div className="bg-red-50 rounded-xl p-4 text-center">
               <p className="text-red-600 font-medium">
                 {isExpired
-                  ? "Este beneficio ya expiró"
+                  ? "Este cupón ya expiró"
                   : isAgotado
-                  ? "Este beneficio está agotado"
-                  : `Este beneficio no está disponible los ${DIAS_FULL[todayIndex]}s. Aplica los: ${diasValidos
+                  ? "Este cupón está agotado"
+                  : `Este cupón no está disponible los ${DIAS_FULL[todayIndex]}s. Aplica los: ${diasValidos
                       .sort((a, b) => a - b)
                       .map((d) => DIAS_FULL[d])
                       .join(", ")}`}

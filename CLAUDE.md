@@ -22,7 +22,7 @@ npx prisma studio       # Visual DB browser
 
 ### Two-actor auth system
 - **Local** (merchants): email/password OR Google OAuth → `local_session` cookie
-- **Cliente** (customers): magic link via email (Resend) OR OTP via WhatsApp → `cliente_session` cookie
+- **Cliente** (customers): magic link via email only (Resend) → `cliente_session` cookie
 
 Both use the same `Session` table in the DB with a `userType` enum (`LOCAL | CLIENTE`). Both cookies are httpOnly, sameSite=lax.
 
@@ -41,14 +41,31 @@ Auth helpers in `src/lib/auth.ts`:
 - Singleton in `src/lib/prisma.ts` with `PrismaPg` adapter
 
 ### Key flows
-- **Benefit claim**: Cliente opens `/beneficio/[id]` → enters email/phone → `POST /api/reclamos` creates Reclamo + sends magic link (email) or OTP (WhatsApp)
-- **Magic link**: Email → `GET /api/auth/cliente/verify?token=...` → sets cookie → redirects to `/mis-beneficios`
-- **WhatsApp OTP**: Customer enters OTP from WhatsApp → `POST /api/auth/cliente/verify-otp` → sets cookie
-- **QR redemption**: Cliente shows QR (2-min expiring token) → merchant scans at `/dashboard/escanear` → `POST /api/reclamos/[id]/canjear`
-- **QR token**: Generated on `POST /api/reclamos/[id]/qr`, stored in `Reclamo.qrToken`, expires in 2 min
+
+**Benefit claim** (`/beneficio/[id]`):
+1. Cliente fills nombre + email + phone in `ReclamarForm`
+2. `POST /api/reclamos` creates/finds `Cliente` (saves phone for future SMS integration), creates `Reclamo`, calls `createSession` (24h) + `sendMagicLink`
+3. Cliente clicks email link → `GET /api/auth/cliente/verify?token=...` → sets `cliente_session` cookie → redirects to `/mis-beneficios`
+
+**Direct login** (`/mis-beneficios`):
+- If no session → shows `ClienteLoginForm` (email only, no phone)
+- `POST /api/auth/cliente/magic-link` → finds/creates `Cliente`, calls `createSession` (1h) + `sendMagicLink`
+- Same verify endpoint as above
+
+**Magic link token**: single-use — `verify` route rotates the session (deletes old, creates new) so a second click returns `expired`.
+
+**QR redemption**: Cliente shows QR (2-min expiring token) → merchant scans at `/dashboard/escanear` → `POST /api/reclamos/[id]/canjear`
+- QR token: generated on `POST /api/reclamos/[id]/qr`, stored in `Reclamo.qrToken`, expires in 2 min
+
+### Email (`src/lib/email.ts`)
+All outbound email goes through Resend. Functions:
+- `sendMagicLink(to, token, redirect)` — cliente auth link, used by both claim and login flows
+- `sendOtpEmail(to, code)` — local merchant OTP
+- `sendApprovalRequestEmail(...)` — new merchant approval request to owner
+- `sendLocalOnboardingMagicLink(to, token)` — post-approval onboarding link
 
 ### Client-side QR
-- `QRScanner.tsx` — loads `html5-qrcode` lazily inside `useEffect` (not via dynamic import). The escanear page uses: `dynamic(() => import("@/components/QRScanner"), { ssr: false })`
+- `QRScanner.tsx` — loads `html5-qrcode` lazily inside `useEffect`. The escanear page uses: `dynamic(() => import("@/components/QRScanner"), { ssr: false })`
 - `QRDisplay.tsx` — fetches QR token, generates data URL with `qrcode`, shows 2-min countdown with auto-refresh
 
 ### Next.js 16 specifics
@@ -70,9 +87,6 @@ OWNER_EMAIL=                    # Admin contact email
 GOOGLE_CLIENT_ID=               # Google Cloud Console OAuth 2.0
 GOOGLE_CLIENT_SECRET=           # Google Cloud Console OAuth 2.0
 BLOB_READ_WRITE_TOKEN=          # Vercel Blob (optional — base64 fallback used without it)
-WHATSAPP_TOKEN=                 # WhatsApp Business API token (optional)
-WHATSAPP_PHONE_NUMBER_ID=       # WhatsApp Business Account phone ID (optional)
-WHATSAPP_TEMPLATE_NAME=         # Message template name, e.g. qupon_magic_link (optional)
 ```
 
 Google OAuth callback URI to register in Google Cloud Console: `http://localhost:3000/api/auth/local/google/callback`

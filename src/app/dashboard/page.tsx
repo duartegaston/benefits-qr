@@ -76,7 +76,7 @@ export default async function DashboardPage({
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "0ms" }}>
-          <p className="text-sm text-gray-500 mb-1">Beneficios</p>
+          <p className="text-sm text-gray-500 mb-1">Cupones</p>
           <p className="text-3xl font-bold text-gray-900">{totalBeneficios}</p>
         </Card>
         <Card className="p-6 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "80ms" }}>
@@ -91,23 +91,23 @@ export default async function DashboardPage({
 
       {/* Beneficios */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Mis beneficios</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Mis cupones</h2>
         <Link
           href="/dashboard/beneficios/nuevo"
           className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors"
         >
-          + Nuevo beneficio
+          + Nuevo cupón
         </Link>
       </div>
 
       {totalBeneficios === 0 ? (
         <Card className="p-12 text-center">
-          <p className="text-gray-400 mb-4">No tenés beneficios aún</p>
+          <p className="text-gray-400 mb-4">No tenés cupones aún</p>
           <Link
             href="/dashboard/beneficios/nuevo"
             className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors"
           >
-            Crear primer beneficio
+            Crear primer cupón
           </Link>
         </Card>
       ) : (
@@ -146,7 +146,7 @@ export default async function DashboardPage({
                       href={`/dashboard/beneficios/${b.id}`}
                       className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
                     >
-                      Ver stats
+                      Ver detalle
                     </Link>
                   </div>
                 </div>

@@ -53,7 +53,7 @@ export default async function MisBeneficiosPage({
       <div className="flex justify-center mb-6">
         <Image src="/logo.png" alt="Qupón" width={72} height={72} className="rounded-2xl shadow-lg shadow-violet-300/50" />
       </div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Mis beneficios</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Mis cupones</h1>
       <MisBeneficiosList reclamos={reclamos} />
       {totalPages > 1 && (
         <div className="flex items-center justify-between mt-4">
