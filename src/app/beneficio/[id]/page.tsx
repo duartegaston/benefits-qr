@@ -92,11 +92,6 @@ export default async function BeneficioPublicoPage({
                 Vence:{" "}
                 {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
               </Badge>
-              {beneficio.maxUsos && (
-                <Badge color="gray">
-                  {canjeados}/{beneficio.maxUsos} usos
-                </Badge>
-              )}
               {tieneRestriccion && (
                 <Badge color="gray">
                   {diasValidos
