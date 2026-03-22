@@ -31,8 +31,8 @@ export async function GET(req: NextRequest) {
 
   // Rotate token to make the magic link single-use.
   // The old session (URL token) is deleted and a new one is created for the cookie.
-  await prisma.session.delete({ where: { token } });
   const newSession = await createSession(session.userId, "CLIENTE");
+  await prisma.session.delete({ where: { token } });
 
   const response = NextResponse.redirect(new URL(safeRedirect, req.url));
   return setSessionCookie(response, newSession.token, "CLIENTE");
