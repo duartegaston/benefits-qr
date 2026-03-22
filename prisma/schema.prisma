@@ -38,6 +38,7 @@ model Beneficio {
   localId         String
   local           Local     @relation(fields: [localId], references: [id])
   createdAt       DateTime  @default(now())
+  deletedAt       DateTime?
   reclamos        Reclamo[]
 
   @@index([localId])

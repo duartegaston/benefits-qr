@@ -82,6 +82,7 @@ export default function NuevoBeneficioPage() {
             type="date"
             value={fechaExpiracion}
             onChange={(e) => setFechaExpiracion(e.target.value)}
+            min={new Date().toLocaleDateString("en-CA")}
             required
           />
           <Input
