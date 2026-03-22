@@ -71,7 +71,7 @@ export async function sendApprovalRequestEmail(
 
 export async function sendLocalOnboardingMagicLink(to: string, token: string) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const magicLink = `${baseUrl}/api/auth/local/verify-link?token=${encodeURIComponent(token)}`;
+  const magicLink = `${baseUrl}/registro?token=${encodeURIComponent(token)}`;
 
   await resendFetch({
     from: process.env.RESEND_FROM || "noreply@qupon.app",
@@ -107,7 +107,7 @@ export async function sendMagicLink(
   redirect: string
 ) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const magicLink = `${baseUrl}/api/auth/cliente/verify?token=${token}&redirect=${encodeURIComponent(redirect)}`;
+  const magicLink = `${baseUrl}/acceso?token=${token}`;
 
   await resendFetch({
     from: process.env.RESEND_FROM || "noreply@qupon.app",
