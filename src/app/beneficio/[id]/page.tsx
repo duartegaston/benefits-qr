@@ -14,7 +14,7 @@ export default async function BeneficioPublicoPage({
   const { id } = await params;
 
   const beneficio = await prisma.beneficio.findUnique({
-    where: { id },
+    where: { id, deletedAt: null },
     include: {
       local: { select: { nombre: true, logoUrl: true } },
       _count: { select: { reclamos: true } },

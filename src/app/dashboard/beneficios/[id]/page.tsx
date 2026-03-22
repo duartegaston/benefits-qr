@@ -4,6 +4,7 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
+import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
 
 const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const PAGE_SIZE = 10;
@@ -55,6 +56,16 @@ export default async function BeneficioStatsPage({
   if (!beneficio) redirect("/dashboard");
 
   const isExpired = beneficio.fechaExpiracion < new Date();
+  const isAgotado = beneficio.maxUsos !== null && totalCanjeados >= beneficio.maxUsos;
+
+  // Lazy update: mark pending reclamos as VENCIDO when the coupon is expired
+  if (isExpired && totalPendientes > 0) {
+    await prisma.reclamo.updateMany({
+      where: { beneficioId: id, estado: "PENDIENTE" },
+      data: { estado: "VENCIDO" },
+    });
+  }
+  const isDeleted = beneficio.deletedAt !== null;
   const totalPages = Math.ceil(totalReclamos / PAGE_SIZE);
 
   return (
@@ -65,14 +76,20 @@ export default async function BeneficioStatsPage({
 
       <Card className="p-6 mb-6">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
               <h1 className="text-xl font-bold text-gray-900">
                 {beneficio.descripcion}
               </h1>
-              <Badge color={isExpired ? "red" : "green"}>
-                {isExpired ? "Vencido" : "Activo"}
-              </Badge>
+              {isDeleted ? (
+                <Badge color="red">Eliminado</Badge>
+              ) : isExpired ? (
+                <Badge color="red">Vencido</Badge>
+              ) : isAgotado ? (
+                <Badge color="yellow">Agotado</Badge>
+              ) : (
+                <Badge color="green">Activo</Badge>
+              )}
             </div>
             <p className="text-gray-500 text-sm">
               Vence:{" "}
@@ -81,6 +98,11 @@ export default async function BeneficioStatsPage({
               {" · "}{formatDias(beneficio.diasValidos)}
             </p>
           </div>
+          {!isDeleted && (
+            <div className="shrink-0">
+              <DeleteBeneficioButton id={beneficio.id} />
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">

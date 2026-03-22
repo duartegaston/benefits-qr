@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
 
     const beneficio = await prisma.beneficio.findUnique({
-      where: { id: beneficioId },
+      where: { id: beneficioId, deletedAt: null },
       include: { reclamos: { where: { estado: "CANJEADO" }, select: { id: true } } },
     });
 

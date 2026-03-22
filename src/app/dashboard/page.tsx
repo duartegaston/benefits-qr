@@ -37,7 +37,7 @@ export default async function DashboardPage({
     await Promise.all([
       prisma.local.findUnique({ where: { id: session.userId } }),
       prisma.beneficio.findMany({
-        where: { localId: session.userId },
+        where: { localId: session.userId, deletedAt: null },
         include: {
           _count: { select: { reclamos: true } },
           reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
@@ -46,7 +46,7 @@ export default async function DashboardPage({
         skip: (page - 1) * PAGE_SIZE,
         take: PAGE_SIZE,
       }),
-      prisma.beneficio.count({ where: { localId: session.userId } }),
+      prisma.beneficio.count({ where: { localId: session.userId, deletedAt: null } }),
       prisma.reclamo.count({ where: { beneficio: { localId: session.userId } } }),
       prisma.reclamo.count({
         where: { beneficio: { localId: session.userId }, estado: "CANJEADO" },

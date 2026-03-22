@@ -46,10 +46,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Fecha de expiración requerida" }, { status: 400 });
   }
 
-  const expiryDate = new Date(fechaExpiracion);
-  if (isNaN(expiryDate.getTime()) || expiryDate < new Date()) {
+  // Parse as end-of-day in Argentina time (UTC-3)
+  const expiryDate = new Date(`${fechaExpiracion}T23:59:59-03:00`);
+  if (isNaN(expiryDate.getTime())) {
+    return NextResponse.json({ error: "Fecha de expiración inválida" }, { status: 400 });
+  }
+
+  // Compare date strings in Argentina timezone (YYYY-MM-DD lexicographic comparison)
+  const todayAR = new Date()
+    .toLocaleString("en-CA", { timeZone: "America/Argentina/Buenos_Aires" })
+    .slice(0, 10);
+  if (fechaExpiracion < todayAR) {
     return NextResponse.json(
-      { error: "Fecha de expiración inválida (debe ser futura)" },
+      { error: "La fecha de expiración no puede ser anterior a hoy" },
       { status: 400 }
     );
   }
