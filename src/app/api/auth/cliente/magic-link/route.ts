@@ -12,6 +12,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email requerido" }, { status: 400 });
     }
 
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!EMAIL_REGEX.test(email) || email.length > 254) {
+      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
+    }
+
     // Rate limit: 1 request per email per 2 minutes
     if (!checkRequestLimit(`magic-link:cliente:${email}`)) {
       return NextResponse.json(
