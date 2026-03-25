@@ -13,19 +13,13 @@ function emailLayout(content: string): string {
       <td align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
 
-          <!-- Header -->
-          <tr>
-            <td align="center" style="padding-bottom:24px;">
-              <a href="${BASE_URL}" style="text-decoration:none;">
-                <img src="${BASE_URL}/logo-min.png" alt="Qupón" width="120"
-                     style="display:block;height:auto;border:0;" />
-              </a>
-            </td>
-          </tr>
-
           <!-- Card -->
           <tr>
             <td style="background-color:#ffffff;border-radius:12px;padding:36px 32px;">
+              <a href="${BASE_URL}" style="text-decoration:none;display:block;margin-bottom:28px;">
+                <img src="${BASE_URL}/logo-min.png" alt="Qupón" width="120"
+                     style="display:block;height:auto;border:0;" />
+              </a>
               ${content}
             </td>
           </tr>
