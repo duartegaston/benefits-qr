@@ -73,7 +73,7 @@ export default async function AccesoPage({
               />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">¡Tu link llegó!</h1>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">¡Tu Qupón llegó!</h1>
           <p className="text-sm text-gray-500 mb-6">
             Hacé clic para acceder a tus cupones guardados
           </p>

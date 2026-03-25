@@ -99,8 +99,8 @@ export default function Pricing() {
         {/* Reassurance */}
         <p className="text-center text-sm text-gray-400 mt-6">
           ¿Tenés dudas? Escribinos a{" "}
-          <a href="mailto:qupon.ar@gmail.com" className="text-violet-600 hover:underline">
-            qupon.ar@gmail.com
+          <a href="mailto:qupon.qr@gmail.com" className="text-violet-600 hover:underline">
+            qupon.qr@gmail.com
           </a>{" "}
           y te respondemos al toque.
         </p>
