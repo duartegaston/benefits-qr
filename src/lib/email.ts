@@ -161,18 +161,25 @@ export async function sendMagicLink(
   const magicLink = `${BASE_URL}/acceso?token=${token}`;
 
   const content = `
-    <p style="margin:0 0 24px;color:#374151;font-size:15px;">
-      Haz clic en el siguiente botón para acceder a tus cupones.
-      Este enlace expira en 24 horas.
+    <h2 style="margin:0 0 8px;font-size:20px;color:#18181b;">
+      Tu enlace de acceso
+    </h2>
+    <p style="margin:0 0 24px;font-size:15px;color:#52525b;line-height:1.6;">
+      Hacé clic en el botón para acceder a tus cupones en Qupon.
+      El enlace es válido por 24 horas y puede usarse una sola vez.
     </p>
     <a href="${magicLink}"
        style="display:inline-block;background:#7c3aed;color:#ffffff;
-              padding:12px 28px;border-radius:8px;text-decoration:none;
+              padding:14px 28px;border-radius:8px;text-decoration:none;
               font-weight:600;font-size:16px;">
       Ver mis cupones
     </a>
-    <p style="margin:24px 0 0;color:#9ca3af;font-size:12px;">
-      Si no solicitaste este enlace, podés ignorar este email.
+    <p style="margin:24px 0 12px;font-size:14px;color:#52525b;line-height:1.6;">
+      Si no solicitaste este enlace, alguien puede haber ingresado tu email por error.
+      Podés ignorar este mail con seguridad — tu cuenta no será afectada.
+    </p>
+    <p style="margin:0;font-size:13px;color:#a1a1aa;">
+      Este es un mensaje automático, no respondas este email.
     </p>
   `;
 
