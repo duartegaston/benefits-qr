@@ -60,14 +60,24 @@ async function resendFetch(payload: object) {
 
 export async function sendOtpEmail(to: string, code: string) {
   const content = `
-    <p style="margin:0 0 8px;color:#374151;font-size:15px;">
-      Usá este código para ingresar al dashboard de tu local. Expira en 10 minutos.
+    <h2 style="margin:0 0 8px;font-size:20px;color:#18181b;">
+      Tu código de acceso
+    </h2>
+    <p style="margin:0 0 24px;font-size:15px;color:#52525b;line-height:1.6;">
+      Usá este código para ingresar al dashboard de tu local en Qupon.
+      El código es válido por 10 minutos y puede usarse una sola vez.
     </p>
-    <div style="background:#f3f4f6;border-radius:12px;padding:24px;text-align:center;margin:24px 0;">
-      <span style="font-size:40px;font-weight:700;letter-spacing:8px;color:#7c3aed;">${code}</span>
+    <div style="background:#f4f4f5;border-radius:8px;padding:20px;text-align:center;margin-bottom:24px;">
+      <span style="font-size:36px;font-weight:700;letter-spacing:10px;color:#18181b;">
+        ${code}
+      </span>
     </div>
-    <p style="margin:0;color:#9ca3af;font-size:12px;">
-      Si no solicitaste este código, podés ignorar este email.
+    <p style="margin:0 0 12px;font-size:14px;color:#52525b;line-height:1.6;">
+      Si no solicitaste este código, alguien puede estar intentando acceder a tu cuenta.
+      Podés ignorar este mail con seguridad — tu cuenta no será afectada.
+    </p>
+    <p style="margin:0;font-size:13px;color:#a1a1aa;">
+      Este es un mensaje automático, no respondas este email.
     </p>
   `;
 
