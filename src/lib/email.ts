@@ -1,3 +1,7 @@
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+const LOGO_HTML = `<img src="${BASE_URL}/logo-min.png" alt="Qupón" style="height: 40px; margin-bottom: 24px; display: block;" />`;
+
 async function resendFetch(payload: object) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -21,7 +25,7 @@ export async function sendOtpEmail(to: string, code: string) {
     subject: `${code} — Tu código de acceso Qupón`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
+        ${LOGO_HTML}
         <p style="color: #374151; margin-bottom: 24px;">
           Usá este código para ingresar al dashboard de tu local. Expira en 10 minutos.
         </p>
@@ -47,7 +51,7 @@ export async function sendApprovalRequestEmail(
     subject: `Solicitud de acceso — ${merchantEmail}`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
+        ${LOGO_HTML}
         <p style="color: #374151; margin-bottom: 8px;">
           Un nuevo local quiere registrarse en la plataforma:
         </p>
@@ -79,7 +83,7 @@ export async function sendLocalOnboardingMagicLink(to: string, token: string) {
     subject: "Completá tu registro en Qupón",
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
+        ${LOGO_HTML}
         <p style="color: #374151; margin-bottom: 8px; font-size: 18px; font-weight: 600;">
           ¡Tu acceso fue aprobado!
         </p>
@@ -115,7 +119,7 @@ export async function sendMagicLink(
     subject: "Tu enlace mágico — Qupón",
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 32px;">
-        <h1 style="color: #7c3aed; font-size: 24px; margin-bottom: 8px;">Qupón</h1>
+        ${LOGO_HTML}
         <p style="color: #374151; margin-bottom: 24px;">
           Haz clic en el siguiente botón para acceder a tus cupones.
           Este enlace expira en 24 horas.
