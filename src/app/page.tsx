@@ -205,7 +205,7 @@ export default function Home() {
             style={{ animationDelay: "380ms" }}
           >
             {/* Para Negocios */}
-            <div className="group bg-white/90 sm:bg-white/75 sm:backdrop-blur-md rounded-2xl p-6 border border-white/80 shadow-lg shadow-violet-100/60 text-left hover:shadow-xl hover:shadow-violet-200/60 hover:-translate-y-0.5 transition-transform transition-shadow duration-300">
+            <div className="group bg-white/90 sm:bg-white/75 sm:backdrop-blur-md rounded-2xl p-6 border border-white/80 shadow-lg shadow-violet-100/60 text-left hover:shadow-xl hover:shadow-violet-200/60 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300">
               <div className="w-11 h-11 rounded-xl bg-violet-100 flex items-center justify-center mb-4 text-violet-600">
                 <IconBuilding />
               </div>
@@ -225,7 +225,7 @@ export default function Home() {
             </div>
 
             {/* Para Clientes */}
-            <div className="group bg-violet-600 rounded-2xl p-6 border border-violet-500/40 shadow-lg shadow-violet-400/30 text-left hover:shadow-xl hover:shadow-violet-500/40 hover:-translate-y-0.5 hover:bg-violet-700 transition-transform transition-shadow transition-colors duration-300">
+            <div className="group bg-violet-600 rounded-2xl p-6 border border-violet-500/40 shadow-lg shadow-violet-400/30 text-left hover:shadow-xl hover:shadow-violet-500/40 hover:-translate-y-0.5 hover:bg-violet-700 transition-[transform,box-shadow,background-color] duration-300">
               <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center mb-4 text-white">
                 <IconGift />
               </div>
