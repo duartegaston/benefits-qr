@@ -75,8 +75,8 @@ export default function LoginPage() {
   return (
     <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
       {/* Decorative blobs — desktop only */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -top-40 -left-40 w-150 h-150 rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-125 h-125 rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
 
       {/* Back link — fixed top-left */}
       <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">

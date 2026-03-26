@@ -74,9 +74,9 @@ export default function Home() {
       {/* Hero — full viewport section */}
       <section className="min-h-screen flex flex-col items-center px-6 pt-14 pb-16 sm:px-8 sm:py-8 relative overflow-hidden">
       {/* Background blobs — desktop only (blur-3xl causes scroll jank on mobile) */}
-      <div className="pointer-events-none absolute -top-56 -left-56 w-[800px] h-[800px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute -bottom-56 -right-56 w-[700px] h-[700px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-white/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -top-56 -left-56 w-200 h-200 rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-56 -right-56 w-175 h-175 rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full bg-white/25 blur-3xl hidden sm:block" />
 
       <div className="max-w-2xl w-full text-center relative z-10 my-auto">
 
@@ -105,7 +105,7 @@ export default function Home() {
           style={{ animationDelay: "140ms" }}
         >
           Cupones que{" "}
-          <span className="bg-gradient-to-r from-violet-600 via-violet-500 to-violet-400 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-violet-600 via-violet-500 to-violet-400 bg-clip-text text-transparent">
             conectan negocios
           </span>
           <br className="hidden sm:block" />
