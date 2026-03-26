@@ -1,4 +1,5 @@
 import Badge from "@/components/ui/Badge";
+import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
 import LinkButton from "@/components/ui/LinkButton";
 
@@ -31,14 +32,17 @@ export default function Pricing() {
   return (
     <section className="bg-gray-50 py-20 px-6 sm:px-8">
       <div className="max-w-3xl mx-auto">
-        <SectionHeader
-          eyebrow="Precios"
-          title="Empezá gratis, crecé sin límites"
-          description="El primer mes lo cubrimos nosotros. Probá todas las funciones sin tarjeta ni compromiso."
-        />
+        <Reveal y={20} amount={0.35}>
+          <SectionHeader
+            eyebrow="Precios"
+            title="Empezá gratis, crecé sin límites"
+            description="El primer mes lo cubrimos nosotros. Probá todas las funciones sin tarjeta ni compromiso."
+          />
+        </Reveal>
 
         {/* Pricing card */}
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <Reveal delay={0.06} y={20} amount={0.25}>
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
           {/* Top banner */}
           <div className="bg-violet-600 px-8 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
@@ -92,19 +96,22 @@ export default function Pricing() {
               ))}
             </ul>
           </div>
-        </div>
+          </div>
+        </Reveal>
 
         {/* Reassurance */}
-        <p className="text-center text-sm text-gray-400 mt-6">
-          ¿Tenés dudas? Escribinos a{" "}
-          <a
-            href="mailto:qupon.qr@gmail.com"
-            className="text-violet-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 rounded-sm"
-          >
-            qupon.qr@gmail.com
-          </a>{" "}
-          y te respondemos al toque.
-        </p>
+        <Reveal delay={0.12} y={16} amount={0.4}>
+          <p className="text-center text-sm text-gray-400 mt-6">
+            ¿Tenés dudas? Escribinos a{" "}
+            <a
+              href="mailto:qupon.qr@gmail.com"
+              className="text-violet-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 rounded-sm"
+            >
+              qupon.qr@gmail.com
+            </a>{" "}
+            y te respondemos al toque.
+          </p>
+        </Reveal>
       </div>
     </section>
   );

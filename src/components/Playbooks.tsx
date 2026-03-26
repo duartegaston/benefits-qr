@@ -1,5 +1,6 @@
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
+import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 function IconChannel() {
@@ -41,36 +42,45 @@ export default function Playbooks() {
   return (
     <section className="bg-white py-16 px-6 sm:px-8">
       <div className="max-w-4xl mx-auto">
-        <SectionHeader
-          eyebrow="Ideas listas para usar"
-          title="Estrategias que funcionan"
-          description="Casos de uso reales que podés replicar en minutos."
-          className="[&>p]:max-w-md"
-        />
+        <Reveal y={20} amount={0.35}>
+          <SectionHeader
+            eyebrow="Ideas listas para usar"
+            title="Estrategias que funcionan"
+            description="Casos de uso reales que podés replicar en minutos."
+            className="[&>p]:max-w-md"
+          />
+        </Reveal>
 
         {/* Cards grid — 2x2 on desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {PLAYBOOKS.map((play) => (
-            <Card
+          {PLAYBOOKS.map((play, index) => (
+            <Reveal
               key={play.name}
-              className="p-5 hover:-translate-y-0.5 hover:shadow-md duration-200"
-              style={{ transitionProperty: "transform, box-shadow" }}
+              delay={0.05 * index}
+              y={18}
+              amount={0.2}
+              className="h-full"
             >
-              <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
-                <h3 className="font-bold text-gray-900 min-w-0 flex-1">{play.name}</h3>
-                <Badge
-                  color="violet"
-                  className="shrink-0 py-1 whitespace-normal sm:whitespace-nowrap max-w-full"
-                >
-                  {play.config}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed mb-4">{play.description}</p>
-              <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                <IconChannel />
-                <span>{play.channel}</span>
-              </div>
-            </Card>
+              <Card
+                className="p-5 hover:-translate-y-0.5 hover:shadow-md duration-200 h-full"
+                style={{ transitionProperty: "transform, box-shadow" }}
+              >
+                <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
+                  <h3 className="font-bold text-gray-900 min-w-0 flex-1">{play.name}</h3>
+                  <Badge
+                    color="violet"
+                    className="shrink-0 py-1 whitespace-normal sm:whitespace-nowrap max-w-full"
+                  >
+                    {play.config}
+                  </Badge>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">{play.description}</p>
+                <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                  <IconChannel />
+                  <span>{play.channel}</span>
+                </div>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </div>

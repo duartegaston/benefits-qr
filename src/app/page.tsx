@@ -12,6 +12,7 @@ import HowItWorks from "@/components/HowItWorks";
 import Playbooks from "@/components/Playbooks";
 import Pricing from "@/components/Pricing";
 import LinkButton from "@/components/ui/LinkButton";
+import Reveal from "@/components/ui/Reveal";
 
 const FEATURES = [
   { icon: <QrCode className="h-4 w-4" aria-hidden="true" />, label: "Canje con QR" },
@@ -34,7 +35,7 @@ export default function Home() {
 
         <div className="max-w-2xl w-full text-center relative z-10 my-auto">
           {/* Logo */}
-          <div className="flex justify-center mb-7 animate-[fade-in_0.4s_ease-out_both] motion-reduce:animate-none">
+          <Reveal y={14} amount={0.6} className="flex justify-center mb-7">
             <Image
               src="/logo.png"
               alt="Qupón"
@@ -43,45 +44,38 @@ export default function Home() {
               priority
               className="rounded-3xl shadow-2xl shadow-violet-500/35 ring-4 ring-white/60"
             />
-          </div>
+          </Reveal>
 
           {/* Badge */}
-          <div
-            className="animate-[fade-up_0.45s_ease-out_both] motion-reduce:animate-none"
-            style={{ animationDelay: "60ms" }}
-          >
+          <Reveal delay={0.06} y={16} amount={0.6}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/85 sm:bg-white/65 sm:backdrop-blur-sm border border-violet-200/70 text-violet-700 text-sm font-medium shadow-sm">
               <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse motion-reduce:animate-none shrink-0" />
               Plataforma de cupones digitales con QR
             </span>
-          </div>
+          </Reveal>
 
           {/* Headline */}
-          <h1
-            className="text-4xl sm:text-5xl font-bold text-gray-900 leading-[1.15] tracking-tight mt-6 mb-4 animate-[fade-up_0.45s_ease-out_both] motion-reduce:animate-none"
-            style={{ animationDelay: "140ms" }}
-          >
-            Cupones que{" "}
-            <span className="bg-linear-to-r from-violet-600 via-violet-500 to-violet-400 bg-clip-text text-transparent">
-              conectan negocios
-            </span>
-            <br className="hidden sm:block" /> con sus clientes
-          </h1>
+          <Reveal delay={0.14} y={18} amount={0.6}>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-[1.15] tracking-tight mt-6 mb-4">
+              Cupones que{" "}
+              <span className="bg-linear-to-r from-violet-600 via-violet-500 to-violet-400 bg-clip-text text-transparent">
+                conectan negocios
+              </span>
+              <br className="hidden sm:block" /> con sus clientes
+            </h1>
+          </Reveal>
 
           {/* Subtitle */}
-          <p
-            className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed animate-[fade-up_0.45s_ease-out_both] motion-reduce:animate-none"
-            style={{ animationDelay: "220ms" }}
-          >
-            Creá cupones de descuento, compartí el link y canjeá al instante con
-            QR desde el celular.
-          </p>
+          <Reveal delay={0.22} y={18} amount={0.6}>
+            <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
+              Creá cupones de descuento, compartí el link y canjeá al instante con
+              QR desde el celular.
+            </p>
+          </Reveal>
 
           {/* Feature pills */}
-          <div
-            className="flex flex-wrap justify-center gap-2 mt-6 mb-10 animate-[fade-up_0.45s_ease-out_both] motion-reduce:animate-none"
-            style={{ animationDelay: "300ms" }}
-          >
+          <Reveal delay={0.3} y={20} amount={0.55} className="mt-6 mb-10">
+            <div className="flex flex-wrap justify-center gap-2">
             {FEATURES.map((f) => (
               <span
                 key={f.label}
@@ -91,13 +85,12 @@ export default function Home() {
                 {f.label}
               </span>
             ))}
-          </div>
+            </div>
+          </Reveal>
 
           {/* CTA Cards */}
-          <div
-            className="grid sm:grid-cols-2 gap-4 animate-[fade-up_0.45s_ease-out_both] motion-reduce:animate-none"
-            style={{ animationDelay: "380ms" }}
-          >
+          <Reveal delay={0.38} y={22} amount={0.45}>
+            <div className="grid sm:grid-cols-2 gap-4">
             {/* Para Negocios */}
             <div className="group bg-white/90 sm:bg-white/75 sm:backdrop-blur-md rounded-2xl p-6 border border-white/80 shadow-lg shadow-violet-100/60 text-left hover:shadow-xl hover:shadow-violet-200/60 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300">
               <div className="w-11 h-11 rounded-xl bg-violet-100 flex items-center justify-center mb-4 text-violet-600">
@@ -129,10 +122,16 @@ export default function Home() {
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </LinkButton>
             </div>
-          </div>
+            </div>
+          </Reveal>
         </div>
 
-        <div className="pointer-events-none z-10 mt-8 flex flex-col items-center gap-1 text-gray-500 animate-[fade-up_0.45s_ease-out_both] motion-reduce:animate-none sm:absolute sm:bottom-5 sm:left-1/2 sm:mt-0 sm:-translate-x-1/2">
+        <Reveal
+          delay={0.46}
+          y={14}
+          amount={0.8}
+          className="pointer-events-none z-10 mt-8 flex flex-col items-center gap-1 text-gray-500 sm:absolute sm:bottom-5 sm:left-1/2 sm:mt-0 sm:-translate-x-1/2"
+        >
           <span className="text-[11px] sm:text-xs font-medium uppercase tracking-[0.2em]">
             Más información abajo
           </span>
@@ -140,7 +139,7 @@ export default function Home() {
             aria-hidden="true"
             className="h-4.5 w-4.5 animate-bounce motion-reduce:animate-none"
           />
-        </div>
+        </Reveal>
       </section>
 
       <HowItWorks />
