@@ -69,7 +69,7 @@ export default function Pricing() {
 
               <Link
                 href="/login"
-                className="inline-flex items-center justify-center gap-1.5 w-full px-5 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors"
+                className="inline-flex items-center justify-center gap-1.5 w-full px-5 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
               >
                 Crear mi cuenta
                 <IconArrow />
@@ -99,7 +99,10 @@ export default function Pricing() {
         {/* Reassurance */}
         <p className="text-center text-sm text-gray-400 mt-6">
           ¿Tenés dudas? Escribinos a{" "}
-          <a href="mailto:qupon.qr@gmail.com" className="text-violet-600 hover:underline">
+          <a
+            href="mailto:qupon.qr@gmail.com"
+            className="text-violet-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 rounded-sm"
+          >
             qupon.qr@gmail.com
           </a>{" "}
           y te respondemos al toque.

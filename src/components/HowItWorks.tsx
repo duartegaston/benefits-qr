@@ -55,7 +55,7 @@ export default function HowItWorks() {
           {STEPS.map((step) => (
             <div
               key={step.number}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-transform transition-shadow duration-200"
             >
               {/* Decorative number */}
               <span className="absolute -top-4 -right-2 text-8xl font-black text-violet-600/10 select-none leading-none">

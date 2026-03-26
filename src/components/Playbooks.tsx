@@ -55,11 +55,11 @@ export default function Playbooks() {
           {PLAYBOOKS.map((play) => (
             <div
               key={play.name}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
+              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:-translate-y-0.5 hover:shadow-md transition-transform transition-shadow duration-200"
             >
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <h3 className="font-bold text-gray-900">{play.name}</h3>
-                <span className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 whitespace-nowrap">
+              <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
+                <h3 className="font-bold text-gray-900 min-w-0 flex-1">{play.name}</h3>
+                <span className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 whitespace-normal sm:whitespace-nowrap max-w-full">
                   {play.config}
                 </span>
               </div>
