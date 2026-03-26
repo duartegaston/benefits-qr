@@ -17,7 +17,6 @@ const jakarta = Plus_Jakarta_Sans({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   viewportFit: "cover",
 };
 
@@ -34,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${geist.variable} ${jakarta.variable} ${geist.className} bg-gradient-to-br from-violet-200 via-violet-50 to-violet-300 bg-fixed min-h-screen antialiased`}
+        className={`${geist.variable} ${jakarta.variable} ${geist.className} bg-linear-to-br from-violet-200 via-violet-50 to-violet-300 bg-fixed min-h-screen antialiased`}
       >
         {children}
       </body>
