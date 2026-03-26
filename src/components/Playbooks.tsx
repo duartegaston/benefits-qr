@@ -1,3 +1,7 @@
+import Badge from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
+
 function IconChannel() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -37,38 +41,36 @@ export default function Playbooks() {
   return (
     <section className="bg-white py-16 px-6 sm:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3 block">
-            Ideas listas para usar
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-            Estrategias que funcionan
-          </h2>
-          <p className="text-gray-600 mt-3 max-w-md mx-auto">
-            Casos de uso reales que podés replicar en minutos.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Ideas listas para usar"
+          title="Estrategias que funcionan"
+          description="Casos de uso reales que podés replicar en minutos."
+          className="[&>p]:max-w-md"
+        />
 
         {/* Cards grid — 2x2 on desktop */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {PLAYBOOKS.map((play) => (
-            <div
+            <Card
               key={play.name}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:-translate-y-0.5 hover:shadow-md transition-[transform,box-shadow] duration-200"
+              className="p-5 hover:-translate-y-0.5 hover:shadow-md duration-200"
+              style={{ transitionProperty: "transform, box-shadow" }}
             >
               <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
                 <h3 className="font-bold text-gray-900 min-w-0 flex-1">{play.name}</h3>
-                <span className="shrink-0 text-xs font-medium px-2.5 py-1 rounded-full bg-violet-50 text-violet-700 whitespace-normal sm:whitespace-nowrap max-w-full">
+                <Badge
+                  color="violet"
+                  className="shrink-0 py-1 whitespace-normal sm:whitespace-nowrap max-w-full"
+                >
                   {play.config}
-                </span>
+                </Badge>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed mb-4">{play.description}</p>
               <div className="flex items-center gap-1.5 text-xs text-gray-400">
                 <IconChannel />
                 <span>{play.channel}</span>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

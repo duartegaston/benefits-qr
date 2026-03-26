@@ -1,4 +1,6 @@
-import Link from "next/link";
+import Badge from "@/components/ui/Badge";
+import SectionHeader from "@/components/ui/SectionHeader";
+import LinkButton from "@/components/ui/LinkButton";
 
 function IconCheck() {
   return (
@@ -29,18 +31,11 @@ export default function Pricing() {
   return (
     <section className="bg-gray-50 py-20 px-6 sm:px-8">
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3 block">
-            Precios
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-            Empezá gratis, crecé sin límites
-          </h2>
-          <p className="text-gray-600 mt-3 max-w-lg mx-auto leading-relaxed">
-            El primer mes lo cubrimos nosotros. Probá todas las funciones sin tarjeta ni compromiso.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Precios"
+          title="Empezá gratis, crecé sin límites"
+          description="El primer mes lo cubrimos nosotros. Probá todas las funciones sin tarjeta ni compromiso."
+        />
 
         {/* Pricing card */}
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
@@ -50,10 +45,12 @@ export default function Pricing() {
               <p className="text-violet-200 text-sm font-medium">Primer mes</p>
               <p className="text-white text-2xl font-black tracking-tight">Totalmente gratis</p>
             </div>
-            <span className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-semibold">
+            <Badge
+              className="self-start sm:self-auto gap-1.5 px-3.5 py-1.5 bg-white/20 border border-white/30 text-white font-semibold"
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
               Sin tarjeta requerida
-            </span>
+            </Badge>
           </div>
 
           {/* Body */}
@@ -67,13 +64,14 @@ export default function Pricing() {
               </div>
               <p className="text-gray-400 text-xs mt-1 mb-6">ARS · IVA incluido</p>
 
-              <Link
+              <LinkButton
                 href="/login"
-                className="inline-flex items-center justify-center gap-1.5 w-full px-5 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+                size="lg"
+                className="w-full font-semibold"
               >
                 Crear mi cuenta
                 <IconArrow />
-              </Link>
+              </LinkButton>
               <p className="text-center text-xs text-gray-400 mt-3">
                 Sin cargo hasta el día 31
               </p>

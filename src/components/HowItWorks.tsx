@@ -1,3 +1,6 @@
+import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
+
 const STEPS = [
   {
     number: "01",
@@ -40,22 +43,18 @@ export default function HowItWorks() {
   return (
     <section className="bg-gray-50 py-16 px-6 sm:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <span className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3 block">
-            Cómo funciona
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-            Tres pasos, sin complicaciones
-          </h2>
-        </div>
+        <SectionHeader
+          eyebrow="Cómo funciona"
+          title="Tres pasos, sin complicaciones"
+        />
 
         {/* Steps grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {STEPS.map((step) => (
-            <div
+            <Card
               key={step.number}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md transition-[transform,box-shadow] duration-200"
+              className="p-6 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md duration-200"
+              style={{ transitionProperty: "transform, box-shadow" }}
             >
               {/* Decorative number */}
               <span className="absolute -top-4 -right-2 text-8xl font-black text-violet-600/10 select-none leading-none">
@@ -70,7 +69,7 @@ export default function HowItWorks() {
               {/* Text */}
               <h3 className="font-semibold text-gray-900 mb-2 relative z-10">{step.title}</h3>
               <p className="text-sm text-gray-600 leading-relaxed relative z-10">{step.description}</p>
-            </div>
+            </Card>
           ))}
         </div>
       </div>
