@@ -1,5 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import HowItWorks from "@/components/HowItWorks";
+import Playbooks from "@/components/Playbooks";
+import Pricing from "@/components/Pricing";
 
 function IconQr() {
   return (
@@ -67,7 +70,9 @@ const FEATURES = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen sm:h-screen flex flex-col items-center px-6 pt-14 pb-36 sm:px-8 sm:py-8 relative sm:overflow-hidden">
+    <main className="relative">
+      {/* Hero — full viewport section */}
+      <section className="min-h-screen flex flex-col items-center px-6 pt-14 pb-16 sm:px-8 sm:py-8 relative overflow-hidden">
       {/* Background blobs — desktop only (blur-3xl causes scroll jank on mobile) */}
       <div className="pointer-events-none absolute -top-56 -left-56 w-[800px] h-[800px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
       <div className="pointer-events-none absolute -bottom-56 -right-56 w-[700px] h-[700px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
@@ -174,6 +179,25 @@ export default function Home() {
         </div>
 
       </div>
+      </section>
+
+      <HowItWorks />
+      <Playbooks />
+      <Pricing />
+
+      <footer className="bg-violet-50 border-t border-violet-100 py-6 px-6 text-center">
+        <p className="text-sm text-gray-400">
+          Creado por{" "}
+          <a
+            href="https://www.godevs.com.ar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-violet-600 hover:text-violet-700 font-semibold transition-colors"
+          >
+            GODevs
+          </a>
+        </p>
+      </footer>
     </main>
   );
 }

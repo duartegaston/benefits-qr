@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL;
 
 function emailLayout(content: string): string {
   return `<!DOCTYPE html>
@@ -82,7 +82,7 @@ export async function sendOtpEmail(to: string, code: string) {
   `;
 
   await resendFetch({
-    from: process.env.RESEND_FROM || "noreply@qupon.app",
+    from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to,
     subject: `${code} — Tu código de acceso Qupón`,
     html: emailLayout(content),
@@ -116,7 +116,7 @@ export async function sendApprovalRequestEmail(
   `;
 
   await resendFetch({
-    from: process.env.RESEND_FROM || "noreply@qupon.app",
+    from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to: ownerEmail,
     subject: `Solicitud de acceso — ${merchantEmail}`,
     html: emailLayout(content),
@@ -146,7 +146,7 @@ export async function sendLocalOnboardingMagicLink(to: string, token: string) {
   `;
 
   await resendFetch({
-    from: process.env.RESEND_FROM || "noreply@qupon.app",
+    from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to,
     subject: "Completá tu registro en Qupón",
     html: emailLayout(content),
@@ -184,7 +184,7 @@ export async function sendMagicLink(
   `;
 
   await resendFetch({
-    from: process.env.RESEND_FROM || "noreply@qupon.app",
+    from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to,
     subject: "Tu enlace mágico — Qupón",
     html: emailLayout(content),
