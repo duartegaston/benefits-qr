@@ -6,6 +6,8 @@ export const buttonBaseClasses =
 export const buttonVariantClasses = {
   primary:
     "bg-violet-600 text-white hover:bg-violet-700 focus-visible:ring-violet-500",
+  muted:
+    "bg-gray-100 text-gray-600 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-violet-200",
   secondary:
     "bg-gray-100 text-gray-700 hover:bg-gray-200 focus-visible:ring-gray-400",
   ghost:
@@ -16,7 +18,7 @@ export const buttonVariantClasses = {
   light:
     "bg-white text-violet-700 hover:bg-violet-50 focus-visible:ring-violet-200 focus-visible:ring-offset-violet-600",
   subtle:
-    "bg-transparent text-violet-700/90 hover:text-violet-800 hover:bg-violet-50 focus-visible:ring-violet-300",
+    "border border-violet-200/70 bg-white/80 text-violet-700 shadow-sm hover:border-violet-300 hover:bg-white hover:text-violet-800 focus-visible:ring-violet-300",
 } as const;
 
 export const buttonSizeClasses = {

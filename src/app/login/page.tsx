@@ -2,18 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { ArrowLeft, Clock3, Mail } from "lucide-react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import LinkButton from "@/components/ui/LinkButton";
-
-function IconClock() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </svg>
-  );
-}
+import Card from "@/components/ui/Card";
+import Reveal from "@/components/ui/Reveal";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,8 +16,6 @@ export default function LoginPage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const secondaryActionClasses =
-    "w-full underline underline-offset-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50";
 
   async function handleRequestOtp(e: React.FormEvent) {
     e.preventDefault();
@@ -87,105 +79,120 @@ export default function LoginPage() {
         size="sm"
         className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40"
       >
-        ← Inicio
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Inicio
       </LinkButton>
 
       {/* Logo + card — centrado */}
-      <div className="w-full max-w-md flex-1 flex flex-col justify-center relative animate-[fade-up_0.45s_ease-out_both]">
+      <div className="w-full max-w-md flex-1 flex flex-col justify-center relative">
         {/* Brand */}
-        <div className="text-center mb-7">
-          <div className="flex justify-center mb-4">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={88}
-              height={88}
-              className="rounded-3xl shadow-2xl shadow-violet-500/30 ring-4 ring-white/60"
-            />
+        <Reveal y={14} amount={0.3}>
+          <div className="text-center mb-7">
+            <div className="flex justify-center mb-4">
+              <Image
+                src="/logo.png"
+                alt="Qupón"
+                width={88}
+                height={88}
+                priority
+                className="rounded-3xl shadow-2xl shadow-violet-500/30 ring-4 ring-white/60"
+              />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">Bienvenido</h1>
+            <p className="text-gray-500 text-sm">Accedé al dashboard de tu negocio</p>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Bienvenido</h1>
-          <p className="text-gray-500 text-sm">Accedé al dashboard de tu negocio</p>
-        </div>
+        </Reveal>
 
         {/* Card */}
-        <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-white/80 shadow-xl shadow-violet-100/50 p-6 sm:p-8">
-          {step === "pending-approval" ? (
-            <div className="space-y-4 text-center">
-              <div className="flex justify-center">
-                <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">
-                  <IconClock />
+        <Reveal delay={0.06} y={16} amount={0.35}>
+          <Card className="bg-white/90 sm:bg-white/80 sm:backdrop-blur-md border-white/80 shadow-xl shadow-violet-100/50 p-6 sm:p-8">
+            {step === "pending-approval" ? (
+              <div className="space-y-5 text-center">
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-amber-100 to-orange-100 border border-amber-200/70 flex items-center justify-center text-amber-600 shadow-sm">
+                    <Clock3 className="w-8 h-8" aria-hidden="true" />
+                  </div>
                 </div>
+                <div className="space-y-2">
+                  <p className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                    Pendiente de aprobación
+                  </p>
+                  <h2 className="font-semibold text-gray-800 text-lg">Solicitud en revisión</h2>
+                </div>
+                <div className="rounded-xl border border-amber-200/70 bg-amber-50/80 p-4 text-sm text-amber-800 leading-relaxed">
+                  Tu solicitud está siendo revisada. Te avisaremos por email cuando sea aprobada y ahí vas a recibir un link directo para completar tu registro.
+                </div>
+                <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                  <Mail className="w-4 h-4" aria-hidden="true" />
+                  <span>{email}</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="muted"
+                  size="sm"
+                  onClick={() => {
+                    setStep("email");
+                    setEmail("");
+                    setError("");
+                  }}
+                  className="w-full"
+                >
+                  Usar otro email
+                </Button>
               </div>
-              <h2 className="font-semibold text-gray-800 text-lg">Solicitud en revisión</h2>
-              <p className="text-sm text-amber-700 bg-amber-50 rounded-xl p-4 leading-relaxed">
-                Tu solicitud está siendo revisada. Te avisaremos por email cuando sea aprobada — ahí recibirás un link directo para completar tu registro.
-              </p>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setStep("email");
-                  setEmail("");
-                  setError("");
-                }}
-                className={secondaryActionClasses}
-              >
-                Usar otro email
-              </Button>
-            </div>
-          ) : step === "email" ? (
-            <form onSubmit={handleRequestOtp} className="space-y-4">
-              <Input
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="tu@email.com"
-                required
-              />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" loading={loading} className="w-full" size="lg">
-                Acceder
-              </Button>
-            </form>
-          ) : (
-            <form onSubmit={handleVerifyOtp} className="space-y-4">
-              <div className="text-center p-3 bg-violet-50 rounded-xl mb-2">
-                <p className="text-sm text-violet-700">
-                  Código enviado a{" "}
-                  <span className="font-semibold">{email}</span>
-                </p>
-              </div>
-              <Input
-                label="Código de acceso"
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                placeholder="123456"
-                inputMode="numeric"
-                required
-              />
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" loading={loading} className="w-full" size="lg">
-                Ingresar
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setStep("email");
-                  setCode("");
-                  setError("");
-                }}
-                className={secondaryActionClasses}
-              >
-                Cambiar email
-              </Button>
-            </form>
-          )}
-        </div>
+            ) : step === "email" ? (
+              <form onSubmit={handleRequestOtp} className="space-y-4">
+                <Input
+                  label="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                  required
+                />
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                <Button variant="primary" type="submit" loading={loading} className="w-full" size="lg">
+                  Acceder
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div className="text-center p-3 bg-violet-50 rounded-xl mb-2">
+                  <p className="text-sm text-violet-700">
+                    Código enviado a{" "}
+                    <span className="font-semibold">{email}</span>
+                  </p>
+                </div>
+                <Input
+                  label="Código de acceso"
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="123456"
+                  inputMode="numeric"
+                  required
+                />
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                <Button variant="primary" type="submit" loading={loading} className="w-full" size="lg">
+                  Ingresar
+                </Button>
+                <Button
+                  type="button"
+                  variant="muted"
+                  size="sm"
+                  onClick={() => {
+                    setStep("email");
+                    setCode("");
+                    setError("");
+                  }}
+                  className="w-full"
+                >
+                  Cambiar email
+                </Button>
+              </form>
+            )}
+          </Card>
+        </Reveal>
       </div>
     </main>
   );
