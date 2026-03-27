@@ -35,7 +35,7 @@ export default function Home() {
 
         <div className="max-w-2xl w-full text-center relative z-10 my-auto">
           {/* Logo */}
-          <Reveal y={14} amount={0.6} className="flex justify-center mb-7">
+          <Reveal y={14} amount={0.1} className="flex justify-center mb-7">
             <Image
               src="/logo.png"
               alt="Qupón"
@@ -47,7 +47,7 @@ export default function Home() {
           </Reveal>
 
           {/* Badge */}
-          <Reveal delay={0.06} y={16} amount={0.6}>
+          <Reveal delay={0.06} y={16} amount={0.2}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/85 sm:bg-white/65 sm:backdrop-blur-sm border border-violet-200/70 text-violet-700 text-sm font-medium shadow-sm">
               <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse motion-reduce:animate-none shrink-0" />
               Plataforma de cupones digitales con QR
@@ -55,7 +55,7 @@ export default function Home() {
           </Reveal>
 
           {/* Headline */}
-          <Reveal delay={0.14} y={18} amount={0.6}>
+          <Reveal delay={0.14} y={18} amount={0.2}>
             <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-[1.15] tracking-tight mt-6 mb-4">
               Cupones que{" "}
               <span className="bg-linear-to-r from-violet-600 via-violet-500 to-violet-400 bg-clip-text text-transparent">
@@ -66,7 +66,7 @@ export default function Home() {
           </Reveal>
 
           {/* Subtitle */}
-          <Reveal delay={0.22} y={18} amount={0.6}>
+          <Reveal delay={0.22} y={18} amount={0.2}>
             <p className="text-lg text-gray-600 max-w-md mx-auto leading-relaxed">
               Creá cupones de descuento, compartí el link y canjeá al instante con
               QR desde el celular.
@@ -74,7 +74,7 @@ export default function Home() {
           </Reveal>
 
           {/* Feature pills */}
-          <Reveal delay={0.3} y={20} amount={0.55} className="mt-6 mb-10">
+          <Reveal delay={0.3} y={20} amount={0.2} className="mt-6 mb-10">
             <div className="flex flex-wrap justify-center gap-2">
             {FEATURES.map((f) => (
               <span
@@ -89,7 +89,7 @@ export default function Home() {
           </Reveal>
 
           {/* CTA Cards */}
-          <Reveal delay={0.38} y={22} amount={0.45}>
+          <Reveal delay={0.38} y={22} amount={0.15}>
             <div className="grid sm:grid-cols-2 gap-4">
             {/* Para Negocios */}
             <div className="group bg-white/90 sm:bg-white/75 sm:backdrop-blur-md rounded-2xl p-6 border border-white/80 shadow-lg shadow-violet-100/60 text-left hover:shadow-xl hover:shadow-violet-200/60 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300">
@@ -129,7 +129,7 @@ export default function Home() {
         <Reveal
           delay={0.46}
           y={14}
-          amount={0.8}
+          amount={0.15}
           className="pointer-events-none z-10 mt-8 flex flex-col items-center gap-1 text-gray-500 sm:absolute sm:bottom-5 sm:left-1/2 sm:mt-0 sm:-translate-x-1/2"
         >
           <span className="text-[11px] sm:text-xs font-medium uppercase tracking-[0.2em]">
