@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import LinkButton from "@/components/ui/LinkButton";
 
 function IconClock() {
   return (
@@ -22,6 +22,8 @@ export default function LoginPage() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const secondaryActionClasses =
+    "w-full underline underline-offset-2 text-gray-500 hover:text-gray-700 hover:bg-gray-50";
 
   async function handleRequestOtp(e: React.FormEvent) {
     e.preventDefault();
@@ -79,9 +81,14 @@ export default function LoginPage() {
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-125 h-125 rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
 
       {/* Back link — fixed top-left */}
-      <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+      <LinkButton
+        href="/"
+        variant="subtle"
+        size="sm"
+        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40"
+      >
         ← Inicio
-      </Link>
+      </LinkButton>
 
       {/* Logo + card — centrado */}
       <div className="w-full max-w-md flex-1 flex flex-col justify-center relative animate-[fade-up_0.45s_ease-out_both]">
@@ -113,13 +120,19 @@ export default function LoginPage() {
               <p className="text-sm text-amber-700 bg-amber-50 rounded-xl p-4 leading-relaxed">
                 Tu solicitud está siendo revisada. Te avisaremos por email cuando sea aprobada — ahí recibirás un link directo para completar tu registro.
               </p>
-              <button
+              <Button
                 type="button"
-                onClick={() => { setStep("email"); setEmail(""); setError(""); }}
-                className="w-full text-sm text-gray-500 hover:text-gray-700 transition-colors underline cursor-pointer"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setStep("email");
+                  setEmail("");
+                  setError("");
+                }}
+                className={secondaryActionClasses}
               >
                 Usar otro email
-              </button>
+              </Button>
             </div>
           ) : step === "email" ? (
             <form onSubmit={handleRequestOtp} className="space-y-4">
@@ -157,13 +170,19 @@ export default function LoginPage() {
               <Button type="submit" loading={loading} className="w-full" size="lg">
                 Ingresar
               </Button>
-              <button
+              <Button
                 type="button"
-                onClick={() => { setStep("email"); setCode(""); setError(""); }}
-                className="w-full text-sm text-gray-500 hover:text-gray-700 transition-colors underline cursor-pointer"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setStep("email");
+                  setCode("");
+                  setError("");
+                }}
+                className={secondaryActionClasses}
               >
                 Cambiar email
-              </button>
+              </Button>
             </form>
           )}
         </div>

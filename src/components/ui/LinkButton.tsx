@@ -3,8 +3,8 @@ import { getButtonClasses } from "@/components/ui/buttonStyles";
 import { ComponentPropsWithoutRef } from "react";
 
 type LinkButtonProps = ComponentPropsWithoutRef<typeof Link> & {
-  variant?: "primary" | "light";
-  size?: "md" | "lg";
+  variant?: "primary" | "light" | "subtle";
+  size?: "sm" | "md" | "lg";
 };
 
 export default function LinkButton({
