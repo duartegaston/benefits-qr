@@ -15,6 +15,8 @@ export const buttonVariantClasses = {
     "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
   light:
     "bg-white text-violet-700 hover:bg-violet-50 focus-visible:ring-violet-200 focus-visible:ring-offset-violet-600",
+  subtle:
+    "bg-transparent text-violet-700/90 hover:text-violet-800 hover:bg-violet-50 focus-visible:ring-violet-300",
 } as const;
 
 export const buttonSizeClasses = {
