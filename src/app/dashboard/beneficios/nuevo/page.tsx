@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
@@ -62,11 +61,8 @@ export default function NuevoBeneficioPage() {
   const todosLosDias = diasValidos.length === 0;
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4">
-      <Link href="/dashboard" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
-        ← Dashboard
-      </Link>
-      <Card className="w-full max-w-md p-6 sm:p-8">
+    <main className="px-4 pt-6 pb-8 sm:pt-8">
+      <Card className="w-full max-w-md mx-auto p-6 sm:p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-8">Nuevo cupón</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">

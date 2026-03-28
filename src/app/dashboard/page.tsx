@@ -61,7 +61,7 @@ export default async function DashboardPage({
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   return (
-    <main className="min-h-screen px-4 pt-16 pb-32 sm:px-6 sm:pt-6 sm:pb-16 max-w-5xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
+    <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16 animate-[fade-in_0.3s_ease-out_both]">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <LogoUpload currentLogoUrl={local.logoUrl} nombre={local.nombre!} />

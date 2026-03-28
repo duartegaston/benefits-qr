@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
+import LinkButton from "@/components/ui/LinkButton";
 
 const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const PAGE_SIZE = 10;
@@ -69,10 +69,7 @@ export default async function BeneficioStatsPage({
   const totalPages = Math.ceil(totalReclamos / PAGE_SIZE);
 
   return (
-    <main className="min-h-screen px-4 pt-14 pb-8 sm:px-6 sm:pt-6 max-w-4xl mx-auto">
-      <Link href="/dashboard" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
-        ← Dashboard
-      </Link>
+    <main className="mx-auto max-w-4xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
 
       <Card className="p-6 mb-6">
         <div className="flex items-start justify-between gap-4">
@@ -166,31 +163,27 @@ export default async function BeneficioStatsPage({
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-2">
-              <Link
+              <LinkButton
                 href={`/dashboard/beneficios/${id}?page=${page - 1}`}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  page <= 1
-                    ? "pointer-events-none text-gray-300 bg-gray-50"
-                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-                }`}
+                variant="secondary"
+                size="sm"
+                className={page <= 1 ? "pointer-events-none opacity-50" : undefined}
                 aria-disabled={page <= 1}
               >
                 ← Anterior
-              </Link>
+              </LinkButton>
               <span className="text-sm text-gray-500">
                 Página {page} de {totalPages}
               </span>
-              <Link
+              <LinkButton
                 href={`/dashboard/beneficios/${id}?page=${page + 1}`}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  page >= totalPages
-                    ? "pointer-events-none text-gray-300 bg-gray-50"
-                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-                }`}
+                variant="secondary"
+                size="sm"
+                className={page >= totalPages ? "pointer-events-none opacity-50" : undefined}
                 aria-disabled={page >= totalPages}
               >
                 Siguiente →
-              </Link>
+              </LinkButton>
             </div>
           )}
         </div>
