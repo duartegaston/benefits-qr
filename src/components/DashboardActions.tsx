@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, QrCode } from "lucide-react";
 import Button from "./ui/Button";
+import LinkButton from "./ui/LinkButton";
 
 export default function DashboardActions() {
   const router = useRouter();
@@ -13,18 +15,19 @@ export default function DashboardActions() {
 
   return (
     <>
-      <button
+      <Button
         onClick={handleLogout}
-        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+        variant="subtle"
+        size="sm"
+        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40"
       >
-        ← Salir
-      </button>
-      <button
-        onClick={() => router.push("/dashboard/escanear")}
-        className="px-4 py-1.5 bg-violet-100 text-violet-700 rounded-lg text-sm font-medium hover:bg-violet-200 transition-colors cursor-pointer"
-      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Salir
+      </Button>
+      <LinkButton href="/dashboard/escanear" variant="light" size="sm">
+        <QrCode className="h-4 w-4" aria-hidden="true" />
         Escanear QR
-      </button>
+      </LinkButton>
     </>
   );
 }

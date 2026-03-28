@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
@@ -7,6 +6,7 @@ import Badge from "@/components/ui/Badge";
 import DashboardActions from "@/components/DashboardActions";
 import ShareButtons from "@/components/ShareButtons";
 import LogoUpload from "@/components/LogoUpload";
+import LinkButton from "@/components/ui/LinkButton";
 
 const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
@@ -75,11 +75,11 @@ export default async function DashboardPage({
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <Card className="p-6 bg-white/75 backdrop-blur-md border-white/70 shadow-md shadow-violet-100/40 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "0ms" }}>
+        <Card className="p-6 bg-white/90 sm:bg-white/75 sm:backdrop-blur-md border-white/70 shadow-md shadow-violet-100/40 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "0ms" }}>
           <p className="text-sm text-gray-500 mb-1">Cupones</p>
           <p className="text-3xl font-bold text-gray-900">{totalBeneficios}</p>
         </Card>
-        <Card className="p-6 bg-white/75 backdrop-blur-md border-white/70 shadow-md shadow-violet-100/40 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "80ms" }}>
+        <Card className="p-6 bg-white/90 sm:bg-white/75 sm:backdrop-blur-md border-white/70 shadow-md shadow-violet-100/40 animate-[fade-up_0.45s_ease-out_both]" style={{ animationDelay: "80ms" }}>
           <p className="text-sm text-gray-500 mb-1">Total reclamos</p>
           <p className="text-3xl font-bold text-gray-900">{totalReclamos}</p>
         </Card>
@@ -92,23 +92,25 @@ export default async function DashboardPage({
       {/* Beneficios */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-900">Mis cupones</h2>
-        <Link
+        <LinkButton
           href="/dashboard/beneficios/nuevo"
-          className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors"
+          variant="primary"
+          size="sm"
         >
           + Nuevo cupón
-        </Link>
+        </LinkButton>
       </div>
 
       {totalBeneficios === 0 ? (
-        <Card className="p-12 text-center bg-white/75 backdrop-blur-md border-white/70">
+        <Card className="p-12 text-center bg-white/90 sm:bg-white/75 sm:backdrop-blur-md border-white/70">
           <p className="text-gray-400 mb-4">No tenés cupones aún</p>
-          <Link
+          <LinkButton
             href="/dashboard/beneficios/nuevo"
-            className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-colors"
+            variant="primary"
+            size="sm"
           >
             Crear primer cupón
-          </Link>
+          </LinkButton>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -119,7 +121,7 @@ export default async function DashboardPage({
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
 
             return (
-              <Card key={b.id} className="p-5 bg-white/75 backdrop-blur-md border-white/70 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+              <Card key={b.id} className="p-5 bg-white/90 sm:bg-white/75 sm:backdrop-blur-md border-white/70 hover:shadow-md hover:-translate-y-0.5 transition-[transform,box-shadow] duration-200">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -142,12 +144,13 @@ export default async function DashboardPage({
                   </div>
                   <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
                     <ShareButtons url={shareUrl} descripcion={b.descripcion} nombreLocal={local.nombre!} fechaExpiracion={b.fechaExpiracion} />
-                    <Link
-                      href={`/dashboard/beneficios/${b.id}`}
-                      className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
-                    >
-                      Ver detalle
-                    </Link>
+                     <LinkButton
+                       href={`/dashboard/beneficios/${b.id}`}
+                       variant="secondary"
+                       size="sm"
+                     >
+                       Ver detalle
+                     </LinkButton>
                   </div>
                 </div>
               </Card>
@@ -155,31 +158,27 @@ export default async function DashboardPage({
           })}
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-2">
-              <Link
+              <LinkButton
                 href={`/dashboard?page=${page - 1}`}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  page <= 1
-                    ? "pointer-events-none text-gray-300 bg-gray-50"
-                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-                }`}
+                variant="secondary"
+                size="sm"
+                className={page <= 1 ? "pointer-events-none opacity-50" : undefined}
                 aria-disabled={page <= 1}
               >
                 ← Anterior
-              </Link>
+              </LinkButton>
               <span className="text-sm text-gray-500">
                 Página {page} de {totalPages}
               </span>
-              <Link
+              <LinkButton
                 href={`/dashboard?page=${page + 1}`}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  page >= totalPages
-                    ? "pointer-events-none text-gray-300 bg-gray-50"
-                    : "text-gray-600 bg-gray-100 hover:bg-gray-200"
-                }`}
+                variant="secondary"
+                size="sm"
+                className={page >= totalPages ? "pointer-events-none opacity-50" : undefined}
                 aria-disabled={page >= totalPages}
               >
                 Siguiente →
-              </Link>
+              </LinkButton>
             </div>
           )}
         </div>

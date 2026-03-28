@@ -3,7 +3,7 @@ import { getButtonClasses } from "@/components/ui/buttonStyles";
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "muted" | "secondary" | "ghost" | "danger" | "success";
+  variant?: "primary" | "muted" | "secondary" | "ghost" | "danger" | "success" | "subtle";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
 }
