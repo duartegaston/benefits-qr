@@ -49,7 +49,7 @@ export default function DashboardHeader() {
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">
         <div>
           {isDashboardHome(pathname) ? (
-            <Button onClick={handleLogout} variant="subtle" size="sm">
+            <Button onClick={handleLogout} variant="logout" size="sm">
               Salir
             </Button>
           ) : isDashboardInternal(pathname) ? (

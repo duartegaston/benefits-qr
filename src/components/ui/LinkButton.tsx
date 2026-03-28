@@ -3,7 +3,7 @@ import { getButtonClasses } from "@/components/ui/buttonStyles";
 import { ComponentPropsWithoutRef } from "react";
 
 type LinkButtonProps = ComponentPropsWithoutRef<typeof Link> & {
-  variant?: "primary" | "secondary" | "light" | "subtle";
+  variant?: "primary" | "muted" | "secondary" | "light" | "subtle";
   size?: "sm" | "md" | "lg";
 };
 

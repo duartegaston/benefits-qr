@@ -22,7 +22,6 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
 
   return (
     <div className="flex items-center gap-1.5">
-      {/* WhatsApp */}
       <a
         href={`https://wa.me/?text=${encodeURIComponent(texto)}`}
         target="_blank"
@@ -34,7 +33,6 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         <MessageCircle aria-hidden="true" className="w-4 h-4 text-green-600" />
       </a>
 
-      {/* Email */}
       <a
         href={`mailto:?subject=${encodeURIComponent("Beneficio especial para vos")}&body=${encodeURIComponent(texto)}`}
         title="Compartir por email"
@@ -44,7 +42,6 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         <Mail aria-hidden="true" className="w-4 h-4 text-blue-600" />
       </a>
 
-      {/* Copiar link */}
       <button
         onClick={handleCopy}
         title={copied ? "¡Copiado!" : "Copiar enlace"}
