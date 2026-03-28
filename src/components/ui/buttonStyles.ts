@@ -6,17 +6,21 @@ export const buttonBaseClasses =
 export const buttonVariantClasses = {
   primary:
     "bg-violet-600 text-white hover:bg-violet-700 focus-visible:ring-violet-500",
+  muted:
+    "bg-gray-100 text-gray-600 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-violet-200",
   secondary:
-    "bg-gray-100 text-gray-700 hover:bg-gray-200 focus-visible:ring-gray-400",
+    "border border-gray-200 bg-gray-200 text-gray-800 shadow-sm hover:border-gray-300 hover:bg-gray-300 focus-visible:ring-gray-400",
   ghost:
     "bg-transparent text-gray-600 hover:bg-gray-100 focus-visible:ring-gray-400",
   danger: "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
+  logout:
+    "border border-red-200/80 bg-red-50/90 text-red-700 shadow-sm hover:border-red-300 hover:bg-red-100 hover:text-red-800 focus-visible:ring-red-300",
   success:
     "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
   light:
-    "bg-white text-violet-700 hover:bg-violet-50 focus-visible:ring-violet-200 focus-visible:ring-offset-violet-600",
+    "border border-violet-200/70 bg-violet-50 text-violet-700 shadow-sm hover:border-violet-300 hover:bg-violet-100 focus-visible:ring-violet-200 focus-visible:ring-offset-violet-600",
   subtle:
-    "bg-transparent text-violet-700/90 hover:text-violet-800 hover:bg-violet-50 focus-visible:ring-violet-300",
+    "border border-violet-200/70 bg-white/80 text-violet-700 shadow-sm hover:border-violet-300 hover:bg-white hover:text-violet-800 focus-visible:ring-violet-300",
 } as const;
 
 export const buttonSizeClasses = {
