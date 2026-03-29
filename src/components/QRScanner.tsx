@@ -7,20 +7,23 @@ interface QRScannerProps {
 
 export default function QRScanner({ onScan }: QRScannerProps) {
   const scannerRef = useRef<{ stop: () => Promise<void> } | null>(null);
-  const mountedRef = useRef(false);
+  const hasStartedRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const readerIdRef = useRef(`qr-reader-${Math.random().toString(36).slice(2, 10)}`);
   const onScanRef = useRef(onScan);
   onScanRef.current = onScan;
 
   useEffect(() => {
-    mountedRef.current = true;
+    let isCancelled = false;
 
-    import("html5-qrcode").then(({ Html5Qrcode }) => {
-      if (!mountedRef.current) return;
+    import("html5-qrcode").then(async ({ Html5Qrcode }) => {
+      if (isCancelled || !containerRef.current) return;
 
-      const scanner = new Html5Qrcode("qr-reader");
+      const scanner = new Html5Qrcode(readerIdRef.current);
+      scannerRef.current = scanner;
 
-      scanner
-        .start(
+      try {
+        await scanner.start(
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: 250, height: 250 } },
           (decodedText) => {
@@ -29,23 +32,38 @@ export default function QRScanner({ onScan }: QRScannerProps) {
           () => {
             // ignore per-frame errors
           }
-        )
-        .catch(() => {
-          // camera permission denied or unavailable
-        });
+        );
 
-      scannerRef.current = scanner;
+        if (isCancelled) {
+          await scanner.stop().catch(() => {});
+          return;
+        }
+
+        hasStartedRef.current = true;
+      } catch {
+        // camera permission denied or unavailable
+      }
     });
 
     return () => {
-      mountedRef.current = false;
-      scannerRef.current?.stop().catch(() => {});
+      isCancelled = true;
+      const scanner = scannerRef.current;
+      scannerRef.current = null;
+
+      if (scanner && hasStartedRef.current) {
+        hasStartedRef.current = false;
+        void scanner.stop().catch(() => {});
+      }
     };
   }, []);
 
   return (
     <div className="w-full">
-      <div id="qr-reader" className="w-full rounded-xl overflow-hidden" />
+      <div
+        ref={containerRef}
+        id={readerIdRef.current}
+        className="w-full rounded-xl overflow-hidden"
+      />
     </div>
   );
 }
