@@ -51,14 +51,14 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
   }
 
   return (
-    <Card className="w-full max-w-md p-8 shadow-xl shadow-gray-200/60">
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Completá tu perfil</h1>
+    <Card className="w-full max-w-md p-6 sm:p-7 shadow-xl shadow-gray-200/60 bg-white/95 sm:bg-white/85 sm:backdrop-blur-md border-white/80">
+      <div className="mb-6 text-center sm:mb-7">
+        <h1 className="mb-1.5 text-2xl font-bold text-gray-900">Completá tu perfil</h1>
         <p className="text-gray-500 text-sm">Esto es lo que verán tus clientes</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="flex flex-col items-center mb-2 gap-1">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+        <div className="mb-1.5 flex flex-col items-center gap-1">
           <LogoUpload
             currentLogoUrl={logoUrl}
             nombre={nombre || "?"}
@@ -69,12 +69,14 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           )}
         </div>
 
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-1">Email</p>
-          <p className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
-            {email}
-          </p>
-        </div>
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          readOnly
+          aria-readonly="true"
+          className="bg-gray-50 text-gray-700 border-gray-200 cursor-default focus-visible:ring-2 focus-visible:ring-violet-200"
+        />
 
         <Input
           label="Nombre del local"
@@ -101,11 +103,19 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           required
         />
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+            {error}
+          </p>
+        )}
 
         <Button type="submit" loading={loading} className="w-full" size="lg">
           Guardar y continuar
         </Button>
+
+        <p className="text-center text-xs text-gray-500">
+          Podés editar estos datos después desde tu dashboard.
+        </p>
       </form>
     </Card>
   );

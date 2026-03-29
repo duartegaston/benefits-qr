@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Camera } from "lucide-react";
 
 interface LogoUploadProps {
   currentLogoUrl?: string | null;
@@ -53,7 +54,7 @@ export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoU
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="relative w-24 h-24 rounded-2xl overflow-hidden bg-violet-100 flex items-center justify-center focus:outline-none"
+        className="relative w-24 h-24 rounded-2xl overflow-hidden bg-violet-100 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed"
         title="Cambiar logo"
         aria-label="Cambiar logo"
         disabled={loading}
@@ -70,10 +71,7 @@ export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoU
           {loading ? (
             <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
-            <svg aria-hidden="true" className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+            <Camera aria-hidden="true" className="w-7 h-7 text-white" />
           )}
         </div>
       </button>
