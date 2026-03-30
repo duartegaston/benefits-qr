@@ -3,15 +3,17 @@ import { useEffect, useRef } from "react";
 
 interface QRScannerProps {
   onScan: (data: string) => void;
+  onError?: () => void;
 }
-
-export default function QRScanner({ onScan }: QRScannerProps) {
+export default function QRScanner({ onScan, onError }: QRScannerProps) {
   const scannerRef = useRef<{ stop: () => Promise<void> } | null>(null);
   const hasStartedRef = useRef(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const readerIdRef = useRef(`qr-reader-${Math.random().toString(36).slice(2, 10)}`);
   const onScanRef = useRef(onScan);
+  const onErrorRef = useRef(onError);
   onScanRef.current = onScan;
+  onErrorRef.current = onError;
 
   useEffect(() => {
     let isCancelled = false;
@@ -41,7 +43,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
 
         hasStartedRef.current = true;
       } catch {
-        // camera permission denied or unavailable
+        onErrorRef.current?.();
       }
     });
 

@@ -5,6 +5,7 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
 import LinkButton from "@/components/ui/LinkButton";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const PAGE_SIZE = 10;
@@ -15,6 +16,18 @@ function formatDias(dias: number[]): string {
   if (nombres.length === 1) return `Válido los ${nombres[0]}`;
   const ultimo = nombres.pop();
   return `Válido los ${nombres.join(", ")} y ${ultimo}`;
+}
+
+function getReclamoStatusPresentation(status: "PENDIENTE" | "CANJEADO" | "VENCIDO") {
+  if (status === "CANJEADO") {
+    return { label: "Canjeado", color: "green" as const };
+  }
+
+  if (status === "VENCIDO") {
+    return { label: "Vencido", color: "red" as const };
+  }
+
+  return { label: "Pendiente", color: "violet" as const };
 }
 
 export default async function BeneficioStatsPage({
@@ -69,56 +82,78 @@ export default async function BeneficioStatsPage({
   const totalPages = Math.ceil(totalReclamos / PAGE_SIZE);
 
   return (
-    <main className="mx-auto max-w-4xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
+    <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
+      <SectionHeader
+        eyebrow="Detalle del cupón"
+        title="Estado y actividad"
+        description="Consultá métricas clave y el historial de clientes que reclamaron este cupón."
+        align="left"
+        className="mb-5 sm:mb-6"
+      />
 
-      <Card className="p-6 mb-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <h1 className="text-xl font-bold text-gray-900">
-                {beneficio.descripcion}
-              </h1>
-              {isDeleted ? (
-                <Badge color="red">Eliminado</Badge>
-              ) : isExpired ? (
-                <Badge color="red">Vencido</Badge>
-              ) : isAgotado ? (
-                <Badge color="yellow">Agotado</Badge>
-              ) : (
-                <Badge color="green">Activo</Badge>
-              )}
+      <Card className="relative mb-6 border-white/80 bg-white/95 p-4 shadow-sm shadow-violet-100/25 sm:bg-white/85 sm:p-6">
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
+            <div className="min-w-0 flex-1 space-y-2 pr-12 sm:pr-36">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-lg font-bold leading-tight text-gray-950 sm:text-xl">
+                  {beneficio.descripcion}
+                </h1>
+                {isDeleted ? (
+                  <Badge color="red">Eliminado</Badge>
+                ) : isExpired ? (
+                  <Badge color="red">Vencido</Badge>
+                ) : isAgotado ? (
+                  <Badge color="yellow">Agotado</Badge>
+                ) : (
+                  <Badge color="green">Activo</Badge>
+                )}
+              </div>
+              <p className="text-sm font-medium text-gray-600">
+                Vence: {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
+                {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
+              </p>
+              <p className="text-xs font-medium text-gray-500 sm:text-sm">
+                {formatDias(beneficio.diasValidos)}
+              </p>
             </div>
-            <p className="text-gray-500 text-sm">
-              Vence:{" "}
-              {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
-              {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
-              {" · "}{formatDias(beneficio.diasValidos)}
+
+            {!isDeleted && (
+              <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
+                <DeleteBeneficioButton id={beneficio.id} />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+              Actividad del cupón
             </p>
-          </div>
-          {!isDeleted && (
-            <div className="shrink-0">
-              <DeleteBeneficioButton id={beneficio.id} />
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-2.5 sm:p-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 sm:text-xs">
+                  Reclamos
+                </p>
+                <p className="mt-0.5 text-base font-semibold text-gray-900 sm:text-lg">{totalReclamos}</p>
+              </div>
+              <div className="rounded-xl border border-green-200/70 bg-green-50/60 p-2.5 sm:p-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-green-700 sm:text-xs">
+                  Canjeados
+                </p>
+                <p className="mt-0.5 text-base font-semibold text-green-700 sm:text-lg">{totalCanjeados}</p>
+              </div>
+              <div className="rounded-xl border border-violet-200/70 bg-violet-50/60 p-2.5 sm:p-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-violet-700 sm:text-xs">
+                  Pendientes
+                </p>
+                <p className="mt-0.5 text-base font-semibold text-violet-700 sm:text-lg">{totalPendientes}</p>
+              </div>
             </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-          <div className="text-center p-4 bg-gray-50 rounded-xl">
-            <p className="text-2xl font-bold text-gray-900">{totalReclamos}</p>
-            <p className="text-xs text-gray-500 mt-1">Reclamos</p>
-          </div>
-          <div className="text-center p-4 bg-green-50 rounded-xl">
-            <p className="text-2xl font-bold text-green-600">{totalCanjeados}</p>
-            <p className="text-xs text-gray-500 mt-1">Canjeados</p>
-          </div>
-          <div className="text-center p-4 bg-violet-50 rounded-xl">
-            <p className="text-2xl font-bold text-violet-600">{totalPendientes}</p>
-            <p className="text-xs text-gray-500 mt-1">Pendientes</p>
           </div>
         </div>
       </Card>
 
-      <h2 className="text-lg font-semibold text-gray-900 mb-3">
+      <h2 className="mb-3 text-xl font-bold text-gray-950">
         Clientes ({totalReclamos})
       </h2>
 
@@ -127,39 +162,37 @@ export default async function BeneficioStatsPage({
           <p className="text-gray-400">Nadie reclamó este cupón aún</p>
         </Card>
       ) : (
-        <div className="space-y-2">
-          {reclamos.map((r) => (
-            <Card key={r.id} className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
-                  </p>
-                  <div className="text-xs text-gray-500 mt-0.5 space-y-0.5">
-                    {r.cliente.email && <p>{r.cliente.email}</p>}
-                    {r.cliente.phone && <p>{r.cliente.phone}</p>}
-                    <p className="text-gray-400">
-                      Reclamó:{" "}
-                      {new Date(r.fechaReclamo).toLocaleString("es-AR")}
-                      {r.fechaCanje &&
-                        ` · Canjeó: ${new Date(r.fechaCanje).toLocaleString("es-AR")}`}
+        <div className="space-y-2.5">
+          {reclamos.map((r) => {
+            const status = getReclamoStatusPresentation(r.estado);
+
+            return (
+              <Card key={r.id} className="border-white/80 bg-white/95 p-3 sm:bg-white/85 sm:p-3.5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-gray-900 sm:text-base">
+                      {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
                     </p>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+                      {r.cliente.email && <span className="break-all">{r.cliente.email}</span>}
+                      {r.cliente.email && r.cliente.phone ? <span aria-hidden>•</span> : null}
+                      {r.cliente.phone && <span>{r.cliente.phone}</span>}
+                      {!r.cliente.email && !r.cliente.phone ? <span>Sin contacto cargado</span> : null}
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400 sm:text-xs">
+                      <span>Reclamó: {new Date(r.fechaReclamo).toLocaleString("es-AR")}</span>
+                      {r.fechaCanje ? (
+                        <span>Canjeó: {new Date(r.fechaCanje).toLocaleString("es-AR")}</span>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="shrink-0">
+                    <Badge color={status.color}>{status.label}</Badge>
                   </div>
                 </div>
-                <Badge
-                  color={
-                    r.estado === "CANJEADO"
-                      ? "green"
-                      : r.estado === "VENCIDO"
-                      ? "red"
-                      : "violet"
-                  }
-                >
-                  {r.estado}
-                </Badge>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between pt-2">
