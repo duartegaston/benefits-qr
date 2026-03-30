@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import type { LucideIcon } from "lucide-react";
 import { CheckCircle2, CircleAlert, QrCode, XCircle } from "lucide-react";
@@ -66,35 +66,75 @@ export default function EscanearPage() {
     if (state !== "scanning") return;
 
     try {
-      const parsed = JSON.parse(data);
-      if (parsed.reclamoId && parsed.qrToken) {
-        setScannedData(parsed);
+      const parsed: unknown = JSON.parse(data);
+
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        "reclamoId" in parsed &&
+        "qrToken" in parsed &&
+        typeof parsed.reclamoId === "string" &&
+        typeof parsed.qrToken === "string" &&
+        parsed.reclamoId.trim() &&
+        parsed.qrToken.trim()
+      ) {
+        setScannedData({ reclamoId: parsed.reclamoId, qrToken: parsed.qrToken });
         setState("confirming");
+        return;
       }
+
+      setMessage("El QR es válido pero no tiene el formato esperado para canjear.");
+      setState("error");
     } catch {
       setMessage("QR inválido");
       setState("error");
     }
   }
 
+  const handleScannerError = useCallback((scannerMessage: string) => {
+    setMessage(scannerMessage);
+    setState("error");
+  }, []);
+
   async function handleCanjear() {
     if (!scannedData) return;
     setLoading(true);
 
-    const res = await fetch(`/api/reclamos/${scannedData.reclamoId}/canjear`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ qrToken: scannedData.qrToken }),
-    });
+    try {
+      const res = await fetch(`/api/reclamos/${scannedData.reclamoId}/canjear`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ qrToken: scannedData.qrToken }),
+      });
 
-    const data = await res.json();
-    setLoading(false);
+      let payload: unknown = null;
+      try {
+        payload = await res.json();
+      } catch {
+        payload = null;
+      }
 
-    if (res.ok) {
-      setState("success");
-    } else {
+      if (res.ok) {
+        setState("success");
+        return;
+      }
+
+      const errorMessage =
+        typeof payload === "object" &&
+        payload !== null &&
+        "error" in payload &&
+        typeof payload.error === "string" &&
+        payload.error.trim()
+          ? payload.error
+          : "Error al canjear";
+
       setState("error");
-      setMessage(data.error || "Error al canjear");
+      setMessage(errorMessage);
+    } catch {
+      setState("error");
+      setMessage("No se pudo conectar con el servidor. Revisá tu conexión e intentá de nuevo.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -121,7 +161,7 @@ export default function EscanearPage() {
               <QrCode className="h-4 w-4 text-violet-600" aria-hidden="true" />
               Apuntá la cámara al código QR del cliente
             </p>
-            <QRScanner onScan={handleScan} />
+            <QRScanner onScan={handleScan} onError={handleScannerError} />
           </div>
         )}
 
