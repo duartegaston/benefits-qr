@@ -3,32 +3,8 @@ import { useEffect, useRef } from "react";
 
 interface QRScannerProps {
   onScan: (data: string) => void;
-  onError?: (message: string) => void;
+  onError?: () => void;
 }
-
-function getCameraStartErrorMessage(error: unknown): string {
-  const rawMessage = error instanceof Error ? error.message : String(error ?? "");
-  const normalized = rawMessage.toLowerCase();
-
-  if (
-    normalized.includes("permission") ||
-    normalized.includes("notallowed") ||
-    normalized.includes("denied")
-  ) {
-    return "No pudimos acceder a la cámara. Revisá los permisos del navegador e intentá de nuevo.";
-  }
-
-  if (
-    normalized.includes("notfound") ||
-    normalized.includes("no camera") ||
-    normalized.includes("devicesnotfound")
-  ) {
-    return "No encontramos una cámara disponible en este dispositivo.";
-  }
-
-  return "No se pudo iniciar la cámara para escanear. Intentá nuevamente.";
-}
-
 export default function QRScanner({ onScan, onError }: QRScannerProps) {
   const scannerRef = useRef<{ stop: () => Promise<void> } | null>(null);
   const hasStartedRef = useRef(false);
@@ -66,8 +42,8 @@ export default function QRScanner({ onScan, onError }: QRScannerProps) {
         }
 
         hasStartedRef.current = true;
-      } catch (error) {
-        onErrorRef.current?.(getCameraStartErrorMessage(error));
+      } catch {
+        onErrorRef.current?.();
       }
     });
 

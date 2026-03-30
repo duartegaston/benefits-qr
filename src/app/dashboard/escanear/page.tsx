@@ -66,33 +66,22 @@ export default function EscanearPage() {
     if (state !== "scanning") return;
 
     try {
-      const parsed: unknown = JSON.parse(data);
-
-      if (
-        typeof parsed === "object" &&
-        parsed !== null &&
-        "reclamoId" in parsed &&
-        "qrToken" in parsed &&
-        typeof parsed.reclamoId === "string" &&
-        typeof parsed.qrToken === "string" &&
-        parsed.reclamoId.trim() &&
-        parsed.qrToken.trim()
-      ) {
-        setScannedData({ reclamoId: parsed.reclamoId, qrToken: parsed.qrToken });
+      const parsed = JSON.parse(data);
+      if (parsed.reclamoId && parsed.qrToken) {
+        setScannedData(parsed);
         setState("confirming");
-        return;
+      } else {
+        setMessage("QR inválido");
+        setState("error");
       }
-
-      setMessage("El QR es válido pero no tiene el formato esperado para canjear.");
-      setState("error");
     } catch {
       setMessage("QR inválido");
       setState("error");
     }
   }
 
-  const handleScannerError = useCallback((scannerMessage: string) => {
-    setMessage(scannerMessage);
+  const handleScannerError = useCallback(() => {
+    setMessage("No se pudo iniciar la cámara para escanear. Revisá permisos e intentá nuevamente.");
     setState("error");
   }, []);
 
