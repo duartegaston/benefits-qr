@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
 
 export default function DeleteBeneficioButton({ id }: { id: string }) {
   const router = useRouter();
@@ -15,34 +18,33 @@ export default function DeleteBeneficioButton({ id }: { id: string }) {
     router.refresh();
   }
 
-  if (confirming) {
-    return (
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-500">¿Confirmás?</span>
-        <button
-          onClick={() => setConfirming(false)}
-          disabled={loading}
-          className="px-3 py-1.5 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-        >
-          Cancelar
-        </button>
-        <button
-          onClick={handleDelete}
-          disabled={loading}
-          className="px-3 py-1.5 text-sm text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
-        >
-          {loading ? "Eliminando…" : "Sí, eliminar"}
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <button
-      onClick={() => setConfirming(true)}
-      className="px-3 py-1.5 text-sm text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-    >
-      Eliminar cupón
-    </button>
+    <>
+      <Button onClick={() => setConfirming(true)} variant="danger" size="sm">
+        <Trash2 className="h-4 w-4" aria-hidden="true" />
+        <span className="hidden sm:inline">Eliminar cupón</span>
+      </Button>
+
+      <Modal open={confirming} onClose={() => !loading && setConfirming(false)} title="Eliminar cupón">
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600">
+            Esta acción eliminará el cupón y no se puede deshacer. ¿Querés continuar?
+          </p>
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <Button
+              onClick={() => setConfirming(false)}
+              disabled={loading}
+              variant="secondary"
+              size="sm"
+            >
+              Cancelar
+            </Button>
+            <Button onClick={handleDelete} variant="danger" size="sm" loading={loading} disabled={loading}>
+              Sí, eliminar
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }

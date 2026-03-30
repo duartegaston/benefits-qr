@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
+import { X } from "lucide-react";
 
 interface ModalProps {
   open: boolean;
@@ -51,20 +52,7 @@ export default function Modal({
             aria-label="Cerrar"
             className="ml-auto p-1 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
           >
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X aria-hidden="true" className="w-5 h-5" />
           </button>
         </div>
         {children}
