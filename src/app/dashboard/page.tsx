@@ -214,13 +214,13 @@ export default async function DashboardPage({
                         </p>
                       </div>
 
-                      <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-gray-700 sm:mt-3 sm:gap-2 sm:text-xs">
-                        <span className="rounded-full bg-gray-100 px-2 py-0.5 sm:px-2.5 sm:py-1">
+                      <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
+                        <Badge color="gray">
                           Reclamos: {b._count.reclamos}
-                        </span>
-                        <span className="rounded-full bg-violet-100 px-2 py-0.5 text-violet-800 sm:px-2.5 sm:py-1">
+                        </Badge>
+                        <Badge color="violet">
                           Canjeados: {canjeados}
-                        </span>
+                        </Badge>
                       </div>
                     </div>
 
