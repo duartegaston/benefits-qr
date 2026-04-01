@@ -10,12 +10,12 @@ interface MetricCardProps {
 
 const colorStyles: Record<MetricCardColor, { wrapper: string; label: string; value: string }> = {
   white: {
-    wrapper: "border-white/80 bg-surface/95 shadow-sm shadow-primary-soft/40 sm:bg-surface/85",
+    wrapper: "border-surface/80 bg-surface/95 shadow-sm shadow-primary-soft/40 sm:bg-surface/85",
     label: "text-text-muted",
     value: "text-text-primary",
   },
   gray: {
-    wrapper: "border-border-default/80 bg-gray-50/70",
+    wrapper: "border-border-default/80 bg-surface-muted/70",
     label: "text-text-muted",
     value: "text-text-primary",
   },

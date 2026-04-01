@@ -92,12 +92,12 @@ export default async function BeneficioStatsPage({
         className="mb-5 sm:mb-6"
       />
 
-      <Card className="relative mb-6 border-white/80 bg-white/95 p-4 shadow-sm shadow-violet-100/25 sm:bg-white/85 sm:p-6">
+      <Card className="relative mb-6 border-surface/80 bg-surface/95 p-4 shadow-sm shadow-accent-soft/25 sm:bg-surface/85 sm:p-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-4">
             <div className="min-w-0 flex-1 space-y-2 pr-12 sm:pr-36">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg font-bold leading-tight text-gray-950 sm:text-xl">
+                <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl">
                   {beneficio.descripcion}
                 </h1>
                 {isDeleted ? (
@@ -110,11 +110,11 @@ export default async function BeneficioStatsPage({
                   <Badge color="green">Activo</Badge>
                 )}
               </div>
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-text-muted">
                 Vence: {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
                 {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
               </p>
-              <p className="text-xs font-medium text-gray-500 sm:text-sm">
+              <p className="text-xs font-medium text-text-muted sm:text-sm">
                 {formatDias(beneficio.diasValidos)}
               </p>
             </div>
@@ -127,7 +127,7 @@ export default async function BeneficioStatsPage({
           </div>
 
           <div className="space-y-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
               Actividad del cupón
             </p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -139,13 +139,13 @@ export default async function BeneficioStatsPage({
         </div>
       </Card>
 
-      <h2 className="mb-3 text-xl font-bold text-gray-950">
+      <h2 className="mb-3 text-xl font-bold text-text-primary">
         Clientes ({totalReclamos})
       </h2>
 
       {totalReclamos === 0 ? (
         <Card className="p-8 text-center">
-          <p className="text-gray-400">Nadie reclamó este cupón aún</p>
+          <p className="text-text-muted">Nadie reclamó este cupón aún</p>
         </Card>
       ) : (
         <div className="space-y-2.5">
@@ -153,19 +153,22 @@ export default async function BeneficioStatsPage({
             const status = getReclamoStatusPresentation(r.estado);
 
             return (
-              <Card key={r.id} className="border-white/80 bg-white/95 p-3 sm:bg-white/85 sm:p-3.5">
+              <Card
+                key={r.id}
+                className="border-surface/80 bg-surface/95 p-3 sm:bg-surface/85 sm:p-3.5"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-gray-900 sm:text-base">
+                    <p className="truncate text-sm font-semibold text-text-primary sm:text-base">
                       {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
                     </p>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted">
                       {r.cliente.email && <span className="break-all">{r.cliente.email}</span>}
                       {r.cliente.email && r.cliente.phone ? <span aria-hidden>•</span> : null}
                       {r.cliente.phone && <span>{r.cliente.phone}</span>}
                       {!r.cliente.email && !r.cliente.phone ? <span>Sin contacto cargado</span> : null}
                     </div>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400 sm:text-xs">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs">
                       <span>Reclamó: {new Date(r.fechaReclamo).toLocaleString("es-AR")}</span>
                       {r.fechaCanje ? (
                         <span>Canjeó: {new Date(r.fechaCanje).toLocaleString("es-AR")}</span>
@@ -191,7 +194,7 @@ export default async function BeneficioStatsPage({
               >
                 ← Anterior
               </LinkButton>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-text-muted">
                 Página {page} de {totalPages}
               </span>
               <LinkButton

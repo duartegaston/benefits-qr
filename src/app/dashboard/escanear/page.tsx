@@ -11,7 +11,7 @@ const QRScanner = dynamic(() => import("@/components/QRScanner"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-48 sm:h-64">
-      <div className="animate-spin h-8 w-8 border-4 border-violet-600 border-t-transparent rounded-full" />
+      <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
     </div>
   ),
 });
@@ -34,22 +34,22 @@ const STATUS_CONFIG: Record<
     title: "QR detectado",
     description: "¿Confirmás el canje de este cupón?",
     icon: CircleAlert,
-    iconBgClassName: "bg-violet-100",
-    iconClassName: "text-violet-600",
+    iconBgClassName: "bg-primary-soft",
+    iconClassName: "text-primary",
   },
   success: {
     title: "¡Canje exitoso!",
     description: "El cupón se canjeó correctamente.",
     icon: CheckCircle2,
-    iconBgClassName: "bg-green-100",
-    iconClassName: "text-green-600",
+    iconBgClassName: "bg-success-soft",
+    iconClassName: "text-success",
   },
   error: {
     title: "Error",
     description: "No se pudo completar el canje.",
     icon: XCircle,
-    iconBgClassName: "bg-red-100",
-    iconClassName: "text-red-600",
+    iconBgClassName: "bg-danger-soft",
+    iconClassName: "text-danger",
   },
 };
 
@@ -146,8 +146,8 @@ export default function EscanearPage() {
       <Card className="p-6">
         {state === "scanning" && (
           <div className="space-y-4">
-            <p className="flex items-center justify-center gap-2 text-center text-sm text-gray-500">
-              <QrCode className="h-4 w-4 text-violet-600" aria-hidden="true" />
+            <p className="flex items-center justify-center gap-2 text-center text-sm text-text-muted">
+              <QrCode className="h-4 w-4 text-primary" aria-hidden="true" />
               Apuntá la cámara al código QR del cliente
             </p>
             <QRScanner onScan={handleScan} onError={handleScannerError} />
@@ -166,10 +166,10 @@ export default function EscanearPage() {
                 aria-hidden="true"
               />
             </div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            <h2 className="text-lg font-semibold text-text-primary mb-2">
               {STATUS_CONFIG.confirming.title}
             </h2>
-            <p className="text-gray-500 text-sm mb-6">
+            <p className="text-text-muted text-sm mb-6">
               {STATUS_CONFIG.confirming.description}
             </p>
             <div className="flex gap-3 justify-center">
@@ -195,10 +195,10 @@ export default function EscanearPage() {
                 aria-hidden="true"
               />
             </div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
+            <h2 className="text-lg font-semibold text-text-primary mb-2">
               {STATUS_CONFIG.success.title}
             </h2>
-            <p className="text-gray-500 text-sm mb-4">{STATUS_CONFIG.success.description}</p>
+            <p className="text-text-muted text-sm mb-4">{STATUS_CONFIG.success.description}</p>
             <Button onClick={reset} className="mt-4">
               Escanear otro
             </Button>
@@ -217,9 +217,9 @@ export default function EscanearPage() {
                 aria-hidden="true"
               />
             </div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">{STATUS_CONFIG.error.title}</h2>
-            <p className="text-gray-500 text-sm mb-2">{STATUS_CONFIG.error.description}</p>
-            <p className="text-red-500 text-sm mb-4">{message}</p>
+            <h2 className="text-lg font-semibold text-text-primary mb-2">{STATUS_CONFIG.error.title}</h2>
+            <p className="text-text-muted text-sm mb-2">{STATUS_CONFIG.error.description}</p>
+            <p className="text-danger text-sm mb-4">{message}</p>
             <Button onClick={reset}>Intentar de nuevo</Button>
           </div>
         )}
