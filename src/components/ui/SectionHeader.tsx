@@ -19,16 +19,16 @@ export default function SectionHeader({
 
   return (
     <div className={cn("mb-12", isCenter ? "text-center" : "text-left", className)}>
-      <span className="text-xs font-semibold uppercase tracking-widest text-violet-600 mb-3 block">
+      <span className="text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">
         {eyebrow}
       </span>
-      <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+      <h2 className="text-3xl sm:text-4xl font-bold text-text-primary tracking-tight">
         {title}
       </h2>
       {description ? (
         <p
           className={cn(
-            "text-gray-600 mt-3 max-w-lg leading-relaxed",
+            "text-text-muted mt-3 max-w-lg leading-relaxed",
             isCenter ? "mx-auto" : "mr-auto"
           )}
         >

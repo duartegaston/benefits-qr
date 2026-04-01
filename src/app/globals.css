@@ -1,18 +1,56 @@
 @import "tailwindcss";
 
 @theme {
-  /* Violet palette — OKLCH for perceptual uniformity */
-  --color-violet-50:  oklch(97%  0.02  285);
-  --color-violet-100: oklch(93%  0.05  285);
-  --color-violet-200: oklch(86%  0.09  285);
-  --color-violet-300: oklch(77%  0.14  285);
-  --color-violet-400: oklch(67%  0.19  285);
-  --color-violet-500: oklch(58%  0.22  285);
-  --color-violet-600: oklch(50%  0.23  285);
-  --color-violet-700: oklch(42%  0.21  285);
-  --color-violet-800: oklch(34%  0.17  285);
-  --color-violet-900: oklch(26%  0.13  285);
-  --color-violet-950: oklch(18%  0.09  285);
+  /* Brand tonal base (internal) */
+  --color-brand-50:  oklch(97%  0.02  285);
+  --color-brand-100: oklch(93%  0.05  285);
+  --color-brand-200: oklch(86%  0.09  285);
+  --color-brand-300: oklch(77%  0.14  285);
+  --color-brand-400: oklch(67%  0.19  285);
+  --color-brand-500: oklch(58%  0.22  285);
+  --color-brand-600: oklch(50%  0.23  285);
+  --color-brand-700: oklch(42%  0.21  285);
+  --color-brand-800: oklch(34%  0.17  285);
+  --color-brand-900: oklch(26%  0.13  285);
+  --color-brand-950: oklch(18%  0.09  285);
+
+  /* Semantic tokens (consumption layer) */
+  --color-primary: var(--color-brand-600);
+  --color-primary-foreground: var(--color-white);
+  --color-primary-soft: var(--color-brand-100);
+
+  --color-surface: var(--color-white);
+  --color-surface-muted: var(--color-gray-100);
+  --color-surface-soft: var(--color-brand-50);
+
+  --color-text-primary: var(--color-gray-900);
+  --color-text-muted: var(--color-gray-500);
+  --color-text-soft: var(--color-brand-200);
+  --color-border-default: var(--color-gray-200);
+  --color-border-strong: var(--color-brand-500);
+
+  --color-bg-gradient-from: var(--color-brand-200);
+  --color-bg-gradient-via: var(--color-brand-50);
+  --color-bg-gradient-to: var(--color-brand-300);
+
+  --color-success: var(--color-green-600);
+  --color-success-soft: var(--color-green-100);
+  --color-success-foreground: var(--color-white);
+  --color-success-border: var(--color-green-300);
+
+  --color-warning: var(--color-yellow-600);
+  --color-warning-soft: var(--color-yellow-100);
+  --color-warning-foreground: var(--color-gray-900);
+  --color-warning-border: var(--color-yellow-300);
+
+  --color-danger: var(--color-red-600);
+  --color-danger-soft: var(--color-red-100);
+  --color-danger-foreground: var(--color-white);
+  --color-danger-border: var(--color-red-300);
+
+  --color-accent: var(--color-brand-700);
+  --color-accent-soft: var(--color-brand-100);
+  --color-accent-foreground: var(--color-brand-800);
 
   /* Animation keyframes — referenced by animate-* utilities */
   --animate-fade-up:  fade-up  0.45s ease-out both;

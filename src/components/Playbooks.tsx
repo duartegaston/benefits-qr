@@ -2,14 +2,7 @@ import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
-
-function IconChannel() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 11.1a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  );
-}
+import { Phone } from "lucide-react";
 
 const PLAYBOOKS = [
   {
@@ -40,7 +33,7 @@ const PLAYBOOKS = [
 
 export default function Playbooks() {
   return (
-    <section className="bg-white py-16 px-6 sm:px-8">
+    <section className="bg-surface py-16 px-6 sm:px-8">
       <div className="max-w-4xl mx-auto">
         <Reveal y={20} amount={0.35}>
           <SectionHeader
@@ -66,7 +59,7 @@ export default function Playbooks() {
                 style={{ transitionProperty: "transform, box-shadow" }}
               >
                 <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
-                  <h3 className="font-bold text-gray-900 min-w-0 flex-1">{play.name}</h3>
+                  <h3 className="font-bold text-text-primary min-w-0 flex-1">{play.name}</h3>
                   <Badge
                     color="violet"
                     className="shrink-0 py-1 whitespace-normal sm:whitespace-nowrap max-w-full"
@@ -74,9 +67,9 @@ export default function Playbooks() {
                     {play.config}
                   </Badge>
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">{play.description}</p>
-                <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                  <IconChannel />
+                <p className="text-sm text-text-muted leading-relaxed mb-4">{play.description}</p>
+                <div className="flex items-center gap-1.5 text-xs text-text-muted/80">
+                  <Phone className="h-3 w-3" aria-hidden="true" />
                   <span>{play.channel}</span>
                 </div>
               </Card>

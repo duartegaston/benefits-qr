@@ -10,34 +10,34 @@ interface MetricCardProps {
 
 const colorStyles: Record<MetricCardColor, { wrapper: string; label: string; value: string }> = {
   white: {
-    wrapper: "border-white/80 bg-white/95 shadow-sm shadow-violet-100/25 sm:bg-white/85",
-    label: "text-gray-500",
-    value: "text-gray-900",
+    wrapper: "border-white/80 bg-surface/95 shadow-sm shadow-primary-soft/40 sm:bg-surface/85",
+    label: "text-text-muted",
+    value: "text-text-primary",
   },
   gray: {
-    wrapper: "border-gray-200/80 bg-gray-50/70",
-    label: "text-gray-500",
-    value: "text-gray-900",
+    wrapper: "border-border-default/80 bg-gray-50/70",
+    label: "text-text-muted",
+    value: "text-text-primary",
   },
   violet: {
-    wrapper: "border-violet-200/70 bg-violet-50/60",
-    label: "text-violet-700",
-    value: "text-violet-700",
+    wrapper: "border-primary-soft/70 bg-surface-soft/80",
+    label: "text-accent",
+    value: "text-accent",
   },
   "violet-strong": {
-    wrapper: "border-violet-500/40 bg-violet-600 shadow-md shadow-violet-300/30",
-    label: "text-violet-200",
-    value: "text-white",
+    wrapper: "border-border-strong/40 bg-primary shadow-md shadow-primary-soft/60",
+    label: "text-text-soft",
+    value: "text-primary-foreground",
   },
   green: {
-    wrapper: "border-green-200/70 bg-green-50/60",
-    label: "text-green-700",
-    value: "text-green-700",
+    wrapper: "border-success-soft/70 bg-success-soft/60",
+    label: "text-success",
+    value: "text-success",
   },
   yellow: {
-    wrapper: "border-yellow-200/70 bg-yellow-50/60",
-    label: "text-yellow-700",
-    value: "text-yellow-700",
+    wrapper: "border-warning-soft/70 bg-warning-soft/60",
+    label: "text-warning",
+    value: "text-warning",
   },
 };
 
