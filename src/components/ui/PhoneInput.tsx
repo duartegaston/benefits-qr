@@ -55,28 +55,28 @@ export default function PhoneInput({
       {label && (
         <label
           htmlFor={id}
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="mb-1 block text-sm font-medium text-text-primary"
         >
           {label}
         </label>
       )}
       <div
         className={cn(
-          "group flex items-stretch rounded-xl border border-gray-200 bg-white shadow-sm",
-          "focus-within:border-violet-400 focus-within:ring-2 focus-within:ring-violet-300",
+          "group flex items-stretch rounded-xl border border-border-default bg-surface shadow-sm",
+          "focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-soft",
           "transition-[border-color,box-shadow] duration-200",
           error &&
-            "border-red-400 focus-within:border-red-400 focus-within:ring-red-300",
+            "border-danger focus-within:border-danger focus-within:ring-danger-soft",
         )}
       >
-        <div className="relative min-w-25 shrink-0 border-r border-gray-200 bg-gray-50/90">
+        <div className="relative min-w-25 shrink-0 border-r border-border-default bg-surface-muted/90">
           <Select
             value={matchedCountry.code}
             onValueChange={handleCountrySelect}
           >
             <SelectTrigger
               aria-label="Código de país"
-              className={cn(error && "focus-visible:ring-red-300")}
+              className={cn(error && "focus-visible:ring-danger-soft")}
             >
               <SelectValue aria-label={matchedCountry.label}>
                 {matchedCountry.label}
@@ -102,10 +102,10 @@ export default function PhoneInput({
           onChange={handleNumberChange}
           placeholder="911234567"
           required={required}
-          className="w-full min-w-0 rounded-r-xl bg-white px-3 py-2.5 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
+          className="w-full min-w-0 rounded-r-xl bg-surface px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:outline-none sm:text-sm"
         />
       </div>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-1 text-xs text-danger">{error}</p>}
     </div>
   );
 }
