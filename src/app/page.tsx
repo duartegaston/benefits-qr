@@ -109,12 +109,12 @@ export default function Home() {
             </div>
 
             {/* Para Clientes */}
-            <div className="group bg-primary rounded-2xl p-6 border border-border-strong/40 shadow-lg shadow-primary/30 text-left hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 hover:bg-accent transition-[transform,box-shadow,background-color] duration-300">
+            <div className="group bg-primary rounded-2xl p-6 border border-primary-foreground/20 shadow-lg shadow-primary/30 text-left hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 hover:bg-accent transition-[transform,box-shadow,background-color] duration-300">
               <div className="w-11 h-11 rounded-xl bg-surface/20 flex items-center justify-center mb-4 text-primary-foreground">
                 <Gift className="h-5 w-5" aria-hidden="true" />
               </div>
               <h2 className="font-semibold text-primary-foreground mb-1.5">Para Clientes</h2>
-              <p className="text-text-soft text-sm mb-5 leading-relaxed">
+              <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
                 Accedé a todos tus cupones y descuentos en un solo lugar.
               </p>
               <LinkButton href="/mis-beneficios" variant="light">
