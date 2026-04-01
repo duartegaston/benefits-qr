@@ -6,6 +6,7 @@ import Badge from "@/components/ui/Badge";
 import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
+import MetricCard from "@/components/ui/MetricCard";
 
 const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const PAGE_SIZE = 10;
@@ -130,24 +131,9 @@ export default async function BeneficioStatsPage({
               Actividad del cupón
             </p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
-              <div className="rounded-xl border border-gray-200/80 bg-gray-50/70 p-2.5 sm:p-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 sm:text-xs">
-                  Reclamos
-                </p>
-                <p className="mt-0.5 text-base font-semibold text-gray-900 sm:text-lg">{totalReclamos}</p>
-              </div>
-              <div className="rounded-xl border border-green-200/70 bg-green-50/60 p-2.5 sm:p-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-green-700 sm:text-xs">
-                  Canjeados
-                </p>
-                <p className="mt-0.5 text-base font-semibold text-green-700 sm:text-lg">{totalCanjeados}</p>
-              </div>
-              <div className="rounded-xl border border-violet-200/70 bg-violet-50/60 p-2.5 sm:p-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-violet-700 sm:text-xs">
-                  Pendientes
-                </p>
-                <p className="mt-0.5 text-base font-semibold text-violet-700 sm:text-lg">{totalPendientes}</p>
-              </div>
+              <MetricCard label="Reclamos" value={totalReclamos} color="gray" />
+              <MetricCard label="Canjeados" value={totalCanjeados} color="green" />
+              <MetricCard label="Pendientes" value={totalPendientes} color="violet" />
             </div>
           </div>
         </div>
