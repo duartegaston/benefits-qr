@@ -54,7 +54,7 @@ export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoU
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="relative w-24 h-24 rounded-2xl overflow-hidden bg-violet-100 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed"
+        className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl bg-primary-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-soft focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed"
         title="Cambiar logo"
         aria-label="Cambiar logo"
         disabled={loading}
@@ -63,15 +63,15 @@ export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoU
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="Logo" className="w-full h-full object-cover" />
         ) : (
-          <span className="text-violet-600 font-bold text-3xl">{initials}</span>
+          <span className="text-3xl font-bold text-primary">{initials}</span>
         )}
 
         {/* Overlay al hacer hover */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <div className="absolute inset-0 bg-accent/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           {loading ? (
-            <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-primary-foreground border-t-accent rounded-full animate-spin" />
           ) : (
-            <Camera aria-hidden="true" className="w-7 h-7 text-white" />
+            <Camera aria-hidden="true" className="w-7 h-7 text-primary-foreground" />
           )}
         </div>
       </button>

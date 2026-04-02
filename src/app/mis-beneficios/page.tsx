@@ -22,14 +22,14 @@ export default async function MisBeneficiosPage({
     return (
       <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
         {/* Back link — fixed top-left */}
-        <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-text-muted hover:text-text-primary transition-colors">
           ← Inicio
         </Link>
 
         {/* Logo + form — centrado */}
         <div className="w-full flex-1 flex flex-col items-center justify-center animate-[fade-up_0.45s_ease-out_both]">
           <div className="mb-6">
-            <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-violet-300/50 ring-4 ring-white/60" />
+            <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-primary-soft/70 ring-4 ring-surface/60" />
           </div>
           <ClienteLoginForm />
         </div>
@@ -56,14 +56,14 @@ export default async function MisBeneficiosPage({
 
   return (
     <main className="min-h-screen px-4 pt-16 pb-16 sm:px-6 sm:pt-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
-      <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-gray-400 hover:text-gray-600 transition-colors">
+      <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-text-muted hover:text-text-primary transition-colors">
         ← Inicio
       </Link>
       <div className="flex items-center gap-4 mb-8">
-        <Image src="/logo.png" alt="Qupón" width={56} height={56} className="rounded-2xl shadow-lg shadow-violet-400/30 ring-2 ring-white/60 shrink-0" />
+        <Image src="/logo.png" alt="Qupón" width={56} height={56} className="rounded-2xl shadow-lg shadow-primary-soft/60 ring-2 ring-surface/60 shrink-0" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Mis cupones</h1>
-          <p className="text-sm text-gray-400">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
+          <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
+          <p className="text-sm text-text-muted">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
         </div>
       </div>
       <MisBeneficiosList reclamos={reclamos} />
@@ -73,22 +73,22 @@ export default async function MisBeneficiosPage({
             href={`/mis-beneficios?page=${page - 1}`}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               page <= 1
-                ? "pointer-events-none text-gray-300 bg-gray-50"
-                : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                ? "pointer-events-none text-text-muted/50 bg-surface-soft"
+                : "text-text-primary bg-surface-muted hover:bg-border-default"
             }`}
             aria-disabled={page <= 1}
           >
             ← Anterior
           </Link>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-text-muted">
             Página {page} de {totalPages}
           </span>
           <Link
             href={`/mis-beneficios?page=${page + 1}`}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               page >= totalPages
-                ? "pointer-events-none text-gray-300 bg-gray-50"
-                : "text-gray-600 bg-gray-100 hover:bg-gray-200"
+                ? "pointer-events-none text-text-muted/50 bg-surface-soft"
+                : "text-text-primary bg-surface-muted hover:bg-border-default"
             }`}
             aria-disabled={page >= totalPages}
           >

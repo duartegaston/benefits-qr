@@ -57,7 +57,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
     return (
       <div className="flex items-center justify-center h-48 sm:h-64">
         <div role="status" aria-label="Cargando código QR">
-          <div aria-hidden="true" className="animate-spin h-8 w-8 border-4 border-violet-600 border-t-transparent rounded-full" />
+          <div aria-hidden="true" className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
         </div>
       </div>
     );
@@ -71,12 +71,12 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
       )}
       <div
         className={`text-2xl font-mono font-bold tabular-nums ${
-          isUrgent ? "text-red-500" : "text-gray-700"
+          isUrgent ? "text-danger" : "text-text-primary"
         }`}
       >
         {minutes}:{seconds.toString().padStart(2, "0")}
       </div>
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-text-muted text-center">
         El QR se renueva automáticamente al expirar
       </p>
     </div>

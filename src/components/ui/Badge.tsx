@@ -7,11 +7,11 @@ interface BadgeProps {
 }
 
 const colors = {
-  gray: "bg-gray-100 text-gray-700",
-  violet: "bg-violet-100 text-violet-800",
-  green: "bg-green-100 text-green-700",
-  red: "bg-red-100 text-red-700",
-  yellow: "bg-yellow-100 text-yellow-700",
+  gray: "bg-surface-muted text-text-muted",
+  violet: "bg-accent-soft text-accent-foreground",
+  green: "bg-success-soft text-success",
+  red: "bg-danger-soft text-danger",
+  yellow: "bg-warning-soft text-warning",
 };
 
 export default function Badge({

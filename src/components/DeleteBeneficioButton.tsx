@@ -27,7 +27,7 @@ export default function DeleteBeneficioButton({ id }: { id: string }) {
 
       <Modal open={confirming} onClose={() => !loading && setConfirming(false)} title="Eliminar cupón">
         <div className="space-y-4">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-muted">
             Esta acción eliminará el cupón y no se puede deshacer. ¿Querés continuar?
           </p>
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

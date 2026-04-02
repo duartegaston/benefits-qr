@@ -21,8 +21,8 @@ function SelectTrigger({ className, children, ...props }: React.ComponentProps<t
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        "flex h-full w-full items-center justify-between gap-2 rounded-l-xl bg-transparent py-2.5 pl-3 pr-2 text-left text-sm font-medium text-gray-700 outline-none",
-        "focus-visible:ring-2 focus-visible:ring-violet-300",
+        "flex h-full w-full items-center justify-between gap-2 rounded-l-xl bg-transparent py-2.5 pl-3 pr-2 text-left text-sm font-medium text-text-primary outline-none",
+        "focus-visible:ring-2 focus-visible:ring-primary-soft",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
@@ -30,7 +30,7 @@ function SelectTrigger({ className, children, ...props }: React.ComponentProps<t
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDown className="h-4 w-4 shrink-0 text-gray-500" />
+        <ChevronDown className="h-4 w-4 shrink-0 text-text-muted" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   );
@@ -41,7 +41,7 @@ function SelectContent({ className, children, position = "popper", ...props }: R
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         className={cn(
-          "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg",
+          "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-border-default bg-surface shadow-lg",
           position === "popper" && "translate-y-1",
           className
         )}
@@ -49,13 +49,13 @@ function SelectContent({ className, children, position = "popper", ...props }: R
         {...props}
       >
         <SelectPrimitive.ScrollUpButton className="flex cursor-default items-center justify-center py-1">
-          <ChevronUp className="h-4 w-4 text-gray-500" />
+          <ChevronUp className="h-4 w-4 text-text-muted" />
         </SelectPrimitive.ScrollUpButton>
         <SelectPrimitive.Viewport className={cn("p-1.5", position === "popper" && "w-full min-w-[var(--radix-select-trigger-width)]")}>
           {children}
         </SelectPrimitive.Viewport>
         <SelectPrimitive.ScrollDownButton className="flex cursor-default items-center justify-center py-1">
-          <ChevronDown className="h-4 w-4 text-gray-500" />
+          <ChevronDown className="h-4 w-4 text-text-muted" />
         </SelectPrimitive.ScrollDownButton>
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
@@ -63,15 +63,15 @@ function SelectContent({ className, children, position = "popper", ...props }: R
 }
 
 function SelectLabel({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.Label>) {
-  return <SelectPrimitive.Label className={cn("px-2 py-1.5 text-xs font-semibold text-gray-500", className)} {...props} />;
+  return <SelectPrimitive.Label className={cn("px-2 py-1.5 text-xs font-semibold text-text-muted", className)} {...props} />;
 }
 
 function SelectItem({ className, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Item>) {
   return (
     <SelectPrimitive.Item
       className={cn(
-        "relative flex w-full cursor-default items-center justify-between rounded-lg px-3 py-2.5 text-sm text-gray-700 outline-none",
-        "hover:bg-violet-100 focus:bg-violet-100 focus:text-violet-700 data-[state=checked]:bg-violet-600 data-[state=checked]:font-medium data-[state=checked]:text-white",
+        "relative flex w-full cursor-default items-center justify-between rounded-lg px-3 py-2.5 text-sm text-text-primary outline-none",
+        "hover:bg-primary-soft focus:bg-primary-soft focus:text-accent data-[state=checked]:bg-primary data-[state=checked]:font-medium data-[state=checked]:text-primary-foreground",
         className
       )}
       {...props}
@@ -85,7 +85,7 @@ function SelectItem({ className, children, ...props }: React.ComponentProps<type
 }
 
 function SelectSeparator({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.Separator>) {
-  return <SelectPrimitive.Separator className={cn("-mx-1 my-1 h-px bg-gray-100", className)} {...props} />;
+  return <SelectPrimitive.Separator className={cn("-mx-1 my-1 h-px bg-surface-muted", className)} {...props} />;
 }
 
 export {

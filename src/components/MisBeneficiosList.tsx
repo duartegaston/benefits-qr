@@ -32,8 +32,8 @@ export default function MisBeneficiosList({
 
   if (reclamos.length === 0) {
     return (
-      <Card className="p-12 text-center bg-white/75 backdrop-blur-md border-white/70">
-        <p className="text-gray-400">No tenés cupones reclamados aún</p>
+      <Card className="border-border-default/70 bg-surface/90 p-12 text-center sm:bg-surface/75 sm:backdrop-blur-md">
+        <p className="text-text-muted">No tenés cupones reclamados aún</p>
       </Card>
     );
   }
@@ -49,13 +49,13 @@ export default function MisBeneficiosList({
           .toUpperCase();
 
         return (
-          <Card key={r.id} className="overflow-hidden bg-white/75 backdrop-blur-md border-white/70 hover:-translate-y-0.5 transition-all duration-200">
-            <div className="h-1 bg-gradient-to-r from-violet-600 to-violet-400" />
+          <Card key={r.id} className="overflow-hidden border-border-default/70 bg-surface/90 transition-all duration-200 hover:-translate-y-0.5 sm:bg-surface/75 sm:backdrop-blur-md">
+            <div className="h-1 bg-gradient-to-r from-primary to-accent" />
             <div className="p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="w-7 h-7 rounded-lg overflow-hidden bg-violet-100 flex items-center justify-center shrink-0">
+                    <div className="w-7 h-7 rounded-lg overflow-hidden bg-primary-soft flex items-center justify-center shrink-0">
                       {r.beneficio.local.logoUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -64,17 +64,17 @@ export default function MisBeneficiosList({
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-violet-600 font-bold text-xs">{initials}</span>
+                        <span className="text-primary font-bold text-xs">{initials}</span>
                       )}
                     </div>
-                    <p className="text-xs font-medium text-violet-600">
+                    <p className="text-xs font-medium text-primary">
                       {r.beneficio.local.nombre}
                     </p>
                   </div>
-                  <h3 className="font-semibold text-gray-900 truncate">
+                  <h3 className="font-semibold text-text-primary truncate">
                     {r.beneficio.descripcion}
                   </h3>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-text-muted mt-1">
                     Reclamado:{" "}
                     {new Date(r.fechaReclamo).toLocaleDateString("es-AR")}
                   </p>
@@ -87,14 +87,14 @@ export default function MisBeneficiosList({
                   onClick={() =>
                     setExpandedId(expandedId === r.id ? null : r.id)
                   }
-                  className="mt-4 w-full py-2 text-sm font-medium text-violet-600 bg-violet-50 rounded-xl hover:bg-violet-100 transition-colors"
+                  className="mt-4 w-full py-2 text-sm font-medium text-primary bg-primary-soft rounded-xl hover:bg-accent-soft transition-colors"
                 >
                   {expandedId === r.id ? "Ocultar QR" : "Mostrar QR"}
                 </button>
               )}
 
               {r.estado === "CANJEADO" && r.fechaCanje && (
-                <p className="text-xs text-green-600 mt-3">
+                <p className="text-xs text-success mt-3">
                   Canjeado:{" "}
                   {new Date(r.fechaCanje).toLocaleString("es-AR")}
                 </p>
@@ -108,7 +108,7 @@ export default function MisBeneficiosList({
             </div>
 
             {expandedId === r.id && r.estado === "PENDIENTE" && (
-              <div className="border-t border-gray-100 p-5">
+              <div className="border-t border-border-default/70 p-5">
                 <QRDisplay reclamoId={r.id} />
               </div>
             )}

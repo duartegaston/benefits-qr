@@ -5,22 +5,22 @@ export const buttonBaseClasses =
 
 export const buttonVariantClasses = {
   primary:
-    "bg-violet-600 text-white hover:bg-violet-700 focus-visible:ring-violet-500",
+    "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
   muted:
-    "bg-gray-100 text-gray-600 hover:bg-violet-50 hover:text-violet-700 focus-visible:ring-violet-200",
+    "bg-surface-muted text-text-muted hover:bg-primary-soft hover:text-accent focus-visible:ring-primary-soft",
   secondary:
-    "border border-gray-200 bg-gray-200 text-gray-800 shadow-sm hover:border-gray-300 hover:bg-gray-300 focus-visible:ring-gray-400",
+    "border border-border-default bg-surface-muted text-text-primary shadow-sm hover:border-border-default hover:bg-surface focus-visible:ring-primary-soft",
   ghost:
-    "bg-transparent text-gray-600 hover:bg-gray-100 focus-visible:ring-gray-400",
-  danger: "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
+    "bg-transparent text-text-muted hover:bg-surface-muted focus-visible:ring-primary-soft",
+  danger: "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
   logout:
-    "border border-red-200/80 bg-red-50/90 text-red-700 shadow-sm hover:border-red-300 hover:bg-red-100 hover:text-red-800 focus-visible:ring-red-300",
+    "border border-danger-border/80 bg-danger-soft/90 text-danger shadow-sm hover:border-danger-border hover:bg-danger-soft hover:text-danger focus-visible:ring-danger",
   success:
-    "bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500",
+    "bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success",
   light:
-    "border border-violet-200/70 bg-violet-50 text-violet-700 shadow-sm hover:border-violet-300 hover:bg-violet-100 focus-visible:ring-violet-200 focus-visible:ring-offset-violet-600",
+    "border border-primary-soft/70 bg-primary-soft text-accent shadow-sm hover:border-primary hover:bg-primary-soft focus-visible:ring-primary-soft focus-visible:ring-offset-primary",
   subtle:
-    "border border-violet-200/70 bg-white/80 text-violet-700 shadow-sm hover:border-violet-300 hover:bg-white hover:text-violet-800 focus-visible:ring-violet-300",
+    "border border-primary-soft/70 bg-surface/80 text-accent shadow-sm hover:border-primary hover:bg-surface hover:text-accent-foreground focus-visible:ring-primary-soft",
 } as const;
 
 export const buttonSizeClasses = {

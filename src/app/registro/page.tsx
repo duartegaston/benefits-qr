@@ -41,8 +41,8 @@ export default async function RegistroPage({
   return (
     <main className="h-screen overflow-hidden flex flex-col items-center justify-center px-4 relative">
       {/* Decorative blobs — desktop only */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/25 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary-soft/80 blur-3xl hidden sm:block" />
 
       <div className="w-full max-w-sm text-center animate-[fade-up_0.45s_ease-out_both]">
         <div className="flex justify-center mb-6">
@@ -51,15 +51,15 @@ export default async function RegistroPage({
             alt="Qupón"
             width={80}
             height={80}
-            className="rounded-3xl shadow-2xl shadow-violet-500/30 ring-4 ring-white/60"
+            className="rounded-3xl shadow-2xl shadow-primary/30 ring-4 ring-surface/60"
           />
         </div>
 
-        <div className="bg-white/80 sm:backdrop-blur-md rounded-2xl border border-white/80 shadow-xl shadow-violet-100/50 p-8">
-          <div className="w-14 h-14 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md rounded-2xl border border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
+          <div className="w-14 h-14 bg-primary-soft rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
               aria-hidden="true"
-              className="w-7 h-7 text-violet-600"
+              className="w-7 h-7 text-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -72,8 +72,8 @@ export default async function RegistroPage({
               />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">¡Tu acceso fue aprobado!</h1>
-          <p className="text-sm text-gray-500 mb-6">
+          <h1 className="text-xl font-bold text-text-primary mb-2">¡Tu acceso fue aprobado!</h1>
+          <p className="text-sm text-text-muted mb-6">
             Hacé clic para completar la configuración de tu local
           </p>
 
@@ -81,7 +81,7 @@ export default async function RegistroPage({
             <input type="hidden" name="token" value={token ?? ""} />
             <button
               type="submit"
-              className="w-full px-4 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors cursor-pointer"
+              className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-accent transition-colors cursor-pointer"
             >
               Completar mi registro →
             </button>
