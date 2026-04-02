@@ -74,6 +74,11 @@ export function clearSessionCookie(response: NextResponse) {
   return response;
 }
 
+export function clearClienteSessionCookie(response: NextResponse) {
+  response.cookies.set(CLIENTE_COOKIE, "", { ...COOKIE_OPTS, maxAge: 0 });
+  return response;
+}
+
 export async function requireLocalAuth(req: NextRequest) {
   const session = await getSession(req);
   if (!session || session.userType !== "LOCAL") {
