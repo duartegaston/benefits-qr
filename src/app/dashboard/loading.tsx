@@ -3,70 +3,70 @@ import Card from "@/components/ui/Card";
 export default function DashboardLoading() {
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16">
-      <div className="mb-5 rounded-2xl border border-white/80 bg-white/95 p-3 shadow-sm shadow-violet-100/20 sm:mb-6 sm:bg-white/85 sm:p-4">
+      <div className="mb-5 rounded-2xl border border-border-default bg-surface p-3 shadow-sm sm:mb-6 sm:p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
-            <div className="h-16 w-16 rounded-2xl bg-gray-200 animate-pulse" />
+            <div className="h-16 w-16 rounded-2xl bg-surface-muted animate-pulse" />
             <div className="min-w-0 space-y-2">
-              <div className="h-6 w-40 rounded-lg bg-gray-200 animate-pulse" />
-              <div className="h-4 w-44 max-w-full rounded bg-gray-100 animate-pulse" />
+              <div className="h-6 w-40 rounded-lg bg-surface-muted animate-pulse" />
+              <div className="h-4 w-44 max-w-full rounded bg-surface-soft animate-pulse" />
             </div>
           </div>
-          <div className="h-9 w-full rounded-lg bg-gray-200 animate-pulse sm:w-36" />
+          <div className="h-9 w-full rounded-lg bg-surface-muted animate-pulse sm:w-36" />
         </div>
       </div>
 
       <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3">
         {[0, 1, 2].map((i) => (
-          <Card key={i} className="border-white/80 bg-white/95 p-3 shadow-sm shadow-violet-100/25 sm:bg-white/85 sm:p-4">
-            <div className="h-3 w-16 rounded bg-gray-200 animate-pulse mb-1" />
-            <div className="h-7 w-10 rounded bg-gray-300 animate-pulse" />
+          <Card key={i} className="border-border-default bg-surface p-3 shadow-sm sm:p-4">
+            <div className="mb-1 h-3 w-16 rounded bg-surface-muted animate-pulse" />
+            <div className="h-7 w-10 rounded bg-accent-soft animate-pulse" />
           </Card>
         ))}
       </div>
 
-      <div className="mb-4 rounded-2xl border border-white/80 bg-white/95 p-4 sm:bg-white/85 sm:p-5">
+      <div className="mb-4 rounded-2xl border border-border-default bg-surface p-4 sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
-            <div className="h-7 w-36 rounded-xl bg-gray-200 animate-pulse" />
-            <div className="h-4 w-64 max-w-full rounded bg-gray-100 animate-pulse" />
+            <div className="h-7 w-36 rounded-xl bg-surface-muted animate-pulse" />
+            <div className="h-4 w-64 max-w-full rounded bg-surface-soft animate-pulse" />
           </div>
-          <div className="h-10 w-full rounded-lg bg-gray-200 animate-pulse sm:w-36" />
+          <div className="h-10 w-full rounded-lg bg-surface-muted animate-pulse sm:w-36" />
         </div>
       </div>
 
       <div className="space-y-3 sm:space-y-4">
         {[0, 1, 2].map((i) => (
-          <Card key={i} className="border border-white/80 bg-white/95 p-3 sm:bg-white/85 sm:p-5">
+          <Card key={i} className="border border-border-default bg-surface p-3 sm:p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="h-5 w-40 rounded bg-gray-200 animate-pulse" />
-                  <div className="h-6 w-16 rounded-full bg-gray-200 animate-pulse" />
+                  <div className="h-5 w-40 rounded bg-surface-muted animate-pulse" />
+                  <div className="h-6 w-16 rounded-full bg-surface-muted animate-pulse" />
                 </div>
-                <div className="h-4 w-48 max-w-full rounded bg-gray-100 animate-pulse" />
-                <div className="h-4 w-36 rounded bg-gray-100 animate-pulse" />
+                <div className="h-4 w-48 max-w-full rounded bg-surface-soft animate-pulse" />
+                <div className="h-4 w-36 rounded bg-surface-soft animate-pulse" />
                 <div className="flex gap-2 pt-1">
-                  <div className="h-6 w-20 rounded-full bg-gray-100 animate-pulse" />
-                  <div className="h-6 w-24 rounded-full bg-gray-100 animate-pulse" />
+                  <div className="h-6 w-20 rounded-full bg-surface-soft animate-pulse" />
+                  <div className="h-6 w-24 rounded-full bg-surface-soft animate-pulse" />
                 </div>
               </div>
               <div className="flex items-center justify-between gap-2 sm:flex-col sm:items-end">
                 <div className="flex items-center gap-1.5">
-                  <div className="h-8 w-8 rounded-lg bg-gray-100 animate-pulse" />
-                  <div className="h-8 w-8 rounded-lg bg-gray-100 animate-pulse" />
-                  <div className="h-8 w-8 rounded-lg bg-gray-100 animate-pulse" />
+                  <div className="h-8 w-8 rounded-lg bg-surface-soft animate-pulse" />
+                  <div className="h-8 w-8 rounded-lg bg-surface-soft animate-pulse" />
+                  <div className="h-8 w-8 rounded-lg bg-surface-soft animate-pulse" />
                 </div>
-                <div className="h-8 w-24 rounded-lg bg-gray-200 animate-pulse" />
+                <div className="h-8 w-24 rounded-lg bg-surface-muted animate-pulse" />
               </div>
             </div>
           </Card>
         ))}
 
         <div className="flex items-center justify-between pt-2">
-          <div className="h-9 w-24 rounded-lg bg-gray-200 animate-pulse" />
-          <div className="h-4 w-24 rounded bg-gray-100 animate-pulse" />
-          <div className="h-9 w-24 rounded-lg bg-gray-200 animate-pulse" />
+          <div className="h-9 w-24 rounded-lg bg-surface-muted animate-pulse" />
+          <div className="h-4 w-24 rounded bg-surface-soft animate-pulse" />
+          <div className="h-9 w-24 rounded-lg bg-surface-muted animate-pulse" />
         </div>
       </div>
     </main>

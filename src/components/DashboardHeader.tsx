@@ -40,10 +40,10 @@ export default function DashboardHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b shadow-[0_12px_28px_-18px_rgba(15,23,42,0.28)] transition-[background-color,border-color,box-shadow] duration-200",
+        "sticky top-0 z-40 border-b shadow-sm transition-[background-color,border-color,box-shadow] duration-200",
         scrolled
-          ? "border-violet-300/70 bg-violet-50/95 shadow-[0_14px_32px_-18px_rgba(15,23,42,0.3)] sm:bg-violet-50/85 sm:backdrop-blur-md"
-          : "border-violet-300/60 bg-transparent"
+          ? "border-border-strong/70 bg-surface-soft/95 shadow-md sm:bg-surface-soft/85 sm:backdrop-blur-md"
+          : "border-border-strong/60 bg-transparent"
       )}
     >
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">

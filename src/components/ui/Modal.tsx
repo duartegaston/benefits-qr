@@ -34,25 +34,23 @@ export default function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-text-primary/50 backdrop-blur-sm"
         onClick={onClose}
       />
       <div
         className={cn(
-          "relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6",
+          "relative w-full max-w-md rounded-2xl bg-surface p-6 shadow-xl mx-4",
           className
         )}
       >
-        <div className="flex items-center justify-between mb-4">
-          {title && (
-            <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          )}
+        <div className="mb-4 flex items-center justify-between">
+          {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
           <button
             onClick={onClose}
             aria-label="Cerrar"
-            className="ml-auto p-1 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+            className="ml-auto rounded-lg p-1 text-text-muted transition-colors hover:bg-surface-muted"
           >
-            <X aria-hidden="true" className="w-5 h-5" />
+            <X aria-hidden="true" className="h-5 w-5" />
           </button>
         </div>
         {children}

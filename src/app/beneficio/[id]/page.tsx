@@ -48,8 +48,8 @@ export default async function BeneficioPublicoPage({
   return (
     <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-4 sm:py-8 relative">
       {/* Decorative blobs — desktop only */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/20 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-accent-soft/60 blur-3xl hidden sm:block" />
 
       <div className="w-full max-w-md relative my-auto animate-[fade-up_0.45s_ease-out_both]">
         {/* Logo Qupón */}
@@ -59,19 +59,19 @@ export default async function BeneficioPublicoPage({
             alt="Qupón"
             width={52}
             height={52}
-            className="rounded-2xl shadow-lg shadow-violet-400/30 ring-4 ring-white/60"
+            className="rounded-2xl shadow-lg shadow-primary/30 ring-4 ring-surface/60"
           />
         </div>
 
         {/* Card */}
-        <div className="overflow-hidden rounded-2xl shadow-xl shadow-violet-100/50">
+        <div className="overflow-hidden rounded-2xl shadow-xl shadow-accent-soft/60">
           {/* Accent bar */}
-          <div className="h-1.5 bg-gradient-to-r from-violet-600 to-violet-400" />
+          <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
 
-          <div className="bg-white/80 sm:backdrop-blur-md border border-t-0 border-white/80 p-4 sm:p-6">
+          <div className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border border-t-0 border-border-default p-4 sm:p-6">
             {/* Local info */}
             <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-xl overflow-hidden bg-violet-100 flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-9 h-9 rounded-xl overflow-hidden bg-primary-soft flex items-center justify-center shrink-0 shadow-sm">
                 {beneficio.local.logoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -80,16 +80,16 @@ export default async function BeneficioPublicoPage({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-violet-600 font-bold text-sm">{initials}</span>
+                  <span className="text-primary font-bold text-sm">{initials}</span>
                 )}
               </div>
               <div>
-                <p className="text-xs text-gray-400 leading-none mb-0.5">Cupón de</p>
-                <p className="text-sm font-semibold text-gray-800">{beneficio.local.nombre}</p>
+                <p className="text-xs text-text-muted leading-none mb-0.5">Cupón de</p>
+                <p className="text-sm font-semibold text-text-primary">{beneficio.local.nombre}</p>
               </div>
             </div>
 
-            <h1 className="text-xl font-bold text-gray-900 mb-2 leading-tight">
+            <h1 className="text-xl font-bold text-text-primary mb-2 leading-tight">
               {beneficio.descripcion}
             </h1>
 
@@ -119,8 +119,8 @@ export default async function BeneficioPublicoPage({
             {!isExpired && !isAgotado && !isWrongDay ? (
               <ReclamarForm beneficioId={beneficio.id} />
             ) : (
-              <div className="bg-red-50 rounded-xl p-4 text-center">
-                <p className="text-red-600 font-medium text-sm">
+              <div className="bg-danger-soft rounded-xl p-4 text-center">
+                <p className="text-danger font-medium text-sm">
                   {isExpired
                     ? "Este cupón ya expiró"
                     : isAgotado
@@ -136,7 +136,7 @@ export default async function BeneficioPublicoPage({
         </div>
 
         {/* Footer branding */}
-        <p className="text-center text-xs text-gray-400/70 mt-3">
+        <p className="text-center text-xs text-text-muted/80 mt-3">
           Powered by Qupón
         </p>
       </div>

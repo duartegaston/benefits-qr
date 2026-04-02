@@ -20,8 +20,8 @@ export default async function OnboardingPage() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden px-4 py-10 sm:py-14">
-      <div className="pointer-events-none absolute -top-32 -left-32 hidden h-120 w-120 rounded-full bg-violet-300/50 blur-3xl sm:block" />
-      <div className="pointer-events-none absolute -right-32 -bottom-32 hidden h-120 w-120 rounded-full bg-violet-200/70 blur-3xl sm:block" />
+      <div className="pointer-events-none absolute -top-32 -left-32 hidden h-120 w-120 rounded-full bg-primary/25 blur-3xl sm:block" />
+      <div className="pointer-events-none absolute -right-32 -bottom-32 hidden h-120 w-120 rounded-full bg-primary-soft/80 blur-3xl sm:block" />
 
       <div className="relative mx-auto my-auto flex w-full max-w-md flex-col items-center">
         <Reveal y={12} amount={0.2} className="mb-5 sm:mb-6">
@@ -31,7 +31,7 @@ export default async function OnboardingPage() {
             width={88}
             height={88}
             priority
-            className="rounded-3xl shadow-xl shadow-violet-300/50"
+            className="rounded-3xl shadow-xl shadow-primary/30"
           />
         </Reveal>
 

@@ -51,10 +51,10 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
   }
 
   return (
-    <Card className="w-full max-w-md p-6 sm:p-7 shadow-xl shadow-gray-200/60 bg-white/95 sm:bg-white/85 sm:backdrop-blur-md border-white/80">
+    <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7">
       <div className="mb-6 text-center sm:mb-7">
-        <h1 className="mb-1.5 text-2xl font-bold text-gray-900">Completá tu perfil</h1>
-        <p className="text-gray-500 text-sm">Esto es lo que verán tus clientes</p>
+        <h1 className="mb-1.5 text-2xl font-bold text-text-primary">Completá tu perfil</h1>
+        <p className="text-sm text-text-muted">Esto es lo que verán tus clientes</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
@@ -65,7 +65,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
             onUploaded={() => setHasLogo(true)}
           />
           {!hasLogo && (
-            <p className="text-xs text-gray-400">Foto del local (requerida)</p>
+            <p className="text-xs text-text-muted">Foto del local (requerida)</p>
           )}
         </div>
 
@@ -75,7 +75,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           value={email}
           readOnly
           aria-readonly="true"
-          className="bg-gray-50 text-gray-700 border-gray-200 cursor-default focus-visible:ring-2 focus-visible:ring-violet-200"
+          className="cursor-default border-border-default bg-surface-muted text-text-muted focus-visible:ring-2 focus-visible:ring-primary-soft"
         />
 
         <Input
@@ -104,7 +104,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
         />
 
         {error && (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
+          <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger">
             {error}
           </p>
         )}
@@ -113,7 +113,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           Guardar y continuar
         </Button>
 
-        <p className="text-center text-xs text-gray-500">
+        <p className="text-center text-xs text-text-muted">
           Podés editar estos datos después desde tu dashboard.
         </p>
       </form>

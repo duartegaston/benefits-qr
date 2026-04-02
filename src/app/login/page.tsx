@@ -69,8 +69,8 @@ export default function LoginPage() {
   return (
     <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
       {/* Decorative blobs — desktop only */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-150 h-150 rounded-full bg-violet-400/25 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-125 h-125 rounded-full bg-violet-300/40 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -top-40 -left-40 w-150 h-150 rounded-full bg-primary/20 blur-3xl hidden sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-125 h-125 rounded-full bg-primary-soft/70 blur-3xl hidden sm:block" />
 
       {/* Back link — fixed top-left */}
       <LinkButton
@@ -95,34 +95,34 @@ export default function LoginPage() {
                 width={88}
                 height={88}
                 priority
-                className="rounded-3xl shadow-2xl shadow-violet-500/30 ring-4 ring-white/60"
+                className="rounded-3xl shadow-2xl shadow-primary/30 ring-4 ring-surface/60"
               />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Bienvenido</h1>
-            <p className="text-gray-500 text-sm">Accedé al dashboard de tu negocio</p>
+            <h1 className="text-2xl font-bold text-text-primary mb-1">Bienvenido</h1>
+            <p className="text-text-muted text-sm">Accedé al dashboard de tu negocio</p>
           </div>
         </Reveal>
 
         {/* Card */}
         <Reveal delay={0.06} y={16} amount={0.35}>
-          <Card className="bg-white/90 sm:bg-white/80 sm:backdrop-blur-md border-white/80 shadow-xl shadow-violet-100/50 p-6 sm:p-8">
+          <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-6 sm:p-8">
             {step === "pending-approval" ? (
               <div className="space-y-5 text-center">
                 <div className="flex justify-center">
-                  <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-amber-100 to-orange-100 border border-amber-200/70 flex items-center justify-center text-amber-600 shadow-sm">
+                  <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-warning-soft to-warning-soft/70 border border-warning-border/70 flex items-center justify-center text-warning shadow-sm">
                     <Clock3 className="w-8 h-8" aria-hidden="true" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <p className="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                  <p className="inline-flex items-center rounded-full border border-warning-border bg-warning-soft px-3 py-1 text-xs font-medium text-warning">
                     Pendiente de aprobación
                   </p>
-                  <h2 className="font-semibold text-gray-800 text-lg">Solicitud en revisión</h2>
+                  <h2 className="font-semibold text-text-primary text-lg">Solicitud en revisión</h2>
                 </div>
-                <div className="rounded-xl border border-amber-200/70 bg-amber-50/80 p-4 text-sm text-amber-800 leading-relaxed">
+                <div className="rounded-xl border border-warning-border/70 bg-warning-soft/80 p-4 text-sm text-warning leading-relaxed">
                   Tu solicitud está siendo revisada. Te avisaremos por email cuando sea aprobada y ahí vas a recibir un link directo para completar tu registro.
                 </div>
-                <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
                   <Mail className="w-4 h-4" aria-hidden="true" />
                   <span>{email}</span>
                 </div>
@@ -150,15 +150,15 @@ export default function LoginPage() {
                   placeholder="tu@email.com"
                   required
                 />
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <p className="text-sm text-danger">{error}</p>}
                 <Button variant="primary" type="submit" loading={loading} className="w-full" size="lg">
                   Acceder
                 </Button>
               </form>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div className="text-center p-3 bg-violet-50 rounded-xl mb-2">
-                  <p className="text-sm text-violet-700">
+                <div className="text-center p-3 bg-primary-soft rounded-xl mb-2">
+                  <p className="text-sm text-accent">
                     Código enviado a{" "}
                     <span className="font-semibold">{email}</span>
                   </p>
@@ -172,7 +172,7 @@ export default function LoginPage() {
                   inputMode="numeric"
                   required
                 />
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <p className="text-sm text-danger">{error}</p>}
                 <Button variant="primary" type="submit" loading={loading} className="w-full" size="lg">
                   Ingresar
                 </Button>

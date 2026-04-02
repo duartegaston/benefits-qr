@@ -63,7 +63,7 @@ export default function NuevoBeneficioPage() {
   return (
     <main className="px-4 pt-6 pb-8 sm:pt-8">
       <Card className="w-full max-w-md mx-auto p-6 sm:p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-8">Nuevo cupón</h1>
+        <h1 className="mb-8 text-2xl font-bold text-text-primary">Nuevo cupón</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -92,7 +92,7 @@ export default function NuevoBeneficioPage() {
 
           {/* Días válidos */}
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Días válidos</p>
+            <p className="mb-2 text-sm font-medium text-text-primary">Días válidos</p>
             <div className="flex gap-2 flex-wrap">
               {DIAS.map((dia) => {
                 const active = todosLosDias || diasValidos.includes(dia.value);
@@ -101,10 +101,10 @@ export default function NuevoBeneficioPage() {
                     key={dia.value}
                     type="button"
                     onClick={() => toggleDia(dia.value)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                    className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
                       active
-                        ? "bg-violet-600 text-white border-violet-600"
-                        : "bg-white text-gray-500 border-gray-200 hover:border-violet-300"
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border-default bg-surface text-text-muted hover:border-border-strong"
                     }`}
                   >
                     {dia.label}
@@ -112,7 +112,7 @@ export default function NuevoBeneficioPage() {
                 );
               })}
             </div>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="mt-2 text-xs text-text-muted">
               {todosLosDias
                 ? "Aplica todos los días"
                 : `Aplica los: ${diasValidos
@@ -124,14 +124,14 @@ export default function NuevoBeneficioPage() {
               <button
                 type="button"
                 onClick={() => setDiasValidos([])}
-                className="text-xs text-violet-600 hover:underline mt-1"
+                className="mt-1 text-xs text-primary hover:underline"
               >
                 Seleccionar todos los días
               </button>
             )}
           </div>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-danger">{error}</p>}
 
           <Button type="submit" loading={loading} className="w-full" size="lg">
             Crear cupón
