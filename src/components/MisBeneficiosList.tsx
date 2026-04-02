@@ -6,7 +6,7 @@ import QRDisplay from "./QRDisplay";
 
 type Reclamo = {
   id: string;
-  estado: "PENDIENTE" | "CANJEADO" | "VENCIDO";
+  estado: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO";
   fechaReclamo: Date | string;
   fechaCanje: Date | string | null;
   beneficio: {
@@ -16,10 +16,11 @@ type Reclamo = {
   };
 };
 
-const estadoBadge: Record<Reclamo["estado"], "violet" | "green" | "red"> = {
+const estadoBadge: Record<Reclamo["estado"], "violet" | "green" | "red" | "gray"> = {
   PENDIENTE: "violet",
   CANJEADO: "green",
   VENCIDO: "red",
+  CANCELADO: "gray",
 };
 
 export default function MisBeneficiosList({
@@ -96,6 +97,12 @@ export default function MisBeneficiosList({
                 <p className="text-xs text-green-600 mt-3">
                   Canjeado:{" "}
                   {new Date(r.fechaCanje).toLocaleString("es-AR")}
+                </p>
+              )}
+
+              {r.estado === "CANCELADO" && (
+                <p className="text-xs text-gray-400 mt-3">
+                  Cupón no disponible
                 </p>
               )}
             </div>

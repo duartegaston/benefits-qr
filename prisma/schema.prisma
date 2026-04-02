@@ -66,6 +66,7 @@ enum EstadoReclamo {
   PENDIENTE
   CANJEADO
   VENCIDO
+  CANCELADO
 }
 
 model Reclamo {
