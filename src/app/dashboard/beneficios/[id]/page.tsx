@@ -19,7 +19,10 @@ function formatDias(dias: number[]): string {
   return `Válido los ${nombres.join(", ")} y ${ultimo}`;
 }
 
-function getReclamoStatusPresentation(status: "PENDIENTE" | "CANJEADO" | "VENCIDO") {
+function getReclamoStatusPresentation(status: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO") {
+  if (status === "CANCELADO") {
+    return { label: "Cancelado", color: "gray" as const };
+  }
   if (status === "CANJEADO") {
     return { label: "Canjeado", color: "green" as const };
   }
