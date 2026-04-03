@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createSession } from "@/lib/auth";
-import { sendMagicLink } from "@/lib/email";
+import { createClienteSession } from "@/lib/auth";
 import { checkRequestLimit } from "@/lib/rateLimit";
+import { EMAIL_REGEX, SESSION_DURATION } from "@/lib/constants";
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email requerido" }, { status: 400 });
     }
 
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!EMAIL_REGEX.test(email) || email.length > 254) {
       return NextResponse.json({ error: "Email inválido" }, { status: 400 });
     }
@@ -30,8 +29,7 @@ export async function POST(req: NextRequest) {
       cliente = await prisma.cliente.create({ data: { email } });
     }
 
-    const session = await createSession(cliente.id, "CLIENTE", 1);
-    await sendMagicLink(email, session.token, "/mis-beneficios");
+    await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_MAGIC_LINK);
 
     return NextResponse.json({ success: true });
   } catch (error) {

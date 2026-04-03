@@ -42,6 +42,7 @@ model Beneficio {
   reclamos        Reclamo[]
 
   @@index([localId])
+  @@index([deletedAt])
 }
 
 model Cliente {
@@ -81,8 +82,8 @@ model Reclamo {
   qrTokenExpira DateTime?
   estado        EstadoReclamo @default(PENDIENTE)
 
-  @@index([clienteId])
-  @@index([beneficioId])
+  @@index([clienteId, estado])
+  @@index([beneficioId, estado])
 }
 
 enum UserType {

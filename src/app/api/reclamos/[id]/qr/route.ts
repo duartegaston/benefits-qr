@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { generateQRDataURL, buildQRPayload } from "@/lib/qr";
 import { EstadoReclamo } from "@/generated/prisma/client";
 import { v4 as uuidv4 } from "uuid";
+import { QR_EXPIRY_MINUTES } from "@/lib/constants";
 
 export async function POST(
   req: NextRequest,
@@ -16,6 +17,7 @@ export async function POST(
 
   const reclamo = await prisma.reclamo.findFirst({
     where: { id, clienteId: session!.userId },
+    select: { estado: true },
   });
 
   if (!reclamo) {
@@ -40,7 +42,7 @@ export async function POST(
   }
 
   const qrToken = uuidv4();
-  const qrTokenExpira = new Date(Date.now() + 2 * 60 * 1000);
+  const qrTokenExpira = new Date(Date.now() + QR_EXPIRY_MINUTES * 60 * 1000);
 
   await prisma.reclamo.update({
     where: { id },

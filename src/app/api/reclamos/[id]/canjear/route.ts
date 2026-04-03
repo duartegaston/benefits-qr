@@ -22,7 +22,11 @@ export async function POST(
 
   const reclamo = await prisma.reclamo.findFirst({
     where: { id, qrToken },
-    include: { beneficio: true },
+    select: {
+      estado: true,
+      qrTokenExpira: true,
+      beneficio: { select: { localId: true, deletedAt: true } },
+    },
   });
 
   if (!reclamo) {

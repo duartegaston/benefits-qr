@@ -47,43 +47,92 @@ export default async function BeneficioStatsPage({
   const session = await getSessionFromCookies();
   if (!session || session.userType !== "LOCAL") redirect("/login");
 
-  const [beneficio, totalReclamos, totalCanjeados, totalPendientes, reclamos] =
-    await Promise.all([
-      prisma.beneficio.findFirst({
-        where: { id, localId: session.userId },
-      }),
-      prisma.reclamo.count({
-        where: { beneficioId: id, beneficio: { localId: session.userId } },
-      }),
-      prisma.reclamo.count({
-        where: { beneficioId: id, beneficio: { localId: session.userId }, estado: "CANJEADO" },
-      }),
-      prisma.reclamo.count({
-        where: { beneficioId: id, beneficio: { localId: session.userId }, estado: "PENDIENTE" },
-      }),
-      prisma.reclamo.findMany({
-        where: { beneficioId: id, beneficio: { localId: session.userId } },
-        include: { cliente: { select: { email: true, phone: true, nombre: true } } },
-        orderBy: { fechaReclamo: "desc" },
-        skip: (page - 1) * PAGE_SIZE,
-        take: PAGE_SIZE,
-      }),
-    ]);
+  // Tipos raw del CTE: fechas dentro de JSON vienen como string ISO
+  type DetailRaw = {
+    beneficio: {
+      id: string; descripcion: string; fechaExpiracion: string; maxUsos: number | null;
+      diasValidos: number[]; deletedAt: string | null; localId: string;
+    } | null;
+    stats: { total: number; canjeados: number; pendientes: number } | null;
+    reclamos: Array<{
+      id: string; estado: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO";
+      fechaReclamo: string; fechaCanje: string | null;
+      cliente: { nombre: string | null; email: string | null; phone: string | null };
+    }> | null;
+  };
+
+  // 1 CTE = 1 conexión a Neon en vez de 3 conexiones paralelas
+  const t0 = performance.now();
+  const [raw] = await prisma.$queryRaw<[DetailRaw]>`
+    WITH
+      beneficio_cte AS (
+        SELECT id, descripcion, "fechaExpiracion", "maxUsos", "diasValidos", "deletedAt", "localId"
+        FROM "Beneficio"
+        WHERE id = ${id}
+          AND "localId" = ${session.userId}
+      ),
+      stats_cte AS (
+        SELECT
+          COUNT(*)::int                                        AS total,
+          COUNT(*) FILTER (WHERE estado = 'CANJEADO')::int    AS canjeados,
+          COUNT(*) FILTER (WHERE estado = 'PENDIENTE')::int   AS pendientes
+        FROM "Reclamo"
+        WHERE "beneficioId" = ${id}
+      ),
+      reclamos_cte AS (
+        SELECT
+          r.id,
+          r.estado,
+          r."fechaReclamo",
+          r."fechaCanje",
+          json_build_object(
+            'nombre', c.nombre,
+            'email',  c.email,
+            'phone',  c.phone
+          ) AS cliente
+        FROM "Reclamo" r
+        JOIN "Cliente" c ON c.id = r."clienteId"
+        WHERE r."beneficioId" = ${id}
+        ORDER BY r."fechaReclamo" DESC
+        LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}
+      )
+    SELECT
+      (SELECT row_to_json(b) FROM beneficio_cte b)                  AS beneficio,
+      COALESCE(
+        (SELECT row_to_json(s) FROM stats_cte s),
+        '{"total":0,"canjeados":0,"pendientes":0}'::json
+      )                                                              AS stats,
+      COALESCE(
+        (SELECT json_agg(r ORDER BY r."fechaReclamo" DESC) FROM reclamos_cte r),
+        '[]'::json
+      )                                                              AS reclamos
+  `;
+  console.log(`[beneficio-detail] DB: ${Math.round(performance.now() - t0)}ms`);
+
+  const beneficio = raw.beneficio
+    ? { ...raw.beneficio, fechaExpiracion: new Date(raw.beneficio.fechaExpiracion), deletedAt: raw.beneficio.deletedAt ? new Date(raw.beneficio.deletedAt) : null }
+    : null;
+  const stats = raw.stats ?? { total: 0, canjeados: 0, pendientes: 0 };
+  const reclamos = (raw.reclamos ?? []).map((r) => ({
+    ...r,
+    fechaReclamo: new Date(r.fechaReclamo),
+    fechaCanje: r.fechaCanje ? new Date(r.fechaCanje) : null,
+  }));
 
   if (!beneficio) redirect("/dashboard");
 
   const isExpired = beneficio.fechaExpiracion < new Date();
-  const isAgotado = beneficio.maxUsos !== null && totalCanjeados >= beneficio.maxUsos;
+  const isAgotado = beneficio.maxUsos !== null && stats.canjeados >= beneficio.maxUsos;
 
-  // Lazy update: mark pending reclamos as VENCIDO when the coupon is expired
-  if (isExpired && totalPendientes > 0) {
-    await prisma.reclamo.updateMany({
+  // Fire-and-forget: marca PENDIENTE → VENCIDO sin bloquear el render
+  if (isExpired && stats.pendientes > 0) {
+    void prisma.reclamo.updateMany({
       where: { beneficioId: id, estado: "PENDIENTE" },
       data: { estado: "VENCIDO" },
     });
   }
   const isDeleted = beneficio.deletedAt !== null;
-  const totalPages = Math.ceil(totalReclamos / PAGE_SIZE);
+  const totalPages = Math.ceil(stats.total / PAGE_SIZE);
 
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
@@ -134,19 +183,19 @@ export default async function BeneficioStatsPage({
               Actividad del cupón
             </p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
-              <MetricCard label="Reclamos" value={totalReclamos} color="gray" />
-              <MetricCard label="Canjeados" value={totalCanjeados} color="green" />
-              <MetricCard label="Pendientes" value={totalPendientes} color="violet" />
+              <MetricCard label="Reclamos" value={stats.total} color="gray" />
+              <MetricCard label="Canjeados" value={stats.canjeados} color="green" />
+              <MetricCard label="Pendientes" value={stats.pendientes} color="violet" />
             </div>
           </div>
         </div>
       </Card>
 
       <h2 className="mb-3 text-xl font-bold text-text-primary">
-        Clientes ({totalReclamos})
+        Clientes ({stats.total})
       </h2>
 
-      {totalReclamos === 0 ? (
+      {stats.total === 0 ? (
         <Card className="p-8 text-center">
           <p className="text-text-muted">Nadie reclamó este cupón aún</p>
         </Card>

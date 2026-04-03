@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { EstadoReclamo } from "@/generated/prisma/client";
+import { TIMEZONE_AR } from "@/lib/constants";
 
 export async function GET(req: NextRequest) {
   const { error, session } = await requireLocalAuth(req);
@@ -10,7 +12,7 @@ export async function GET(req: NextRequest) {
     where: { localId: session!.userId },
     include: {
       _count: { select: { reclamos: true } },
-      reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
+      reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -54,7 +56,7 @@ export async function POST(req: NextRequest) {
 
   // Compare date strings in Argentina timezone (YYYY-MM-DD lexicographic comparison)
   const todayAR = new Date()
-    .toLocaleString("en-CA", { timeZone: "America/Argentina/Buenos_Aires" })
+    .toLocaleString("en-CA", { timeZone: TIMEZONE_AR })
     .slice(0, 10);
   if (fechaExpiracion < todayAR) {
     return NextResponse.json(

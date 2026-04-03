@@ -32,20 +32,52 @@ export default async function MisBeneficiosPage({
     );
   }
 
-  const [reclamos, total] = await Promise.all([
-    prisma.reclamo.findMany({
-      where: { clienteId: session.userId },
-      include: {
-        beneficio: {
-          include: { local: { select: { nombre: true, logoUrl: true } } },
-        },
-      },
-      orderBy: { fechaReclamo: "desc" },
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-    }),
+  type ReclamoRow = {
+    id: string;
+    estado: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO";
+    fechaReclamo: Date;
+    fechaCanje: Date | null;
+    beneficioDescripcion: string;
+    beneficioFechaExpiracion: Date;
+    beneficioDeletedAt: Date | null;
+    localNombre: string | null;
+    localLogoUrl: string | null;
+  };
+
+  const [rows, total] = await Promise.all([
+    // 1 SQL con JOINs en vez de 3 SQL secuenciales (reclamos → beneficios IN → locals IN)
+    prisma.$queryRaw<ReclamoRow[]>`
+      SELECT
+        r.id,
+        r.estado,
+        r."fechaReclamo",
+        r."fechaCanje",
+        b.descripcion           AS "beneficioDescripcion",
+        b."fechaExpiracion"     AS "beneficioFechaExpiracion",
+        b."deletedAt"           AS "beneficioDeletedAt",
+        l.nombre                AS "localNombre",
+        l."logoUrl"             AS "localLogoUrl"
+      FROM "Reclamo" r
+      JOIN "Beneficio" b ON b.id = r."beneficioId"
+      JOIN "Local"     l ON l.id = b."localId"
+      WHERE r."clienteId" = ${session.userId}
+      ORDER BY r."fechaReclamo" DESC
+      LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}
+    `,
     prisma.reclamo.count({ where: { clienteId: session.userId } }),
   ]);
+
+  const reclamos = rows.map((r) => ({
+    id: r.id,
+    estado: r.estado,
+    fechaReclamo: r.fechaReclamo,
+    fechaCanje: r.fechaCanje,
+    beneficio: {
+      descripcion: r.beneficioDescripcion,
+      fechaExpiracion: r.beneficioFechaExpiracion,
+      local: { nombre: r.localNombre, logoUrl: r.localLogoUrl },
+    },
+  }));
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
