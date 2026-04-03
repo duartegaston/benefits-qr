@@ -1,0 +1,6 @@
+export enum EstadoReclamo {
+  PENDIENTE = "PENDIENTE",
+  CANJEADO = "CANJEADO",
+  VENCIDO = "VENCIDO",
+  CANCELADO = "CANCELADO",
+}

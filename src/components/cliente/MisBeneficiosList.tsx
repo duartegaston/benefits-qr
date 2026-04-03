@@ -4,7 +4,7 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import QRDisplay from "@/components/cliente/QRDisplay";
 import Button from "@/components/ui/Button";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { EstadoReclamo } from "@/lib/enums";
 
 type Reclamo = {
   id: string;
