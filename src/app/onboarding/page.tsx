@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
-import OnboardingForm from "@/components/OnboardingForm";
+import OnboardingForm from "@/components/local/onboarding/OnboardingForm";
 import Reveal from "@/components/ui/Reveal";
 
 export default async function OnboardingPage() {

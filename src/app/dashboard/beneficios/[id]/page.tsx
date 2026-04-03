@@ -3,7 +3,7 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
+import DeleteBeneficioButton from "@/components/local/dashboard/beneficios/DeleteBeneficioButton";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";

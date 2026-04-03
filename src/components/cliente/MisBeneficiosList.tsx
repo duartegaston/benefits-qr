@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import Card from "./ui/Card";
-import Badge from "./ui/Badge";
-import QRDisplay from "./QRDisplay";
-import Button from "./ui/Button";
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
+import QRDisplay from "@/components/cliente/QRDisplay";
+import Button from "@/components/ui/Button";
 
 type Reclamo = {
   id: string;

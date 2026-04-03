@@ -2,7 +2,7 @@
 
 import { format, parse } from "date-fns";
 import { es } from "date-fns/locale";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import Calendar from "@/components/ui/Calendar";
@@ -77,10 +77,9 @@ export default function DatePicker({
           <Button
             id={inputId}
             type="button"
-            variant="secondary"
+            variant="outline"
             className={cn(
-              "w-full justify-between rounded-xl text-left font-normal",
-              !value && "text-text-muted",
+              "w-full justify-between rounded-xl text-left font-normal data-[empty=true]:text-text-muted",
               error && "border-danger-border focus-visible:ring-danger-soft",
             )}
             aria-expanded={open}
@@ -89,11 +88,11 @@ export default function DatePicker({
             data-empty={!value}
           >
             {value ? <span className="truncate">{formatDisplayDate(value)}</span> : <span>Seleccionar fecha</span>}
-            <CalendarIcon className="shrink-0 text-text-muted" aria-hidden="true" />
+            <ChevronDownIcon className="shrink-0 text-text-muted" aria-hidden="true" />
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="p-0" align="start">
+        <PopoverContent className="w-auto p-0" align="start">
           <div className="p-0">
             <Calendar
               initialFocus

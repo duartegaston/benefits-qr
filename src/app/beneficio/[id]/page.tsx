@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 export const revalidate = 60;
 import Image from "next/image";
 import Badge from "@/components/ui/Badge";
-import ReclamarForm from "@/components/ReclamarForm";
+import ReclamarForm from "@/components/cliente/ReclamarForm";
 
 export default async function BeneficioPublicoPage({
   params,

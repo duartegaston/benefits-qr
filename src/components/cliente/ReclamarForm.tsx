@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import Input from "./ui/Input";
-import Button from "./ui/Button";
-import PhoneInput from "./ui/PhoneInput";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import PhoneInput from "@/components/ui/PhoneInput";
 
 type Step = "form" | "sent";
 

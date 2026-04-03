@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import LogoUpload from "@/components/LogoUpload";
+import LogoUpload from "@/components/local/LogoUpload";
 import Input from "@/components/ui/Input";
 import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";

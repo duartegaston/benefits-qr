@@ -1,6 +1,6 @@
 import Card from "@/components/ui/Card";
 import SectionHeader from "@/components/ui/SectionHeader";
-import NuevoBeneficioForm from "@/components/dashboard/NuevoBeneficioForm";
+import NuevoBeneficioForm from "@/components/local/dashboard/beneficios/NuevoBeneficioForm";
 
 export default function NuevoBeneficioPage() {
   return (
