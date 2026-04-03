@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
 import Button from "@/components/ui/Button";
 import LinkButton from "@/components/ui/LinkButton";
 import { cn } from "@/lib/utils";
@@ -50,6 +51,7 @@ export default function DashboardHeader() {
         <div>
           {isDashboardHome(pathname) ? (
             <Button onClick={handleLogout} variant="logout" size="sm">
+              <LogOut aria-hidden="true" className="h-4 w-4" />
               Salir
             </Button>
           ) : isDashboardInternal(pathname) ? (

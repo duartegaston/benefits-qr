@@ -25,16 +25,6 @@ export function getDiaLabel(value: number, style: LabelStyle = "short") {
   return day ? day[style === "full" ? "fullLabel" : "shortLabel"] : String(value);
 }
 
-export function formatDiasValidosList(
-  dias: number[],
-  style: LabelStyle = "short",
-  separator = ", ",
-) {
-  return sortDiasValidos(dias)
-    .map((day) => getDiaLabel(day, style))
-    .join(separator);
-}
-
 export function formatDiasValidosSentence(
   dias: number[],
   {
@@ -45,7 +35,7 @@ export function formatDiasValidosSentence(
 ) {
   const sorted = sortDiasValidos(dias);
 
-  if (sorted.length === 0) {
+  if (sorted.length === 0 || sorted.length === BENEFICIO_WEEKDAYS.length) {
     return emptyLabel;
   }
 

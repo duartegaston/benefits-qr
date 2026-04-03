@@ -22,7 +22,7 @@ export const buttonVariants = cva(
         subtle:
           "border border-primary-soft/70 bg-surface/80 text-accent shadow-sm hover:border-primary hover:bg-surface hover:text-accent-foreground focus-visible:ring-primary-soft",
         logout:
-          "border border-danger-border/80 bg-danger-soft/90 text-danger shadow-sm hover:border-danger-border hover:bg-danger-soft hover:text-danger focus-visible:ring-danger",
+          "border border-danger-border/80 bg-danger-soft/70 text-danger shadow-sm hover:border-danger-border hover:bg-danger-soft hover:text-danger focus-visible:ring-danger-soft",
         link: "bg-transparent text-primary underline-offset-4 hover:underline focus-visible:ring-primary-soft",
       },
       size: {
@@ -32,6 +32,7 @@ export const buttonVariants = cva(
         sm: "h-9 px-3 text-sm",
         lg: "h-12 px-6 text-base",
         icon: "size-10",
+        "icon-2xs": "size-7",
         "icon-xs": "size-8",
         "icon-sm": "size-9",
         "icon-lg": "size-12",

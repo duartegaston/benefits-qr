@@ -48,8 +48,9 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         onClick={handleCopy}
         title={copied ? "¡Copiado!" : "Copiar enlace"}
         aria-label={copied ? "Enlace copiado" : "Copiar enlace"}
-        variant="ghost"
-        className={`h-auto w-auto p-1.5 rounded-lg transition-colors hover:bg-primary-soft/80 active:scale-100 ${copied ? "bg-success-soft hover:bg-success-soft/80" : "bg-primary-soft"}`}
+        variant="outline"
+        size="icon-2xs"
+        className={`rounded-lg transition-colors hover:bg-primary-soft/80 active:scale-100 ${copied ? "bg-success-soft hover:bg-success-soft/80" : "bg-primary-soft"}`}
       >
         {copied ? (
           <Check aria-hidden="true" className="w-4 h-4 text-success" />
