@@ -4,8 +4,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const session = await getClienteSession(req);
-  if (session) {
-    await prisma.session.delete({ where: { id: session.id } }).catch(() => {});
+  const token = req.cookies.get("cliente_session")?.value;
+  if (session && token) {
+    // Usar el token de la cookie para encontrar y eliminar la sesión
+    await prisma.session.delete({ where: { token } }).catch(() => {});
   }
   const response = NextResponse.json({ success: true });
   return clearClienteSessionCookie(response);
