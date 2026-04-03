@@ -1,31 +1,40 @@
 "use client";
-import { getButtonClasses } from "@/components/ui/buttonStyles";
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { getButtonClasses, type ButtonVisualSize, type ButtonVisualVariant } from "@/components/ui/buttonStyles";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "muted" | "secondary" | "ghost" | "danger" | "success" | "subtle" | "logout";
-  size?: "sm" | "md" | "lg";
+  asChild?: boolean;
+  variant?: ButtonVisualVariant;
+  size?: ButtonVisualSize;
   loading?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = "primary",
-      size = "md",
-      loading = false,
-      disabled,
-      children,
-      ...props
-    },
+    (
+      {
+        asChild = false,
+        className,
+        variant = "default",
+        size = "default",
+        loading = false,
+        disabled,
+        children,
+        ...props
+      },
     ref
   ) => {
+    const Comp = asChild ? Slot : "button";
+
     return (
-      <button
+      <Comp
         ref={ref}
+        data-slot="button"
+        data-variant={variant}
+        data-size={size}
         className={getButtonClasses(variant, size, className)}
         disabled={disabled || loading}
+        aria-busy={loading || undefined}
         {...props}
       >
         {loading ? (
@@ -55,7 +64,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           children
         )}
-      </button>
+      </Comp>
     );
   }
 );

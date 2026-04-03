@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
 import Image from "next/image";
+import { BadgeCheck } from "lucide-react";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 
 async function verifyOnboardingLink(formData: FormData) {
   "use server";
@@ -40,7 +43,6 @@ export default async function RegistroPage({
 
   return (
     <main className="h-screen overflow-hidden flex flex-col items-center justify-center px-4 relative">
-      {/* Decorative blobs — desktop only */}
       <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/25 blur-3xl hidden sm:block" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary-soft/80 blur-3xl hidden sm:block" />
 
@@ -55,22 +57,9 @@ export default async function RegistroPage({
           />
         </div>
 
-        <div className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md rounded-2xl border border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
+        <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
           <div className="w-14 h-14 bg-primary-soft rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg
-              aria-hidden="true"
-              className="w-7 h-7 text-primary"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-              />
-            </svg>
+            <BadgeCheck aria-hidden="true" className="w-7 h-7 text-primary" />
           </div>
           <h1 className="text-xl font-bold text-text-primary mb-2">¡Tu acceso fue aprobado!</h1>
           <p className="text-sm text-text-muted mb-6">
@@ -79,14 +68,11 @@ export default async function RegistroPage({
 
           <form action={verifyOnboardingLink}>
             <input type="hidden" name="token" value={token ?? ""} />
-            <button
-              type="submit"
-              className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-accent transition-colors cursor-pointer"
-            >
+            <Button type="submit" className="w-full" size="lg">
               Completar mi registro →
-            </button>
+            </Button>
           </form>
-        </div>
+        </Card>
       </div>
     </main>
   );

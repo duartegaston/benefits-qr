@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import Input from "./ui/Input";
-import Button from "./ui/Button";
-import PhoneInput from "./ui/PhoneInput";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import PhoneInput from "@/components/ui/PhoneInput";
 
 type Step = "form" | "sent";
 
@@ -50,13 +50,17 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
             Te enviamos un link a <strong>{email}</strong> para acceder a tu cupón.
           </p>
         </div>
-        <button
+        <Button
           type="button"
-          onClick={() => { setStep("form"); setError(""); }}
-          className="text-sm text-text-muted hover:text-text-primary"
+          variant="ghost"
+          onClick={() => {
+            setStep("form");
+            setError("");
+          }}
+          className="h-auto p-0 text-sm text-text-muted hover:text-text-primary hover:bg-transparent"
         >
           ← Usar otro email
-        </button>
+        </Button>
       </div>
     );
   }

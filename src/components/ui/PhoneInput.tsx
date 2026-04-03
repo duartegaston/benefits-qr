@@ -76,7 +76,10 @@ export default function PhoneInput({
           >
             <SelectTrigger
               aria-label="Código de país"
-              className={cn(error && "focus-visible:ring-danger-soft")}
+              className={cn(
+                "h-full rounded-none rounded-l-xl border-0 bg-transparent shadow-none",
+                error && "focus-visible:ring-danger-soft",
+              )}
             >
               <SelectValue aria-label={matchedCountry.label}>
                 {matchedCountry.label}

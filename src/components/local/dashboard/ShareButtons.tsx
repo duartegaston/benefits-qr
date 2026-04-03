@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Check, Copy, Mail, MessageCircle } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface ShareButtonsProps {
   url: string;
@@ -42,18 +43,21 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         <Mail aria-hidden="true" className="w-4 h-4 text-accent" />
       </a>
 
-      <button
+      <Button
+        type="button"
         onClick={handleCopy}
         title={copied ? "¡Copiado!" : "Copiar enlace"}
         aria-label={copied ? "Enlace copiado" : "Copiar enlace"}
-        className={`p-1.5 rounded-lg transition-colors ${copied ? "bg-success-soft" : "bg-primary-soft hover:bg-primary-soft/80"}`}
+        variant="outline"
+        size="icon-2xs"
+        className={`rounded-lg transition-colors hover:bg-primary-soft/80 active:scale-100 ${copied ? "bg-success-soft hover:bg-success-soft/80" : "bg-primary-soft"}`}
       >
         {copied ? (
           <Check aria-hidden="true" className="w-4 h-4 text-success" />
         ) : (
           <Copy aria-hidden="true" className="w-4 h-4 text-primary" />
         )}
-      </button>
+      </Button>
     </div>
   );
 }

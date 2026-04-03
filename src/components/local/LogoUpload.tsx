@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
+import Button from "@/components/ui/Button";
 
 interface LogoUploadProps {
   currentLogoUrl?: string | null;
@@ -51,13 +52,14 @@ export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoU
 
   return (
     <div className="relative group">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => inputRef.current?.click()}
-        className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl bg-primary-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-soft focus-visible:ring-offset-2 focus-visible:ring-offset-surface disabled:cursor-not-allowed"
         title="Cambiar logo"
         aria-label="Cambiar logo"
         disabled={loading}
+        className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl bg-primary-soft p-0 focus-visible:ring-primary-soft focus-visible:ring-offset-surface disabled:cursor-not-allowed active:scale-100"
       >
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -74,7 +76,7 @@ export default function LogoUpload({ currentLogoUrl, nombre, onUploaded }: LogoU
             <Camera aria-hidden="true" className="w-7 h-7 text-primary-foreground" />
           )}
         </div>
-      </button>
+      </Button>
 
       <input
         ref={inputRef}

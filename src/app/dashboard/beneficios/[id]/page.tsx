@@ -3,21 +3,12 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
+import DeleteBeneficioButton from "@/components/local/dashboard/beneficios/DeleteBeneficioButton";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
-
-const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 const PAGE_SIZE = 10;
-
-function formatDias(dias: number[]): string {
-  if (dias.length === 0) return "Válido todos los días";
-  const nombres = [...dias].sort((a, b) => a - b).map((d) => DIAS_LABELS[d]);
-  if (nombres.length === 1) return `Válido los ${nombres[0]}`;
-  const ultimo = nombres.pop();
-  return `Válido los ${nombres.join(", ")} y ${ultimo}`;
-}
 
 function getReclamoStatusPresentation(status: "PENDIENTE" | "CANJEADO" | "VENCIDO") {
   if (status === "CANJEADO") {
@@ -115,7 +106,7 @@ export default async function BeneficioStatsPage({
                 {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
               </p>
               <p className="text-xs font-medium text-text-muted sm:text-sm">
-                {formatDias(beneficio.diasValidos)}
+                {formatDiasValidosSentence(beneficio.diasValidos)}
               </p>
             </div>
 
