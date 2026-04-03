@@ -50,13 +50,10 @@ export default async function MisBeneficiosPage({
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
-    <main className="px-4 pb-16 sm:px-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
-      <div className="flex items-center gap-4 mb-8">
-        <Image src="/logo.png" alt="Qupón" width={56} height={56} className="rounded-2xl shadow-lg shadow-primary-soft/60 ring-2 ring-surface/60 shrink-0" />
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
-          <p className="text-sm text-text-muted">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
-        </div>
+    <main className="px-4 pt-8 pb-16 sm:px-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
+        <p className="text-sm text-text-muted">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
       </div>
       <MisBeneficiosList reclamos={reclamos} />
       {totalPages > 1 && (
