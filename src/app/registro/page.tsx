@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
 import Image from "next/image";
+import Button from "@/components/ui/Button";
 
 async function verifyOnboardingLink(formData: FormData) {
   "use server";
@@ -79,12 +80,9 @@ export default async function RegistroPage({
 
           <form action={verifyOnboardingLink}>
             <input type="hidden" name="token" value={token ?? ""} />
-            <button
-              type="submit"
-              className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-accent transition-colors cursor-pointer"
-            >
+            <Button type="submit" className="w-full" size="lg">
               Completar mi registro →
-            </button>
+            </Button>
           </form>
         </div>
       </div>

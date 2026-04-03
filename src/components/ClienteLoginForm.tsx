@@ -45,13 +45,18 @@ export default function ClienteLoginForm() {
           <p className="text-text-muted text-sm mb-6">
             Te enviamos un link a <strong>{email}</strong>. Hacé clic en él para acceder a tus cupones.
           </p>
-          <button
+          <Button
             type="button"
-            onClick={() => { setStep("form"); setEmail(""); setError(""); }}
-            className="text-sm text-text-muted hover:text-text-primary"
+            variant="ghost"
+            onClick={() => {
+              setStep("form");
+              setEmail("");
+              setError("");
+            }}
+            className="h-auto p-0 text-sm text-text-muted hover:text-text-primary hover:bg-transparent"
           >
             ← Usar otro email
-          </button>
+          </Button>
         </div>
       </Card>
     );

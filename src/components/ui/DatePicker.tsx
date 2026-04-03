@@ -94,21 +94,23 @@ export default function DatePicker({
         </PopoverTrigger>
 
         <PopoverContent className="p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="single"
-            month={open ? visibleMonth : fallbackMonth}
-            onMonthChange={setVisibleMonth}
-            selected={selectedDate ?? undefined}
-            onSelect={(date) => {
-              if (!date) return;
-              setVisibleMonth(date);
-              onChange(formatDateString(date));
-              setOpen(false);
-            }}
-            disabled={minDate ? { before: minDate } : undefined}
-            defaultMonth={fallbackMonth}
-          />
+          <div className="p-0">
+            <Calendar
+              initialFocus
+              mode="single"
+              month={open ? visibleMonth : fallbackMonth}
+              onMonthChange={setVisibleMonth}
+              selected={selectedDate ?? undefined}
+              onSelect={(date) => {
+                if (!date) return;
+                setVisibleMonth(date);
+                onChange(formatDateString(date));
+                setOpen(false);
+              }}
+              disabled={minDate ? { before: minDate } : undefined}
+              defaultMonth={fallbackMonth}
+            />
+          </div>
         </PopoverContent>
       </Popover>
 

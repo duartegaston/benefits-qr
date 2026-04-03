@@ -1,7 +1,8 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
 import { X } from "lucide-react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import Button from "@/components/ui/Button";
 
 interface ModalProps {
   open: boolean;
@@ -18,43 +19,34 @@ export default function Modal({
   children,
   className,
 }: ModalProps) {
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-text-primary/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        className={cn(
-          "relative w-full max-w-md rounded-2xl bg-surface p-6 shadow-xl mx-4",
-          className
-        )}
-      >
-        <div className="mb-4 flex items-center justify-between">
-          {title && <h2 className="text-lg font-semibold text-text-primary">{title}</h2>}
-          <button
-            onClick={onClose}
-            aria-label="Cerrar"
-            className="ml-auto rounded-lg p-1 text-text-muted transition-colors hover:bg-surface-muted"
-          >
-            <X aria-hidden="true" className="h-5 w-5" />
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
+    <DialogPrimitive.Root open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="fixed inset-0 bg-text-primary/50 backdrop-blur-sm" />
+        <DialogPrimitive.Content
+          className={cn(
+            "fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border-default bg-surface p-6 shadow-xl outline-none",
+            className
+          )}
+        >
+          <div className="mb-4 flex items-start justify-between gap-4">
+            {title ? (
+              <DialogPrimitive.Title className="text-lg font-semibold text-text-primary">
+                {title}
+              </DialogPrimitive.Title>
+            ) : (
+              <DialogPrimitive.Title className="sr-only">Modal</DialogPrimitive.Title>
+            )}
+            <DialogPrimitive.Close asChild>
+              <Button variant="ghost" size="icon-sm" className="ml-auto">
+                <X aria-hidden="true" />
+                <span className="sr-only">Cerrar</span>
+              </Button>
+            </DialogPrimitive.Close>
+          </div>
+          {children}
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }

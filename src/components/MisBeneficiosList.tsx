@@ -3,6 +3,7 @@ import { useState } from "react";
 import Card from "./ui/Card";
 import Badge from "./ui/Badge";
 import QRDisplay from "./QRDisplay";
+import Button from "./ui/Button";
 
 type Reclamo = {
   id: string;
@@ -82,14 +83,16 @@ export default function MisBeneficiosList({
               </div>
 
               {r.estado === "PENDIENTE" && (
-                <button
+                <Button
+                  type="button"
                   onClick={() =>
                     setExpandedId(expandedId === r.id ? null : r.id)
                   }
-                  className="mt-4 w-full py-2 text-sm font-medium text-primary bg-primary-soft rounded-xl hover:bg-accent-soft transition-colors"
+                  variant="ghost"
+                  className="mt-4 w-full h-auto py-2 text-sm font-medium text-primary bg-primary-soft rounded-xl hover:bg-accent-soft transition-colors active:scale-100"
                 >
                   {expandedId === r.id ? "Ocultar QR" : "Mostrar QR"}
-                </button>
+                </Button>
               )}
 
               {r.estado === "CANJEADO" && r.fechaCanje && (

@@ -4,7 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Modal from "@/components/ui/Modal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/AlertDialog";
 
 export default function DeleteBeneficioButton({ id }: { id: string }) {
   const router = useRouter();
@@ -20,31 +30,34 @@ export default function DeleteBeneficioButton({ id }: { id: string }) {
 
   return (
     <>
-      <Button onClick={() => setConfirming(true)} variant="danger" size="sm">
-        <Trash2 className="h-4 w-4" aria-hidden="true" />
-        <span className="hidden sm:inline">Eliminar cupón</span>
-      </Button>
-
-      <Modal open={confirming} onClose={() => !loading && setConfirming(false)} title="Eliminar cupón">
-        <div className="space-y-4">
-          <p className="text-sm text-text-muted">
-            Esta acción eliminará el cupón y no se puede deshacer. ¿Querés continuar?
-          </p>
-          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button
-              onClick={() => setConfirming(false)}
-              disabled={loading}
-              variant="secondary"
-              size="sm"
-            >
-              Cancelar
-            </Button>
-            <Button onClick={handleDelete} variant="danger" size="sm" loading={loading} disabled={loading}>
-              Sí, eliminar
-            </Button>
-          </div>
-        </div>
-      </Modal>
+      <AlertDialog open={confirming} onOpenChange={(nextOpen) => !loading && setConfirming(nextOpen)}>
+        <AlertDialogTrigger asChild>
+          <Button onClick={() => setConfirming(true)} variant="danger" size="sm">
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden sm:inline">Eliminar cupón</span>
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Eliminar cupón</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción eliminará el cupón y no se puede deshacer. ¿Querés continuar?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <Button disabled={loading} variant="secondary" size="sm">
+                Cancelar
+              </Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button onClick={handleDelete} variant="danger" size="sm" loading={loading} disabled={loading}>
+                Sí, eliminar
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

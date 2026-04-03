@@ -50,13 +50,17 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
             Te enviamos un link a <strong>{email}</strong> para acceder a tu cupón.
           </p>
         </div>
-        <button
+        <Button
           type="button"
-          onClick={() => { setStep("form"); setError(""); }}
-          className="text-sm text-text-muted hover:text-text-primary"
+          variant="ghost"
+          onClick={() => {
+            setStep("form");
+            setError("");
+          }}
+          className="h-auto p-0 text-sm text-text-muted hover:text-text-primary hover:bg-transparent"
         >
           ← Usar otro email
-        </button>
+        </Button>
       </div>
     );
   }

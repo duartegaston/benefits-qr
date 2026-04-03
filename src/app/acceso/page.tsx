@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
+import Button from "@/components/ui/Button";
 
 async function verifyMagicLink(formData: FormData) {
   "use server";
@@ -80,12 +81,9 @@ export default async function AccesoPage({
 
           <form action={verifyMagicLink}>
             <input type="hidden" name="token" value={token ?? ""} />
-            <button
-              type="submit"
-              className="w-full px-4 py-3 bg-primary text-primary-foreground rounded-xl text-sm font-semibold hover:bg-accent transition-colors cursor-pointer"
-            >
+            <Button type="submit" className="w-full" size="lg">
               Ver mis cupones →
-            </button>
+            </Button>
           </form>
         </div>
 
