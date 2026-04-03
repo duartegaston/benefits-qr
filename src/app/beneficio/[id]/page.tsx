@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { EstadoReclamo } from "@/generated/prisma/client";
 
 export const revalidate = 60;
 import Image from "next/image";
@@ -23,7 +24,7 @@ export default async function BeneficioPublicoPage({
     include: {
       local: { select: { nombre: true, logoUrl: true } },
       _count: { select: { reclamos: true } },
-      reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
+      reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
     },
   });
 

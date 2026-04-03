@@ -1,5 +1,6 @@
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { EstadoReclamo } from "@/generated/prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
@@ -34,7 +35,7 @@ export default async function MisBeneficiosPage({
 
   type ReclamoRow = {
     id: string;
-    estado: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO";
+    estado: EstadoReclamo;
     fechaReclamo: Date;
     fechaCanje: Date | null;
     beneficioDescripcion: string;

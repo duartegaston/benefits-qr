@@ -4,10 +4,11 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import QRDisplay from "@/components/cliente/QRDisplay";
 import Button from "@/components/ui/Button";
+import { EstadoReclamo } from "@/generated/prisma/client";
 
 type Reclamo = {
   id: string;
-  estado: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO";
+  estado: EstadoReclamo;
   fechaReclamo: Date | string;
   fechaCanje: Date | string | null;
   beneficio: {
@@ -17,11 +18,11 @@ type Reclamo = {
   };
 };
 
-const estadoBadge: Record<Reclamo["estado"], "violet" | "green" | "red" | "gray"> = {
-  PENDIENTE: "violet",
-  CANJEADO: "green",
-  VENCIDO: "red",
-  CANCELADO: "gray",
+const estadoBadge: Record<EstadoReclamo, "violet" | "green" | "red" | "gray"> = {
+  [EstadoReclamo.PENDIENTE]: "violet",
+  [EstadoReclamo.CANJEADO]: "green",
+  [EstadoReclamo.VENCIDO]: "red",
+  [EstadoReclamo.CANCELADO]: "gray",
 };
 
 export default function MisBeneficiosList({
@@ -83,7 +84,7 @@ export default function MisBeneficiosList({
                 <Badge color={estadoBadge[r.estado]}>{r.estado}</Badge>
               </div>
 
-              {r.estado === "PENDIENTE" && (
+              {r.estado === EstadoReclamo.PENDIENTE && (
                 <Button
                   type="button"
                   onClick={() =>
@@ -96,21 +97,21 @@ export default function MisBeneficiosList({
                 </Button>
               )}
 
-              {r.estado === "CANJEADO" && r.fechaCanje && (
+              {r.estado === EstadoReclamo.CANJEADO && r.fechaCanje && (
                 <p className="text-xs text-success mt-3">
                   Canjeado:{" "}
                   {new Date(r.fechaCanje).toLocaleString("es-AR")}
                 </p>
               )}
 
-              {r.estado === "CANCELADO" && (
+              {r.estado === EstadoReclamo.CANCELADO && (
                 <p className="text-xs text-gray-400 mt-3">
                   Cupón no disponible
                 </p>
               )}
             </div>
 
-            {expandedId === r.id && r.estado === "PENDIENTE" && (
+            {expandedId === r.id && r.estado === EstadoReclamo.PENDIENTE && (
               <div className="border-t border-border-default/70 p-5">
                 <QRDisplay reclamoId={r.id} />
               </div>

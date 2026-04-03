@@ -8,17 +8,18 @@ import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
+import { EstadoReclamo } from "@/generated/prisma/client";
 const PAGE_SIZE = 10;
 
-function getReclamoStatusPresentation(status: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO") {
-  if (status === "CANCELADO") {
+function getReclamoStatusPresentation(status: EstadoReclamo) {
+  if (status === EstadoReclamo.CANCELADO) {
     return { label: "Cancelado", color: "gray" as const };
   }
-  if (status === "CANJEADO") {
+  if (status === EstadoReclamo.CANJEADO) {
     return { label: "Canjeado", color: "green" as const };
   }
 
-  if (status === "VENCIDO") {
+  if (status === EstadoReclamo.VENCIDO) {
     return { label: "Vencido", color: "red" as const };
   }
 
@@ -46,7 +47,7 @@ export default async function BeneficioStatsPage({
     } | null;
     stats: { total: number; canjeados: number; pendientes: number } | null;
     reclamos: Array<{
-      id: string; estado: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO";
+      id: string; estado: EstadoReclamo;
       fechaReclamo: string; fechaCanje: string | null;
       cliente: { nombre: string | null; email: string | null; phone: string | null };
     }> | null;
@@ -118,8 +119,8 @@ export default async function BeneficioStatsPage({
   // Fire-and-forget: marca PENDIENTE → VENCIDO sin bloquear el render
   if (isExpired && stats.pendientes > 0) {
     void prisma.reclamo.updateMany({
-      where: { beneficioId: id, estado: "PENDIENTE" },
-      data: { estado: "VENCIDO" },
+      where: { beneficioId: id, estado: EstadoReclamo.PENDIENTE },
+      data: { estado: EstadoReclamo.VENCIDO },
     });
   }
   const isDeleted = beneficio.deletedAt !== null;
