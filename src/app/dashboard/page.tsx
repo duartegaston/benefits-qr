@@ -9,8 +9,7 @@ import LogoUpload from "@/components/LogoUpload";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import MetricCard from "@/components/ui/MetricCard";
-
-const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 
 function getBenefitStatus(isExpired: boolean, isAgotado: boolean) {
   if (isExpired) {
@@ -34,14 +33,6 @@ function getBenefitStatus(isExpired: boolean, isAgotado: boolean) {
     color: "green" as const,
     cardTone: "border-l-success-border",
   };
-}
-
-function formatDias(dias: number[]): string {
-  if (dias.length === 0) return "Válido todos los días";
-  const nombres = [...dias].sort((a, b) => a - b).map((d) => DIAS_LABELS[d]);
-  if (nombres.length === 1) return `Válido los ${nombres[0]}`;
-  const ultimo = nombres.pop();
-  return `Válido los ${nombres.join(", ")} y ${ultimo}`;
 }
 
 const PAGE_SIZE = 10;
@@ -230,7 +221,7 @@ export default async function DashboardPage({
                             : `${canjeados}/∞`}
                         </p>
                         <p className="sm:col-span-2 text-[13px] font-medium text-text-muted sm:text-sm">
-                          {formatDias(b.diasValidos)}
+                          {formatDiasValidosSentence(b.diasValidos)}
                         </p>
                       </div>
 
