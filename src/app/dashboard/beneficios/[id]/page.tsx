@@ -10,14 +10,6 @@ import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 const PAGE_SIZE = 10;
 
-function formatDias(dias: number[]): string {
-  if (dias.length === 0) return "Válido todos los días";
-  const nombres = [...dias].sort((a, b) => a - b).map((d) => DIAS_LABELS[d]);
-  if (nombres.length === 1) return `Válido los ${nombres[0]}`;
-  const ultimo = nombres.pop();
-  return `Válido los ${nombres.join(", ")} y ${ultimo}`;
-}
-
 function getReclamoStatusPresentation(status: "PENDIENTE" | "CANJEADO" | "VENCIDO" | "CANCELADO") {
   if (status === "CANCELADO") {
     return { label: "Cancelado", color: "gray" as const };
