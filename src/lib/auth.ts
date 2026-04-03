@@ -4,6 +4,7 @@ import { cache } from "react";
 import { signToken, verifyToken } from "./jwt";
 import { sendMagicLink } from "./email";
 import { SESSION_DURATION } from "./constants";
+import { prisma } from "./prisma";
 
 const LOCAL_COOKIE = "local_session";
 const CLIENTE_COOKIE = "cliente_session";
@@ -23,6 +24,14 @@ export async function createSession(
   durationHours = SESSION_DURATION_DAYS * 24
 ) {
   const token = await signToken({ userId, userType }, `${durationHours}h`);
+  await prisma.session.create({
+    data: {
+      token,
+      userId,
+      userType,
+      expiresAt: new Date(Date.now() + durationHours * 60 * 60 * 1000),
+    },
+  });
   return { token };
 }
 
