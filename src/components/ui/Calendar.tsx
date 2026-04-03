@@ -27,18 +27,11 @@ export default function Calendar({
         root: cn("bg-background", defaultClassNames.root),
         months: cn("relative flex flex-col gap-4 md:flex-row", defaultClassNames.months),
         month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
+        caption: "relative flex items-center justify-center pt-1",
         caption_label: cn("text-sm font-semibold capitalize text-text-primary", defaultClassNames.caption_label),
-        nav: cn("flex items-center gap-1", defaultClassNames.nav),
-        button_previous: cn(
-          buttonVariants({ variant: "ghost", size: "icon-sm" }),
-          "absolute left-0",
-          defaultClassNames.button_previous,
-        ),
-        button_next: cn(
-          buttonVariants({ variant: "ghost", size: "icon-sm" }),
-          "absolute right-0",
-          defaultClassNames.button_next,
-        ),
+        nav: cn("absolute right-1 top-1 flex items-center gap-1", defaultClassNames.nav),
+        button_previous: cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), defaultClassNames.button_previous),
+        button_next: cn(buttonVariants({ variant: "ghost", size: "icon-sm" }), defaultClassNames.button_next),
         month_grid: cn("w-full border-collapse", defaultClassNames.month_grid),
         weekdays: cn("grid grid-cols-7 gap-1", defaultClassNames.weekdays),
         weekday:
