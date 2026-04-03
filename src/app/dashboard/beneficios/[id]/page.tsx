@@ -3,12 +3,11 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-import DeleteBeneficioButton from "@/components/DeleteBeneficioButton";
+import DeleteBeneficioButton from "@/components/local/dashboard/beneficios/DeleteBeneficioButton";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
-
-const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 const PAGE_SIZE = 10;
 
 function formatDias(dias: number[]): string {
@@ -167,7 +166,7 @@ export default async function BeneficioStatsPage({
                 {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
               </p>
               <p className="text-xs font-medium text-text-muted sm:text-sm">
-                {formatDias(beneficio.diasValidos)}
+                {formatDiasValidosSentence(beneficio.diasValidos)}
               </p>
             </div>
 

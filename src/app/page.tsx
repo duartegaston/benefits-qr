@@ -8,9 +8,9 @@ import {
   Smartphone,
   Store,
 } from "lucide-react";
-import HowItWorks from "@/components/HowItWorks";
-import Playbooks from "@/components/Playbooks";
-import Pricing from "@/components/Pricing";
+import HowItWorks from "@/components/landing/HowItWorks";
+import Playbooks from "@/components/landing/Playbooks";
+import Pricing from "@/components/landing/Pricing";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 

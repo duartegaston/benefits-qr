@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
 import Button from "@/components/ui/Button";
 import LinkButton from "@/components/ui/LinkButton";
 import { cn } from "@/lib/utils";
@@ -40,9 +41,9 @@ export default function DashboardHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b shadow-sm transition-[background-color,border-color,box-shadow] duration-200",
+        "sticky top-0 z-40 shadow-sm transition-[background-color,border-color,box-shadow] duration-200",
         scrolled
-          ? "border-border-strong/70 bg-surface-soft/95 shadow-md sm:bg-surface-soft/85 sm:backdrop-blur-md"
+          ? "border-border-strong/70 bg-surface-soft/95 shadow-xl sm:bg-surface-soft/85 sm:backdrop-blur-md"
           : "border-border-strong/60 bg-transparent"
       )}
     >
@@ -50,6 +51,7 @@ export default function DashboardHeader() {
         <div>
           {isDashboardHome(pathname) ? (
             <Button onClick={handleLogout} variant="logout" size="sm">
+              <LogOut aria-hidden="true" className="h-4 w-4" />
               Salir
             </Button>
           ) : isDashboardInternal(pathname) ? (

@@ -7,7 +7,7 @@ import Card from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import SectionHeader from "@/components/ui/SectionHeader";
 
-const QRScanner = dynamic(() => import("@/components/QRScanner"), {
+const QRScanner = dynamic(() => import("@/components/local/dashboard/escanear/QRScanner"), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-48 sm:h-64">

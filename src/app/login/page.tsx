@@ -68,11 +68,9 @@ export default function LoginPage() {
 
   return (
     <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
-      {/* Decorative blobs — desktop only */}
       <div className="pointer-events-none absolute -top-40 -left-40 w-150 h-150 rounded-full bg-primary/20 blur-3xl hidden sm:block" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-125 h-125 rounded-full bg-primary-soft/70 blur-3xl hidden sm:block" />
 
-      {/* Back link — fixed top-left */}
       <LinkButton
         href="/"
         variant="subtle"
@@ -83,9 +81,7 @@ export default function LoginPage() {
         Inicio
       </LinkButton>
 
-      {/* Logo + card — centrado */}
       <div className="w-full max-w-md flex-1 flex flex-col justify-center relative">
-        {/* Brand */}
         <Reveal y={14} amount={0.3}>
           <div className="text-center mb-7">
             <div className="flex justify-center mb-4">
@@ -103,7 +99,6 @@ export default function LoginPage() {
           </div>
         </Reveal>
 
-        {/* Card */}
         <Reveal delay={0.06} y={16} amount={0.35}>
           <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-6 sm:p-8">
             {step === "pending-approval" ? (

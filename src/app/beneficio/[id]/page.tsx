@@ -4,7 +4,12 @@ import { prisma } from "@/lib/prisma";
 export const revalidate = 60;
 import Image from "next/image";
 import Badge from "@/components/ui/Badge";
-import ReclamarForm from "@/components/ReclamarForm";
+import ReclamarForm from "@/components/cliente/ReclamarForm";
+import {
+  formatDiasValidosSentence,
+  getDiaLabel,
+  sortDiasValidos,
+} from "@/lib/beneficioSchedule";
 
 export default async function BeneficioPublicoPage({
   params,
@@ -28,14 +33,13 @@ export default async function BeneficioPublicoPage({
   const canjeados = beneficio.reclamos.length;
   const isAgotado = beneficio.maxUsos !== null && canjeados >= beneficio.maxUsos;
 
-  const DIAS_LABELS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-  const DIAS_FULL = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
   const todayIndex = new Date(
     new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })
   ).getDay();
   const diasValidos: number[] = beneficio.diasValidos as number[];
   const tieneRestriccion = diasValidos.length > 0;
   const isWrongDay = tieneRestriccion && !diasValidos.includes(todayIndex);
+  const diasValidosOrdenados = sortDiasValidos(diasValidos);
 
   const initials = (beneficio.local.nombre ?? "")
     .split(" ")
@@ -108,10 +112,10 @@ export default async function BeneficioPublicoPage({
               </Badge>
               {tieneRestriccion && (
                 <Badge color="gray">
-                  {diasValidos
-                    .sort((a, b) => a - b)
-                    .map((d) => DIAS_LABELS[d])
-                    .join(" · ")}
+                  {formatDiasValidosSentence(diasValidosOrdenados, {
+                    emptyLabel: "",
+                    prefix: "Válido los",
+                  })}
                 </Badge>
               )}
             </div>
@@ -125,10 +129,11 @@ export default async function BeneficioPublicoPage({
                     ? "Este cupón ya expiró"
                     : isAgotado
                     ? "Este cupón está agotado"
-                    : `Este cupón no está disponible los ${DIAS_FULL[todayIndex]}s. Aplica los: ${diasValidos
-                        .sort((a, b) => a - b)
-                        .map((d) => DIAS_FULL[d])
-                        .join(", ")}`}
+                    : `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}s. Aplica los: ${formatDiasValidosSentence(diasValidosOrdenados, {
+                        emptyLabel: "",
+                        prefix: "",
+                        style: "full",
+                      })}`}
                 </p>
               </div>
             )}

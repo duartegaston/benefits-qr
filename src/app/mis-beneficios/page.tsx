@@ -2,8 +2,8 @@ import { getClienteSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
-import MisBeneficiosList from "@/components/MisBeneficiosList";
-import ClienteLoginForm from "@/components/ClienteLoginForm";
+import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
+import ClienteLoginForm from "@/components/cliente/ClienteLoginForm";
 
 const PAGE_SIZE = 10;
 
