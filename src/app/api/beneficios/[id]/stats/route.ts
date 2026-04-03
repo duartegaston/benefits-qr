@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { EstadoReclamo } from "@/generated/prisma/client";
 
 export async function GET(
   req: NextRequest,
@@ -15,7 +16,13 @@ export async function GET(
     where: { id, localId: session!.userId },
     include: {
       reclamos: {
-        include: { cliente: { select: { email: true } } },
+        select: {
+          id: true,
+          estado: true,
+          fechaReclamo: true,
+          fechaCanje: true,
+          cliente: { select: { email: true } },
+        },
         orderBy: { fechaReclamo: "desc" },
       },
     },
@@ -31,7 +38,7 @@ export async function GET(
   return NextResponse.json({
     ...beneficio,
     totalReclamos: beneficio.reclamos.length,
-    canjeados: beneficio.reclamos.filter((r: { estado: string }) => r.estado === "CANJEADO").length,
-    pendientes: beneficio.reclamos.filter((r: { estado: string }) => r.estado === "PENDIENTE").length,
+    canjeados: beneficio.reclamos.filter((r) => r.estado === EstadoReclamo.CANJEADO).length,
+    pendientes: beneficio.reclamos.filter((r) => r.estado === EstadoReclamo.PENDIENTE).length,
   });
 }

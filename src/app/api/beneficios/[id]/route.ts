@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireLocalAuth } from "@/lib/auth";
+import { EstadoReclamo } from "@/generated/prisma/client";
 
 export async function GET(
   _req: NextRequest,
@@ -43,10 +44,16 @@ export async function DELETE(
     );
   }
 
-  await prisma.beneficio.update({
-    where: { id },
-    data: { deletedAt: new Date() },
-  });
+  await prisma.$transaction([
+    prisma.beneficio.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    }),
+    prisma.reclamo.updateMany({
+      where: { beneficioId: id, estado: EstadoReclamo.PENDIENTE },
+      data: { estado: EstadoReclamo.CANCELADO, qrToken: null, qrTokenExpira: null },
+    }),
+  ]);
 
   return NextResponse.json({ success: true });
 }

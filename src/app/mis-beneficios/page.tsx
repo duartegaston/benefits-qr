@@ -1,5 +1,6 @@
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { EstadoReclamo } from "@/generated/prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
@@ -20,12 +21,7 @@ export default async function MisBeneficiosPage({
   // Sin sesión → mostrar formulario de acceso
   if (!session || session.userType !== "CLIENTE") {
     return (
-      <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-8 relative">
-        {/* Back link — fixed top-left */}
-        <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-text-muted hover:text-text-primary transition-colors">
-          ← Inicio
-        </Link>
-
+      <main className="flex-1 flex flex-col items-center px-4 py-8 relative">
         {/* Logo + form — centrado */}
         <div className="w-full flex-1 flex flex-col items-center justify-center animate-[fade-up_0.45s_ease-out_both]">
           <div className="mb-6">
@@ -37,34 +33,60 @@ export default async function MisBeneficiosPage({
     );
   }
 
-  const [reclamos, total] = await Promise.all([
-    prisma.reclamo.findMany({
-      where: { clienteId: session.userId },
-      include: {
-        beneficio: {
-          include: { local: { select: { nombre: true, logoUrl: true } } },
-        },
-      },
-      orderBy: { fechaReclamo: "desc" },
-      skip: (page - 1) * PAGE_SIZE,
-      take: PAGE_SIZE,
-    }),
+  type ReclamoRow = {
+    id: string;
+    estado: EstadoReclamo;
+    fechaReclamo: Date;
+    fechaCanje: Date | null;
+    beneficioDescripcion: string;
+    beneficioFechaExpiracion: Date;
+    beneficioDeletedAt: Date | null;
+    localNombre: string | null;
+    localLogoUrl: string | null;
+  };
+
+  const [rows, total] = await Promise.all([
+    // 1 SQL con JOINs en vez de 3 SQL secuenciales (reclamos → beneficios IN → locals IN)
+    prisma.$queryRaw<ReclamoRow[]>`
+      SELECT
+        r.id,
+        r.estado,
+        r."fechaReclamo",
+        r."fechaCanje",
+        b.descripcion           AS "beneficioDescripcion",
+        b."fechaExpiracion"     AS "beneficioFechaExpiracion",
+        b."deletedAt"           AS "beneficioDeletedAt",
+        l.nombre                AS "localNombre",
+        l."logoUrl"             AS "localLogoUrl"
+      FROM "Reclamo" r
+      JOIN "Beneficio" b ON b.id = r."beneficioId"
+      JOIN "Local"     l ON l.id = b."localId"
+      WHERE r."clienteId" = ${session.userId}
+      ORDER BY r."fechaReclamo" DESC
+      LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}
+    `,
     prisma.reclamo.count({ where: { clienteId: session.userId } }),
   ]);
+
+  const reclamos = rows.map((r) => ({
+    id: r.id,
+    estado: r.estado,
+    fechaReclamo: r.fechaReclamo,
+    fechaCanje: r.fechaCanje,
+    beneficio: {
+      descripcion: r.beneficioDescripcion,
+      fechaExpiracion: r.beneficioFechaExpiracion,
+      local: { nombre: r.localNombre, logoUrl: r.localLogoUrl },
+    },
+  }));
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
-    <main className="min-h-screen px-4 pt-16 pb-16 sm:px-6 sm:pt-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
-      <Link href="/" className="fixed top-5 left-5 sm:top-6 sm:left-6 z-40 text-sm text-text-muted hover:text-text-primary transition-colors">
-        ← Inicio
-      </Link>
-      <div className="flex items-center gap-4 mb-8">
-        <Image src="/logo.png" alt="Qupón" width={56} height={56} className="rounded-2xl shadow-lg shadow-primary-soft/60 ring-2 ring-surface/60 shrink-0" />
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
-          <p className="text-sm text-text-muted">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
-        </div>
+    <main className="px-4 pt-8 pb-16 sm:px-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
+        <p className="text-sm text-text-muted">{total} {total === 1 ? "cupón guardado" : "cupones guardados"}</p>
       </div>
       <MisBeneficiosList reclamos={reclamos} />
       {totalPages > 1 && (

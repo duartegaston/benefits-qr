@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createSession } from "@/lib/auth";
-import { sendMagicLink } from "@/lib/email";
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
+import { createClienteSession } from "@/lib/auth";
+import { EMAIL_REGEX, PHONE_REGEX, TIMEZONE_AR, SESSION_DURATION } from "@/lib/constants";
+import { EstadoReclamo } from "@/generated/prisma/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     const beneficio = await prisma.beneficio.findUnique({
       where: { id: beneficioId, deletedAt: null },
-      include: { reclamos: { where: { estado: "CANJEADO" }, select: { id: true } } },
+      include: { reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } } },
     });
 
     if (!beneficio) {
@@ -44,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     if (beneficio.diasValidos.length > 0) {
       const hoy = new Date(
-        new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })
+        new Date().toLocaleString("en-US", { timeZone: TIMEZONE_AR })
       ).getDay();
       if (!beneficio.diasValidos.includes(hoy)) {
         const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
@@ -114,12 +112,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingReclamo) {
-      if (existingReclamo.estado === "CANJEADO") {
+      if (existingReclamo.estado === EstadoReclamo.CANJEADO) {
         return NextResponse.json({ error: "Ya canjeaste este cupón" }, { status: 409 });
       }
       // Reclamo exists but not redeemed → resend magic link
-      const session = await createSession(cliente.id, "CLIENTE", 24);
-      await sendMagicLink(email, session.token, "/mis-beneficios");
+      await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_RECLAMO);
       return NextResponse.json({ success: true, reclamoId: existingReclamo.id });
     }
 
@@ -127,8 +124,7 @@ export async function POST(req: NextRequest) {
       data: { beneficioId, clienteId: cliente.id },
     });
 
-    const session = await createSession(cliente.id, "CLIENTE", 24);
-    await sendMagicLink(email, session.token, "/mis-beneficios");
+    await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_RECLAMO);
 
     return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
   } catch (error) {

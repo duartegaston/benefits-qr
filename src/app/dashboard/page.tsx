@@ -50,32 +50,98 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  const [local, beneficios, totalBeneficios, totalReclamos, totalCanjeados] =
-    await Promise.all([
-      prisma.local.findUnique({ where: { id: session.userId } }),
-      prisma.beneficio.findMany({
-        where: { localId: session.userId, deletedAt: null },
-        include: {
-          _count: { select: { reclamos: true } },
-          reclamos: { where: { estado: "CANJEADO" }, select: { id: true } },
-        },
-        orderBy: { createdAt: "desc" },
-        skip: (page - 1) * PAGE_SIZE,
-        take: PAGE_SIZE,
-      }),
-      prisma.beneficio.count({
-        where: { localId: session.userId, deletedAt: null },
-      }),
-      prisma.reclamo.count({
-        where: { beneficio: { localId: session.userId } },
-      }),
-      prisma.reclamo.count({
-        where: { beneficio: { localId: session.userId }, estado: "CANJEADO" },
-      }),
-    ]);
+  type BeneficioRow = {
+    id: string;
+    descripcion: string;
+    fechaExpiracion: Date;
+    maxUsos: number | null;
+    diasValidos: number[];
+    createdAt: Date;
+    totalReclamos: number;
+    canjeados: number;
+  };
 
+  // Tipos raw del CTE: fechas vienen como string desde JSON de Postgres
+  type DashboardRaw = {
+    local: { id: string; nombre: string | null; email: string; logoUrl: string | null } | null;
+    beneficios: Array<{
+      id: string; descripcion: string; fechaExpiracion: string; maxUsos: number | null;
+      diasValidos: number[]; createdAt: string; totalReclamos: number; canjeados: number;
+    }> | null;
+    totalBeneficios: number;
+    reclamoStats: { total: number; canjeados: number } | null;
+  };
+
+  // 1 CTE = 1 conexión WebSocket a Neon en vez de 4 conexiones paralelas
+  const t0 = performance.now();
+  const [raw] = await prisma.$queryRaw<[DashboardRaw]>`
+    WITH
+      local_cte AS (
+        SELECT id, nombre, email, "logoUrl"
+        FROM "Local"
+        WHERE id = ${session.userId}
+      ),
+      beneficios_cte AS (
+        SELECT
+          b.id,
+          b.descripcion,
+          b."fechaExpiracion",
+          b."maxUsos",
+          b."diasValidos",
+          b."createdAt",
+          COUNT(r.id)::int                                          AS "totalReclamos",
+          COUNT(r.id) FILTER (WHERE r.estado = 'CANJEADO')::int    AS "canjeados"
+        FROM "Beneficio" b
+        LEFT JOIN "Reclamo" r ON r."beneficioId" = b.id
+        WHERE b."localId" = ${session.userId}
+          AND b."deletedAt" IS NULL
+        GROUP BY b.id
+        ORDER BY b."createdAt" DESC
+        LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}
+      ),
+      total_cte AS (
+        SELECT COUNT(*)::int AS count
+        FROM "Beneficio"
+        WHERE "localId" = ${session.userId}
+          AND "deletedAt" IS NULL
+      ),
+      reclamo_stats_cte AS (
+        SELECT
+          COUNT(r.id)::int                                          AS total,
+          COUNT(r.id) FILTER (WHERE r.estado = 'CANJEADO')::int    AS canjeados
+        FROM "Reclamo" r
+        JOIN "Beneficio" b ON r."beneficioId" = b.id
+        WHERE b."localId" = ${session.userId}
+      )
+    SELECT
+      (SELECT row_to_json(l) FROM local_cte l)                                              AS local,
+      COALESCE(
+        (SELECT json_agg(b ORDER BY b."createdAt" DESC) FROM beneficios_cte b),
+        '[]'::json
+      )                                                                                     AS beneficios,
+      (SELECT count FROM total_cte)                                                         AS "totalBeneficios",
+      COALESCE(
+        (SELECT row_to_json(rs) FROM reclamo_stats_cte rs),
+        '{"total":0,"canjeados":0}'::json
+      )                                                                                     AS "reclamoStats"
+  `;
+  console.log(`[dashboard] DB: ${Math.round(performance.now() - t0)}ms`);
+
+  const local = raw.local;
   if (!local) redirect("/login");
   if (local.nombre === null) redirect("/onboarding");
+
+  const totalBeneficios = Number(raw.totalBeneficios ?? 0);
+  const reclamoStats = raw.reclamoStats ?? { total: 0, canjeados: 0 };
+  const totalReclamos = Number(reclamoStats.total);
+  const totalCanjeados = Number(reclamoStats.canjeados);
+
+  // Convertir fechas: dentro de JSON de Postgres vienen como string ISO
+  const beneficios: BeneficioRow[] = (raw.beneficios ?? []).map((b) => ({
+    ...b,
+    fechaExpiracion: new Date(b.fechaExpiracion),
+    createdAt: new Date(b.createdAt),
+  }));
 
   const totalPages = Math.ceil(totalBeneficios / PAGE_SIZE);
 
@@ -176,7 +242,7 @@ export default async function DashboardPage({
         <div className="space-y-3 sm:space-y-4">
           {beneficios.map((b, index) => {
             const isExpired = b.fechaExpiracion < new Date();
-            const canjeados = b.reclamos.length;
+            const canjeados = b.canjeados;
             const isAgotado = b.maxUsos !== null && canjeados >= b.maxUsos;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
             const vencimiento = new Date(b.fechaExpiracion).toLocaleDateString(
@@ -227,7 +293,7 @@ export default async function DashboardPage({
 
                       <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
                         <Badge color="gray">
-                          Reclamos: {b._count.reclamos}
+                          Reclamos: {b.totalReclamos}
                         </Badge>
                         <Badge color="violet">Canjeados: {canjeados}</Badge>
                       </div>

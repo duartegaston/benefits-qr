@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { cache } from "react";
+import { signToken, verifyToken } from "./jwt";
+import { sendMagicLink } from "./email";
+import { SESSION_DURATION } from "./constants";
 import { prisma } from "./prisma";
-import { v4 as uuidv4 } from "uuid";
 
 const LOCAL_COOKIE = "local_session";
 const CLIENTE_COOKIE = "cliente_session";
@@ -21,21 +23,21 @@ export async function createSession(
   userType: "LOCAL" | "CLIENTE",
   durationHours = SESSION_DURATION_DAYS * 24
 ) {
-  const token = uuidv4();
-  const expiresAt = new Date(Date.now() + durationHours * 60 * 60 * 1000);
-
-  const session = await prisma.session.create({
-    data: { token, userId, userType, expiresAt },
+  const token = await signToken({ userId, userType }, `${durationHours}h`);
+  await prisma.session.create({
+    data: {
+      token,
+      userId,
+      userType,
+      expiresAt: new Date(Date.now() + durationHours * 60 * 60 * 1000),
+    },
   });
-
-  return session;
+  return { token };
 }
 
 async function findSession(token: string | undefined) {
   if (!token) return null;
-  const session = await prisma.session.findUnique({ where: { token } });
-  if (!session || session.expiresAt < new Date()) return null;
-  return session;
+  return verifyToken(token);
 }
 
 export async function getSession(req: NextRequest) {
@@ -74,6 +76,11 @@ export function clearSessionCookie(response: NextResponse) {
   return response;
 }
 
+export function clearClienteSessionCookie(response: NextResponse) {
+  response.cookies.set(CLIENTE_COOKIE, "", { ...COOKIE_OPTS, maxAge: 0 });
+  return response;
+}
+
 export async function requireLocalAuth(req: NextRequest) {
   const session = await getSession(req);
   if (!session || session.userType !== "LOCAL") {
@@ -94,4 +101,15 @@ export async function requireClienteAuth(req: NextRequest) {
     };
   }
   return { error: null, session };
+}
+
+export async function createClienteSession(
+  clienteId: string,
+  email: string,
+  durationHours: number = SESSION_DURATION.CLIENTE_RECLAMO,
+  redirect = "/mis-beneficios"
+) {
+  const session = await createSession(clienteId, "CLIENTE", durationHours);
+  await sendMagicLink(email, session.token, redirect);
+  return session;
 }
