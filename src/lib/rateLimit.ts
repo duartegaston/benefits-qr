@@ -7,18 +7,26 @@
 
 type AttemptEntry = { count: number; firstAttempt: number };
 
-const requestLimits = new Map<string, number>();
+const requestLimits = new Map<string, AttemptEntry>();
 const attemptLimits = new Map<string, AttemptEntry>();
 
 /**
  * Limits how often a key (email or phone) can trigger an OTP/magic-link request.
- * Returns false (rate limited) if a request was made within the last `windowMs` ms.
+ * Returns false (rate limited) if `maxRequests` have been made within `windowMs` ms.
  */
-export function checkRequestLimit(key: string, windowMs = 2 * 60 * 1000): boolean {
+export function checkRequestLimit(
+  key: string,
+  maxRequests = 2,
+  windowMs = 2 * 60 * 1000
+): boolean {
   const now = Date.now();
-  const last = requestLimits.get(key);
-  if (last !== undefined && now - last < windowMs) return false;
-  requestLimits.set(key, now);
+  const entry = requestLimits.get(key);
+  if (!entry || now - entry.firstAttempt > windowMs) {
+    requestLimits.set(key, { count: 1, firstAttempt: now });
+    return true;
+  }
+  if (entry.count >= maxRequests) return false;
+  entry.count++;
   return true;
 }
 
