@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-
-const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { uploadLogoFlow } from "@/server/services/localApiService";
 
 export async function POST(req: NextRequest) {
   const { error, session } = await requireLocalAuth(req);
@@ -11,44 +10,11 @@ export async function POST(req: NextRequest) {
   const form = await req.formData();
   const file = form.get("logo") as File | null;
 
-  if (!file) {
-    return NextResponse.json({ error: "Archivo requerido" }, { status: 400 });
+  const result = await uploadLogoFlow(session!.userId, file);
+
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  // Strict MIME type whitelist — SVG is excluded to prevent XSS
-  if (!ALLOWED_MIME_TYPES.has(file.type)) {
-    return NextResponse.json(
-      { error: "Solo se permiten imágenes JPG, PNG, WebP o GIF" },
-      { status: 400 }
-    );
-  }
-
-  if (file.size > 3 * 1024 * 1024) {
-    return NextResponse.json({ error: "La imagen no puede superar 3MB" }, { status: 400 });
-  }
-
-  let logoUrl: string;
-
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    // Producción: usar Vercel Blob
-    const { put } = await import("@vercel/blob");
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const blob = await put(`logos/${session!.userId}.${ext}`, file, {
-      access: "public",
-      addRandomSuffix: true,
-    });
-    logoUrl = blob.url;
-  } else {
-    // Desarrollo: guardar como base64 (máx 500KB recomendado)
-    const buffer = await file.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString("base64");
-    logoUrl = `data:${file.type};base64,${base64}`;
-  }
-
-  await prisma.local.update({
-    where: { id: session!.userId },
-    data: { logoUrl },
-  });
-
-  return NextResponse.json({ url: logoUrl });
+  return apiSuccess(result.data, result.status);
 }

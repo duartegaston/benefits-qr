@@ -5,6 +5,7 @@ import { signToken, verifyToken } from "./jwt";
 import { sendMagicLink } from "./email";
 import { SESSION_DURATION } from "./constants";
 import { prisma } from "./prisma";
+import { UserType } from "./enums";
 
 const LOCAL_COOKIE = "local_session";
 const CLIENTE_COOKIE = "cliente_session";
@@ -20,7 +21,7 @@ const COOKIE_OPTS = {
 
 export async function createSession(
   userId: string,
-  userType: "LOCAL" | "CLIENTE",
+  userType: UserType,
   durationHours = SESSION_DURATION_DAYS * 24
 ) {
   const token = await signToken({ userId, userType }, `${durationHours}h`);
@@ -61,9 +62,9 @@ export const getClienteSessionFromCookies = cache(async () => {
 export function setSessionCookie(
   response: NextResponse,
   token: string,
-  userType: "LOCAL" | "CLIENTE"
+  userType: UserType
 ) {
-  const name = userType === "LOCAL" ? LOCAL_COOKIE : CLIENTE_COOKIE;
+  const name = userType === UserType.LOCAL ? LOCAL_COOKIE : CLIENTE_COOKIE;
   response.cookies.set(name, token, {
     ...COOKIE_OPTS,
     maxAge: SESSION_DURATION_DAYS * 24 * 60 * 60,
@@ -83,7 +84,7 @@ export function clearClienteSessionCookie(response: NextResponse) {
 
 export async function requireLocalAuth(req: NextRequest) {
   const session = await getSession(req);
-  if (!session || session.userType !== "LOCAL") {
+  if (!session || session.userType !== UserType.LOCAL) {
     return {
       error: NextResponse.json({ error: "No autorizado" }, { status: 401 }),
       session: null,
@@ -94,7 +95,7 @@ export async function requireLocalAuth(req: NextRequest) {
 
 export async function requireClienteAuth(req: NextRequest) {
   const session = await getClienteSession(req);
-  if (!session || session.userType !== "CLIENTE") {
+  if (!session || session.userType !== UserType.CLIENTE) {
     return {
       error: NextResponse.json({ error: "No autorizado" }, { status: 401 }),
       session: null,
@@ -109,7 +110,7 @@ export async function createClienteSession(
   durationHours: number = SESSION_DURATION.CLIENTE_RECLAMO,
   redirect = "/mis-beneficios"
 ) {
-  const session = await createSession(clienteId, "CLIENTE", durationHours);
+  const session = await createSession(clienteId, UserType.CLIENTE, durationHours);
   await sendMagicLink(email, session.token, redirect);
   return session;
 }

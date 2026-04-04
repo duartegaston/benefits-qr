@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { UserType } from "@/lib/enums";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import DeleteBeneficioButton from "@/components/local/dashboard/beneficios/DeleteBeneficioButton";
@@ -9,6 +9,10 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { EstadoReclamo } from "@/generated/prisma/client";
+import {
+  expirePendingReclamosAsyncIfNeeded,
+  getBeneficioDetailPageData,
+} from "@/server/services/beneficioDetailService";
 const PAGE_SIZE = 10;
 
 function getReclamoStatusPresentation(status: EstadoReclamo) {
@@ -37,79 +41,16 @@ export default async function BeneficioStatsPage({
   const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
   const session = await getSessionFromCookies();
-  if (!session || session.userType !== "LOCAL") redirect("/login");
+  if (!session || session.userType !== UserType.LOCAL) redirect("/login");
 
-  // Tipos raw del CTE: fechas dentro de JSON vienen como string ISO
-  type DetailRaw = {
-    beneficio: {
-      id: string; descripcion: string; fechaExpiracion: string; maxUsos: number | null;
-      diasValidos: number[]; deletedAt: string | null; localId: string;
-    } | null;
-    stats: { total: number; canjeados: number; pendientes: number } | null;
-    reclamos: Array<{
-      id: string; estado: EstadoReclamo;
-      fechaReclamo: string; fechaCanje: string | null;
-      cliente: { nombre: string | null; email: string | null; phone: string | null };
-    }> | null;
-  };
-
-  // 1 CTE = 1 conexión a Neon en vez de 3 conexiones paralelas
   const t0 = performance.now();
-  const [raw] = await prisma.$queryRaw<[DetailRaw]>`
-    WITH
-      beneficio_cte AS (
-        SELECT id, descripcion, "fechaExpiracion", "maxUsos", "diasValidos", "deletedAt", "localId"
-        FROM "Beneficio"
-        WHERE id = ${id}
-          AND "localId" = ${session.userId}
-      ),
-      stats_cte AS (
-        SELECT
-          COUNT(*)::int                                        AS total,
-          COUNT(*) FILTER (WHERE estado = 'CANJEADO')::int    AS canjeados,
-          COUNT(*) FILTER (WHERE estado = 'PENDIENTE')::int   AS pendientes
-        FROM "Reclamo"
-        WHERE "beneficioId" = ${id}
-      ),
-      reclamos_cte AS (
-        SELECT
-          r.id,
-          r.estado,
-          r."fechaReclamo",
-          r."fechaCanje",
-          json_build_object(
-            'nombre', c.nombre,
-            'email',  c.email,
-            'phone',  c.phone
-          ) AS cliente
-        FROM "Reclamo" r
-        JOIN "Cliente" c ON c.id = r."clienteId"
-        WHERE r."beneficioId" = ${id}
-        ORDER BY r."fechaReclamo" DESC
-        LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}
-      )
-    SELECT
-      (SELECT row_to_json(b) FROM beneficio_cte b)                  AS beneficio,
-      COALESCE(
-        (SELECT row_to_json(s) FROM stats_cte s),
-        '{"total":0,"canjeados":0,"pendientes":0}'::json
-      )                                                              AS stats,
-      COALESCE(
-        (SELECT json_agg(r ORDER BY r."fechaReclamo" DESC) FROM reclamos_cte r),
-        '[]'::json
-      )                                                              AS reclamos
-  `;
+  const { beneficio, stats, reclamos, totalPages } = await getBeneficioDetailPageData(
+    id,
+    session.userId,
+    page,
+    PAGE_SIZE
+  );
   console.log(`[beneficio-detail] DB: ${Math.round(performance.now() - t0)}ms`);
-
-  const beneficio = raw.beneficio
-    ? { ...raw.beneficio, fechaExpiracion: new Date(raw.beneficio.fechaExpiracion), deletedAt: raw.beneficio.deletedAt ? new Date(raw.beneficio.deletedAt) : null }
-    : null;
-  const stats = raw.stats ?? { total: 0, canjeados: 0, pendientes: 0 };
-  const reclamos = (raw.reclamos ?? []).map((r) => ({
-    ...r,
-    fechaReclamo: new Date(r.fechaReclamo),
-    fechaCanje: r.fechaCanje ? new Date(r.fechaCanje) : null,
-  }));
 
   if (!beneficio) redirect("/dashboard");
 
@@ -117,14 +58,8 @@ export default async function BeneficioStatsPage({
   const isAgotado = beneficio.maxUsos !== null && stats.canjeados >= beneficio.maxUsos;
 
   // Fire-and-forget: marca PENDIENTE → VENCIDO sin bloquear el render
-  if (isExpired && stats.pendientes > 0) {
-    void prisma.reclamo.updateMany({
-      where: { beneficioId: id, estado: EstadoReclamo.PENDIENTE },
-      data: { estado: EstadoReclamo.VENCIDO },
-    });
-  }
+  expirePendingReclamosAsyncIfNeeded(id, isExpired, stats.pendientes);
   const isDeleted = beneficio.deletedAt !== null;
-  const totalPages = Math.ceil(stats.total / PAGE_SIZE);
 
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
