@@ -29,7 +29,7 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         rel="noopener noreferrer"
         title="Compartir por WhatsApp"
         aria-label="Compartir por WhatsApp"
-        className="p-1.5 rounded-lg bg-success-soft hover:bg-success-soft/80 transition-colors"
+        className="p-1.5 rounded-lg bg-success-soft transition-[background-color,transform,box-shadow] duration-200 hover:bg-success-soft/95 hover:shadow-md hover:shadow-success/20 hover:-translate-y-0.5"
       >
         <MessageCircle aria-hidden="true" className="w-4 h-4 text-success" />
       </a>
@@ -38,7 +38,7 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         href={`mailto:?subject=${encodeURIComponent("Beneficio especial para vos")}&body=${encodeURIComponent(texto)}`}
         title="Compartir por email"
         aria-label="Compartir por email"
-        className="p-1.5 rounded-lg bg-accent-soft hover:bg-accent-soft/80 transition-colors"
+        className="p-1.5 rounded-lg bg-accent-soft transition-[background-color,transform,box-shadow] duration-200 hover:bg-accent-soft/95 hover:shadow-md hover:shadow-accent/20 hover:-translate-y-0.5"
       >
         <Mail aria-hidden="true" className="w-4 h-4 text-accent" />
       </a>
@@ -50,7 +50,7 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
         aria-label={copied ? "Enlace copiado" : "Copiar enlace"}
         variant="outline"
         size="icon-2xs"
-        className={`rounded-lg transition-colors hover:bg-primary-soft/80 active:scale-100 ${copied ? "bg-success-soft hover:bg-success-soft/80" : "bg-primary-soft"}`}
+        className={`rounded-lg transition-[background-color,transform,box-shadow] duration-200 hover:bg-primary-soft/95 hover:shadow-md hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 active:shadow-none ${copied ? "bg-success-soft hover:bg-success-soft/95 hover:shadow-success/20" : "bg-primary-soft"}`}
       >
         {copied ? (
           <Check aria-hidden="true" className="w-4 h-4 text-success" />
