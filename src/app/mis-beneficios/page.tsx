@@ -1,10 +1,10 @@
 import { getClienteSessionFromCookies } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { UserType } from "@/lib/enums";
 import Image from "next/image";
 import Link from "next/link";
 import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
 import ClienteLoginForm from "@/components/cliente/ClienteLoginForm";
+import { getMisBeneficiosPageData } from "@/server/services/misBeneficiosService";
 
 const PAGE_SIZE = 10;
 
@@ -19,7 +19,7 @@ export default async function MisBeneficiosPage({
   const session = await getClienteSessionFromCookies();
 
   // Sin sesión → mostrar formulario de acceso
-  if (!session || session.userType !== "CLIENTE") {
+  if (!session || session.userType !== UserType.CLIENTE) {
     return (
       <main className="flex-1 flex flex-col items-center px-4 py-8 relative">
         {/* Logo + form — centrado */}
@@ -33,54 +33,11 @@ export default async function MisBeneficiosPage({
     );
   }
 
-  type ReclamoRow = {
-    id: string;
-    estado: EstadoReclamo;
-    fechaReclamo: Date;
-    fechaCanje: Date | null;
-    beneficioDescripcion: string;
-    beneficioFechaExpiracion: Date;
-    beneficioDeletedAt: Date | null;
-    localNombre: string | null;
-    localLogoUrl: string | null;
-  };
-
-  const [rows, total] = await Promise.all([
-    // 1 SQL con JOINs en vez de 3 SQL secuenciales (reclamos → beneficios IN → locals IN)
-    prisma.$queryRaw<ReclamoRow[]>`
-      SELECT
-        r.id,
-        r.estado,
-        r."fechaReclamo",
-        r."fechaCanje",
-        b.descripcion           AS "beneficioDescripcion",
-        b."fechaExpiracion"     AS "beneficioFechaExpiracion",
-        b."deletedAt"           AS "beneficioDeletedAt",
-        l.nombre                AS "localNombre",
-        l."logoUrl"             AS "localLogoUrl"
-      FROM "Reclamo" r
-      JOIN "Beneficio" b ON b.id = r."beneficioId"
-      JOIN "Local"     l ON l.id = b."localId"
-      WHERE r."clienteId" = ${session.userId}
-      ORDER BY r."fechaReclamo" DESC
-      LIMIT ${PAGE_SIZE} OFFSET ${(page - 1) * PAGE_SIZE}
-    `,
-    prisma.reclamo.count({ where: { clienteId: session.userId } }),
-  ]);
-
-  const reclamos = rows.map((r) => ({
-    id: r.id,
-    estado: r.estado,
-    fechaReclamo: r.fechaReclamo,
-    fechaCanje: r.fechaCanje,
-    beneficio: {
-      descripcion: r.beneficioDescripcion,
-      fechaExpiracion: r.beneficioFechaExpiracion,
-      local: { nombre: r.localNombre, logoUrl: r.localLogoUrl },
-    },
-  }));
-
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const { reclamos, total, totalPages } = await getMisBeneficiosPageData(
+    session.userId,
+    page,
+    PAGE_SIZE
+  );
 
   return (
     <main className="px-4 pt-8 pb-16 sm:px-6 max-w-2xl mx-auto animate-[fade-in_0.3s_ease-out_both]">

@@ -1,13 +1,14 @@
 import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { UserType } from "@/lib/enums";
 import Image from "next/image";
 import OnboardingForm from "@/components/local/onboarding/OnboardingForm";
 import Reveal from "@/components/ui/Reveal";
 
 export default async function OnboardingPage() {
   const session = await getSessionFromCookies();
-  if (!session || session.userType !== "LOCAL") {
+  if (!session || session.userType !== UserType.LOCAL) {
     redirect("/login");
   }
 

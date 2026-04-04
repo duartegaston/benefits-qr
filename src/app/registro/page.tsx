@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
+import { UserType } from "@/lib/enums";
 import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
@@ -15,12 +16,12 @@ async function verifyOnboardingLink(formData: FormData) {
 
   const session = await prisma.session.findUnique({ where: { token } });
 
-  if (!session || session.expiresAt < new Date() || session.userType !== "LOCAL") {
+  if (!session || session.expiresAt < new Date() || session.userType !== UserType.LOCAL) {
     redirect("/login?error=expired");
   }
 
   await prisma.session.delete({ where: { token } });
-  const newSession = await createSession(session.userId, "LOCAL");
+  const newSession = await createSession(session.userId, UserType.LOCAL);
 
   const cookieStore = await cookies();
   cookieStore.set("local_session", newSession.token, {

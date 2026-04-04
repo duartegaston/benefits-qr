@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { getBeneficioStats } from "@/server/services/beneficiosApiService";
 
 export async function GET(
   req: NextRequest,
@@ -12,33 +12,10 @@ export async function GET(
 
   const { id } = await params;
 
-  const beneficio = await prisma.beneficio.findFirst({
-    where: { id, localId: session!.userId },
-    include: {
-      reclamos: {
-        select: {
-          id: true,
-          estado: true,
-          fechaReclamo: true,
-          fechaCanje: true,
-          cliente: { select: { email: true } },
-        },
-        orderBy: { fechaReclamo: "desc" },
-      },
-    },
-  });
-
-  if (!beneficio) {
-    return NextResponse.json(
-      { error: "Beneficio no encontrado" },
-      { status: 404 }
-    );
+  const result = await getBeneficioStats(id, session!.userId);
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  return NextResponse.json({
-    ...beneficio,
-    totalReclamos: beneficio.reclamos.length,
-    canjeados: beneficio.reclamos.filter((r) => r.estado === EstadoReclamo.CANJEADO).length,
-    pendientes: beneficio.reclamos.filter((r) => r.estado === EstadoReclamo.PENDIENTE).length,
-  });
+  return apiSuccess(result.data as Record<string, unknown>, result.status);
 }

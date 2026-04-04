@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { verifyApprovalToken } from "@/lib/approvalToken";
-import { sendLocalOnboardingMagicLink } from "@/lib/email";
-import { createSession } from "@/lib/auth";
+import { approveLocalAccessFlow } from "@/server/services/authApiService";
 
 function html(title: string, color: string, message: string) {
   return new NextResponse(
@@ -37,77 +34,6 @@ function html(title: string, color: string, message: string) {
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token");
 
-  if (!token) {
-    return html("Link inválido", "#dc2626", "Este link de aprobación no es válido.");
-  }
-
-  const payload = verifyApprovalToken(token);
-
-  if (!payload) {
-    return html("Link inválido", "#dc2626", "Este link de aprobación no es válido o fue alterado.");
-  }
-
-  if (payload.exp < Date.now()) {
-    return html(
-      "Link expirado",
-      "#dc2626",
-      "Este link de aprobación expiró. El local debe solicitar acceso nuevamente."
-    );
-  }
-
-  const otp = await prisma.localOtp.findUnique({ where: { email: payload.email } });
-
-  if (!otp) {
-    return html(
-      "Solicitud no encontrada",
-      "#dc2626",
-      "No se encontró una solicitud pendiente para este email. El local puede haber solicitado acceso nuevamente."
-    );
-  }
-
-  if (!otp.pendingApproval) {
-    return html(
-      "Ya aprobado",
-      "#d97706",
-      `El acceso para <strong>${payload.email}</strong> ya fue aprobado anteriormente.`
-    );
-  }
-
-  // Verify token matches the current OTP record (prevents old tokens from re-approving)
-  if (payload.exp !== otp.expiresAt.getTime()) {
-    return html(
-      "Link inválido",
-      "#dc2626",
-      "Este link ya no es válido. El local puede haber solicitado acceso nuevamente."
-    );
-  }
-
-  // Crear el registro Local si no existe
-  let local = await prisma.local.findUnique({ where: { email: payload.email } });
-  if (!local) {
-    local = await prisma.local.create({ data: { email: payload.email } });
-  }
-
-  // Crear sesión de 2h como token del magic link
-  const session = await createSession(local.id, "LOCAL", 2);
-
-  // Limpiar LocalOtp — ya no se necesita
-  await prisma.localOtp.delete({ where: { email: payload.email } });
-
-  try {
-    await sendLocalOnboardingMagicLink(payload.email, session.token);
-  } catch (err) {
-    console.error("[approve] Error enviando magic link:", err);
-    return html(
-      "Error al enviar enlace",
-      "#dc2626",
-      "Se aprobó el acceso pero no se pudo enviar el email. Revisá la configuración de Resend."
-    );
-  }
-
-  return html(
-    "Acceso aprobado",
-    "#16a34a",
-    `Se envió el enlace de acceso a <strong>${payload.email}</strong>. El local ya puede completar su registro.`
-  );
+  const result = await approveLocalAccessFlow(token);
+  return html(result.title, result.color, result.message);
 }

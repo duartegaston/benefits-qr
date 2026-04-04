@@ -1,0 +1,43 @@
+import { prisma } from "@/lib/prisma";
+import type { EstadoReclamo } from "@/lib/enums";
+
+export type ReclamoRow = {
+  id: string;
+  estado: EstadoReclamo;
+  fechaReclamo: Date;
+  fechaCanje: Date | null;
+  beneficioDescripcion: string;
+  beneficioFechaExpiracion: Date;
+  beneficioDeletedAt: Date | null;
+  localNombre: string | null;
+  localLogoUrl: string | null;
+};
+
+export async function getMisBeneficiosRows(
+  clienteId: string,
+  page: number,
+  pageSize: number
+): Promise<ReclamoRow[]> {
+  return prisma.$queryRaw<ReclamoRow[]>`
+    SELECT
+      r.id,
+      r.estado,
+      r."fechaReclamo",
+      r."fechaCanje",
+      b.descripcion           AS "beneficioDescripcion",
+      b."fechaExpiracion"     AS "beneficioFechaExpiracion",
+      b."deletedAt"           AS "beneficioDeletedAt",
+      l.nombre                AS "localNombre",
+      l."logoUrl"             AS "localLogoUrl"
+    FROM "Reclamo" r
+    JOIN "Beneficio" b ON b.id = r."beneficioId"
+    JOIN "Local"     l ON l.id = b."localId"
+    WHERE r."clienteId" = ${clienteId}
+    ORDER BY r."fechaReclamo" DESC
+    LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
+  `;
+}
+
+export async function countMisBeneficios(clienteId: string): Promise<number> {
+  return prisma.reclamo.count({ where: { clienteId } });
+}

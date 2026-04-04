@@ -1,29 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { updateLocalMeFlow } from "@/server/services/localApiService";
 
 export async function PATCH(req: NextRequest) {
   const { error, session } = await requireLocalAuth(req);
   if (error) return error;
 
-  const { nombre, direccion, telefono } = await req.json();
+  const body = await req.json();
+  const result = await updateLocalMeFlow(session!.userId, body);
 
-  if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
-    return NextResponse.json({ error: "El nombre es requerido" }, { status: 400 });
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  if (!telefono || typeof telefono !== "string" || telefono.trim() === "") {
-    return NextResponse.json({ error: "El teléfono es requerido" }, { status: 400 });
-  }
-
-  const local = await prisma.local.update({
-    where: { id: session!.userId },
-    data: {
-      nombre: nombre.trim(),
-      direccion: direccion?.trim() || null,
-      telefono: telefono?.trim() || null,
-    },
-  });
-
-  return NextResponse.json({ ok: true, local });
+  return apiSuccess(result.data, result.status);
 }

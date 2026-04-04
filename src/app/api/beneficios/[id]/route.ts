@@ -1,7 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import {
+  deleteBeneficioFlow,
+  getBeneficioById,
+} from "@/server/services/beneficiosApiService";
 
 export async function GET(
   _req: NextRequest,
@@ -9,19 +12,12 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  const beneficio = await prisma.beneficio.findUnique({
-    where: { id, deletedAt: null },
-    include: { local: { select: { nombre: true, logoUrl: true } } },
-  });
-
-  if (!beneficio) {
-    return NextResponse.json(
-      { error: "Beneficio no encontrado" },
-      { status: 404 }
-    );
+  const result = await getBeneficioById(id);
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  return NextResponse.json(beneficio);
+  return apiSuccess(result.data as Record<string, unknown>, result.status);
 }
 
 export async function DELETE(
@@ -33,27 +29,10 @@ export async function DELETE(
 
   const { id } = await params;
 
-  const beneficio = await prisma.beneficio.findFirst({
-    where: { id, localId: session!.userId, deletedAt: null },
-  });
-
-  if (!beneficio) {
-    return NextResponse.json(
-      { error: "Cupón no encontrado" },
-      { status: 404 }
-    );
+  const result = await deleteBeneficioFlow(id, session!.userId);
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  await prisma.$transaction([
-    prisma.beneficio.update({
-      where: { id },
-      data: { deletedAt: new Date() },
-    }),
-    prisma.reclamo.updateMany({
-      where: { beneficioId: id, estado: EstadoReclamo.PENDIENTE },
-      data: { estado: EstadoReclamo.CANCELADO, qrToken: null, qrTokenExpira: null },
-    }),
-  ]);
-
-  return NextResponse.json({ success: true });
+  return apiSuccess({ success: true }, result.status);
 }

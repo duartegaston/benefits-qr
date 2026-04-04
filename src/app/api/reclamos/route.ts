@@ -1,134 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { createClienteSession } from "@/lib/auth";
-import { EMAIL_REGEX, PHONE_REGEX, TIMEZONE_AR, SESSION_DURATION } from "@/lib/constants";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { NextRequest } from "next/server";
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { createReclamoFlow } from "@/server/services/reclamosService";
 
 export async function POST(req: NextRequest) {
   try {
-    const { beneficioId, nombre, email, phone } = await req.json();
+    const body = await req.json();
+    const result = await createReclamoFlow(body);
 
-    if (!beneficioId || !nombre || !email || !phone) {
-      return NextResponse.json(
-        { error: "Nombre, email y teléfono son requeridos" },
-        { status: 400 }
-      );
+    if (!result.ok) {
+      return apiError(result.error, result.status, result.code);
     }
 
-    if (typeof nombre !== "string" || nombre.trim().length === 0 || nombre.length > 100) {
-      return NextResponse.json({ error: "Nombre inválido (máx. 100 caracteres)" }, { status: 400 });
-    }
-
-    if (typeof email !== "string" || !EMAIL_REGEX.test(email) || email.length > 254) {
-      return NextResponse.json({ error: "Email inválido" }, { status: 400 });
-    }
-
-    if (typeof phone !== "string" || !PHONE_REGEX.test(phone)) {
-      return NextResponse.json({ error: "Número de teléfono inválido" }, { status: 400 });
-    }
-
-    const beneficio = await prisma.beneficio.findUnique({
-      where: { id: beneficioId, deletedAt: null },
-      include: { reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } } },
-    });
-
-    if (!beneficio) {
-      return NextResponse.json({ error: "Cupón no encontrado" }, { status: 404 });
-    }
-
-    if (beneficio.fechaExpiracion < new Date()) {
-      return NextResponse.json({ error: "Este cupón ya expiró" }, { status: 400 });
-    }
-
-    if (beneficio.diasValidos.length > 0) {
-      const hoy = new Date(
-        new Date().toLocaleString("en-US", { timeZone: TIMEZONE_AR })
-      ).getDay();
-      if (!beneficio.diasValidos.includes(hoy)) {
-        const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-        const nombres = beneficio.diasValidos
-          .sort((a: number, b: number) => a - b)
-          .map((d: number) => DIAS[d])
-          .join(", ");
-        return NextResponse.json(
-          { error: `Este cupón solo aplica los: ${nombres}` },
-          { status: 400 }
-        );
-      }
-    }
-
-    if (beneficio.maxUsos !== null && beneficio.reclamos.length >= beneficio.maxUsos) {
-      return NextResponse.json(
-        { error: "Este cupón ya alcanzó el máximo de usos" },
-        { status: 400 }
-      );
-    }
-
-    // Deduplication: look up by email and by phone separately
-    const [clienteByEmail, clienteByPhone] = await Promise.all([
-      prisma.cliente.findUnique({ where: { email } }),
-      prisma.cliente.findUnique({ where: { phone } }),
-    ]);
-
-    // Cross-conflict: email already registered with a different phone
-    if (clienteByEmail && clienteByEmail.phone && clienteByEmail.phone !== phone) {
-      return NextResponse.json(
-        { error: "Este email ya está registrado con otro número de teléfono" },
-        { status: 400 }
-      );
-    }
-
-    // Cross-conflict: phone already registered with a different email
-    if (clienteByPhone && clienteByPhone.email && clienteByPhone.email !== email) {
-      return NextResponse.json(
-        { error: "Este número de teléfono ya está registrado con otro email" },
-        { status: 400 }
-      );
-    }
-
-    // Split-identity: email and phone exist but in separate records
-    if (clienteByEmail && clienteByPhone && clienteByEmail.id !== clienteByPhone.id) {
-      return NextResponse.json(
-        { error: "El email y el teléfono ya están registrados en cuentas separadas. Contactate con el negocio." },
-        { status: 400 }
-      );
-    }
-
-    let cliente = clienteByEmail ?? clienteByPhone;
-    if (!cliente) {
-      cliente = await prisma.cliente.create({ data: { nombre, email, phone } });
-    } else {
-      const updates: Record<string, string> = {};
-      if (!cliente.nombre) updates.nombre = nombre;
-      if (!cliente.email) updates.email = email;
-      if (!cliente.phone) updates.phone = phone;
-      if (Object.keys(updates).length > 0) {
-        cliente = await prisma.cliente.update({ where: { id: cliente.id }, data: updates });
-      }
-    }
-
-    const existingReclamo = await prisma.reclamo.findFirst({
-      where: { beneficioId, clienteId: cliente.id },
-    });
-
-    if (existingReclamo) {
-      if (existingReclamo.estado === EstadoReclamo.CANJEADO) {
-        return NextResponse.json({ error: "Ya canjeaste este cupón" }, { status: 409 });
-      }
-      // Reclamo exists but not redeemed → resend magic link
-      await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_RECLAMO);
-      return NextResponse.json({ success: true, reclamoId: existingReclamo.id });
-    }
-
-    const reclamo = await prisma.reclamo.create({
-      data: { beneficioId, clienteId: cliente.id },
-    });
-
-    await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_RECLAMO);
-
-    return NextResponse.json({ success: true, reclamoId: reclamo.id }, { status: 201 });
+    return apiSuccess({ success: true, reclamoId: result.reclamoId }, result.status);
   } catch (error) {
     console.error("[reclamos]", error instanceof Error ? error.message : String(error));
-    return NextResponse.json({ error: "Error del servidor" }, { status: 500 });
+    return apiError("Error del servidor", 500, "INTERNAL_ERROR");
   }
 }
