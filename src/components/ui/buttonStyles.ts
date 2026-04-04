@@ -5,22 +5,28 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
-        primary: "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
+        default:
+          "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
+        primary:
+          "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
         secondary:
           "border border-border-default bg-surface-muted text-text-primary shadow-sm hover:border-border-default hover:bg-surface focus-visible:ring-primary-soft",
         outline:
           "border border-border-default bg-transparent text-text-primary shadow-sm hover:bg-surface-muted focus-visible:ring-primary-soft",
-        ghost: "bg-transparent text-text-muted hover:bg-surface-muted focus-visible:ring-primary-soft",
-        destructive: "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
-        danger: "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
+        ghost:
+          "bg-transparent text-text-muted hover:bg-surface-muted focus-visible:ring-primary-soft",
+        destructive:
+          "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
+        danger:
+          "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
         muted:
           "bg-surface-muted text-text-muted hover:bg-primary-soft hover:text-accent focus-visible:ring-primary-soft",
-        success: "bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success",
+        success:
+          "bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success",
         light:
           "border border-primary-soft/70 bg-primary-soft text-accent shadow-sm hover:border-primary hover:bg-primary-soft focus-visible:ring-primary-soft focus-visible:ring-offset-primary",
         subtle:
-          "border border-primary-soft/70 bg-surface/80 text-accent shadow-sm hover:border-primary hover:bg-surface hover:text-accent-foreground focus-visible:ring-primary-soft",
+          "bg-surface/80 text-accent shadow-sm hover:border-primary hover:bg-surface hover:text-accent-foreground focus-visible:ring-primary-soft",
         logout:
           "border border-danger-border/80 bg-danger-soft/70 text-danger shadow-sm hover:border-danger-border hover:bg-danger-soft hover:text-danger focus-visible:ring-danger-soft",
         link: "bg-transparent text-primary underline-offset-4 hover:underline focus-visible:ring-primary-soft",
@@ -42,16 +48,18 @@ export const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
-export type ButtonVisualVariant = VariantProps<typeof buttonVariants>["variant"];
+export type ButtonVisualVariant = VariantProps<
+  typeof buttonVariants
+>["variant"];
 export type ButtonVisualSize = VariantProps<typeof buttonVariants>["size"];
 
 export function getButtonClasses(
   variant: ButtonVisualVariant,
   size: ButtonVisualSize,
-  className?: string
+  className?: string,
 ) {
   return buttonVariants({ variant, size, className });
 }
