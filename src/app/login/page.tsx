@@ -85,14 +85,16 @@ export default function LoginPage() {
         <Reveal y={14} amount={0.3}>
           <div className="text-center mb-7">
             <div className="flex justify-center mb-4">
-              <Image
-                src="/logo.png"
-                alt="Qupón"
-                width={88}
-                height={88}
-                priority
-                className="rounded-3xl shadow-2xl shadow-primary/30 ring-4 ring-surface/60"
-              />
+              <div className="w-24">
+                <Image
+                  src="/logo.png"
+                  alt="Qupón"
+                  width={250}
+                  height={180}
+                  priority
+                  className="w-full h-auto"
+                />
+              </div>
             </div>
             <h1 className="text-2xl font-bold text-text-primary mb-1">Bienvenido</h1>
             <p className="text-text-muted text-sm">Accedé al dashboard de tu negocio</p>

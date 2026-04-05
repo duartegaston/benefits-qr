@@ -59,13 +59,15 @@ export default async function BeneficioPublicoPage({
       <div className="w-full max-w-md relative my-auto animate-[fade-up_0.45s_ease-out_both]">
         {/* Logo Qupón */}
         <div className="flex justify-center mb-3">
-          <Image
-            src="/logo.png"
-            alt="Qupón"
-            width={52}
-            height={52}
-            className="rounded-2xl shadow-lg shadow-primary/30 ring-4 ring-surface/60"
-          />
+          <div className="w-13">
+            <Image
+              src="/logo.png"
+              alt="Qupón"
+              width={250}
+              height={180}
+              className="w-full h-auto"
+            />
+          </div>
         </div>
 
         {/* Card */}

@@ -70,14 +70,16 @@ export default function DashboardHeader() {
           className="inline-flex items-center"
           aria-label="Ir al dashboard"
         >
-          <Image
-            src="/logo.png"
-            alt="Qupón"
-            width={64}
-            height={64}
-            priority
-            className="rounded-2xl shadow-md"
-          />
+          <div className="w-20">
+            <Image
+              src="/logo.png"
+              alt="Qupón"
+              width={250}
+              height={180}
+              priority
+              className="w-full h-auto"
+            />
+          </div>
         </Link>
       </div>
     </header>
