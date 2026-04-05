@@ -1,13 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSession, clearSessionCookie } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
+import { clearSessionCookie } from "@/lib/auth";
+import { apiSuccess } from "@/lib/apiResponse";
 
-export async function POST(req: NextRequest) {
-  const session = await getSession(req);
-  const token = req.cookies.get("local_session")?.value;
-  if (session && token) {
-    await prisma.session.delete({ where: { token } }).catch(() => {});
-  }
-  const response = NextResponse.json({ success: true });
+export async function POST(_req: NextRequest) {
+  const response = apiSuccess({ success: true });
   return clearSessionCookie(response);
 }

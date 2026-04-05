@@ -1,10 +1,11 @@
 import { SignJWT, jwtVerify } from "jose";
+import type { UserType } from "./enums";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
 export type JWTPayload = {
   userId: string;
-  userType: "LOCAL" | "CLIENTE";
+  userType: UserType;
 };
 
 export async function signToken(
@@ -23,7 +24,7 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
     const { payload } = await jwtVerify(token, secret);
     return {
       userId: payload.userId as string,
-      userType: payload.userType as "LOCAL" | "CLIENTE",
+      userType: payload.userType as UserType,
     };
   } catch {
     return null;

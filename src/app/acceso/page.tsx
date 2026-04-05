@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
+import { UserType } from "@/lib/enums";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
@@ -14,12 +15,12 @@ async function verifyMagicLink(formData: FormData) {
 
   const session = await prisma.session.findUnique({ where: { token } });
 
-  if (!session || session.expiresAt < new Date() || session.userType !== "CLIENTE") {
+  if (!session || session.expiresAt < new Date() || session.userType !== UserType.CLIENTE) {
     redirect("/mis-beneficios");
   }
 
   await prisma.session.delete({ where: { token } });
-  const newSession = await createSession(session.userId, "CLIENTE");
+  const newSession = await createSession(session.userId, UserType.CLIENTE);
 
   const cookieStore = await cookies();
   cookieStore.set("cliente_session", newSession.token, {

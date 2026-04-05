@@ -1,20 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { requireClienteAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import { apiSuccess } from "@/lib/apiResponse";
+import { listMisBeneficiosByCliente } from "@/server/services/localApiService";
 
 export async function GET(req: NextRequest) {
   const { error, session } = await requireClienteAuth(req);
   if (error) return error;
 
-  const reclamos = await prisma.reclamo.findMany({
-    where: { clienteId: session!.userId },
-    include: {
-      beneficio: {
-        include: { local: { select: { nombre: true, logoUrl: true } } },
-      },
-    },
-    orderBy: { fechaReclamo: "desc" },
-  });
-
-  return NextResponse.json(reclamos);
+  const result = await listMisBeneficiosByCliente(session!.userId);
+  return apiSuccess(result.data, result.status);
 }

@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { canjearReclamo } from "@/server/services/reclamoActionsService";
 
 export async function POST(
   req: NextRequest,
@@ -13,59 +13,11 @@ export async function POST(
   const { id } = await params;
   const { qrToken } = await req.json();
 
-  if (!qrToken) {
-    return NextResponse.json(
-      { error: "Token QR requerido" },
-      { status: 400 }
-    );
+  const result = await canjearReclamo(id, qrToken, session!.userId);
+
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  const reclamo = await prisma.reclamo.findFirst({
-    where: { id, qrToken },
-    select: {
-      estado: true,
-      qrTokenExpira: true,
-      beneficio: { select: { localId: true, deletedAt: true } },
-    },
-  });
-
-  if (!reclamo) {
-    return NextResponse.json({ error: "QR inválido" }, { status: 400 });
-  }
-
-  if (reclamo.beneficio.localId !== session!.userId) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 403 });
-  }
-
-  if (!reclamo.qrTokenExpira || reclamo.qrTokenExpira < new Date()) {
-    return NextResponse.json({ error: "QR expirado" }, { status: 400 });
-  }
-
-  if (reclamo.beneficio.deletedAt !== null) {
-    return NextResponse.json(
-      { error: "Este beneficio ya no está disponible" },
-      { status: 400 }
-    );
-  }
-
-  if (reclamo.estado === EstadoReclamo.CANCELADO) {
-    return NextResponse.json(
-      { error: "Este cupón ha sido eliminado por el local" },
-      { status: 409 }
-    );
-  }
-
-  if (reclamo.estado === EstadoReclamo.CANJEADO) {
-    return NextResponse.json(
-      { error: "Este cupón ya fue canjeado" },
-      { status: 400 }
-    );
-  }
-
-  await prisma.reclamo.update({
-    where: { id },
-    data: { estado: EstadoReclamo.CANJEADO, fechaCanje: new Date(), qrToken: null },
-  });
-
-  return NextResponse.json({ success: true });
+  return apiSuccess({ success: true }, result.status);
 }

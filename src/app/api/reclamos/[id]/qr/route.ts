@@ -1,10 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { requireClienteAuth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
-import { generateQRDataURL, buildQRPayload } from "@/lib/qr";
-import { EstadoReclamo } from "@/generated/prisma/client";
-import { v4 as uuidv4 } from "uuid";
-import { QR_EXPIRY_MINUTES } from "@/lib/constants";
+import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { generateReclamoQr } from "@/server/services/reclamoActionsService";
 
 export async function POST(
   req: NextRequest,
@@ -15,42 +12,11 @@ export async function POST(
 
   const { id } = await params;
 
-  const reclamo = await prisma.reclamo.findFirst({
-    where: { id, clienteId: session!.userId },
-    select: { estado: true },
-  });
+  const result = await generateReclamoQr(id, session!.userId);
 
-  if (!reclamo) {
-    return NextResponse.json(
-      { error: "Reclamo no encontrado" },
-      { status: 404 }
-    );
+  if (!result.ok) {
+    return apiError(result.error, result.status, result.code);
   }
 
-  if (reclamo.estado === EstadoReclamo.CANJEADO) {
-    return NextResponse.json(
-      { error: "Este cupón ya fue canjeado" },
-      { status: 400 }
-    );
-  }
-
-  if (reclamo.estado === EstadoReclamo.CANCELADO) {
-    return NextResponse.json(
-      { error: "Este cupón ha sido eliminado por el local" },
-      { status: 409 }
-    );
-  }
-
-  const qrToken = uuidv4();
-  const qrTokenExpira = new Date(Date.now() + QR_EXPIRY_MINUTES * 60 * 1000);
-
-  await prisma.reclamo.update({
-    where: { id },
-    data: { qrToken, qrTokenExpira },
-  });
-
-  const payload = buildQRPayload(id, qrToken);
-  const qrDataURL = await generateQRDataURL(payload);
-
-  return NextResponse.json({ qrDataURL, expiresAt: qrTokenExpira });
+  return apiSuccess({ qrDataURL: result.qrDataURL, expiresAt: result.expiresAt }, result.status);
 }
