@@ -46,16 +46,18 @@ export default async function AccesoPage({
       <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/25 blur-3xl hidden sm:block" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary-soft/80 blur-3xl hidden sm:block" />
 
-      <div className="w-full max-w-sm text-center animate-[fade-up_0.45s_ease-out_both]">
-        <div className="flex justify-center mb-6">
-          <Image
-            src="/logo.png"
-            alt="Qupón"
-            width={80}
-            height={80}
-            className="rounded-3xl shadow-2xl shadow-primary/30 ring-4 ring-surface/60"
-          />
-        </div>
+        <div className="w-full max-w-sm text-center animate-[fade-up_0.45s_ease-out_both]">
+          <div className="flex justify-center mb-6">
+            <div className="w-20">
+              <Image
+                src="/logo.png"
+                alt="Qupón"
+                width={250}
+                height={180}
+                className="w-full h-auto"
+              />
+            </div>
+          </div>
 
         <div className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md rounded-2xl border border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
           <div className="w-14 h-14 bg-primary-soft rounded-full flex items-center justify-center mx-auto mb-4">

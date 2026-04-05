@@ -25,7 +25,15 @@ export default async function MisBeneficiosPage({
         {/* Logo + form — centrado */}
         <div className="w-full flex-1 flex flex-col items-center justify-center animate-[fade-up_0.45s_ease-out_both]">
           <div className="mb-6">
-            <Image src="/logo.png" alt="Qupón" width={96} height={96} className="rounded-3xl shadow-xl shadow-primary-soft/70 ring-4 ring-surface/60" />
+            <div className="w-24">
+              <Image
+                src="/logo.png"
+                alt="Qupón"
+                width={250}
+                height={180}
+                className="w-full h-auto"
+              />
+            </div>
           </div>
           <ClienteLoginForm />
         </div>

@@ -15,12 +15,18 @@ import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 
 const FEATURES = [
-  { icon: <QrCode className="h-4 w-4" aria-hidden="true" />, label: "Canje con QR" },
+  {
+    icon: <QrCode className="h-4 w-4" aria-hidden="true" />,
+    label: "Canje con QR",
+  },
   {
     icon: <Smartphone className="h-4 w-4" aria-hidden="true" />,
     label: "Sin app extra",
   },
-  { icon: <Store className="h-4 w-4" aria-hidden="true" />, label: "Cualquier negocio" },
+  {
+    icon: <Store className="h-4 w-4" aria-hidden="true" />,
+    label: "Cualquier negocio",
+  },
 ];
 
 export default function Home() {
@@ -36,14 +42,16 @@ export default function Home() {
         <div className="max-w-2xl w-full text-center relative z-10 my-auto">
           {/* Logo */}
           <Reveal y={14} amount={0.1} className="flex justify-center mb-7">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={96}
-              height={96}
-              priority
-              className="rounded-3xl shadow-2xl shadow-primary/35 ring-4 ring-surface/60"
-            />
+            <div className="w-24">
+              <Image
+                src="/logo.png"
+                alt="Qupón"
+                width={250}
+                height={180}
+                priority
+                className="w-full h-auto"
+              />
+            </div>
           </Reveal>
 
           {/* Badge */}
@@ -68,60 +76,62 @@ export default function Home() {
           {/* Subtitle */}
           <Reveal delay={0.22} y={18} amount={0.2}>
             <p className="text-lg text-text-muted max-w-md mx-auto leading-relaxed">
-              Creá cupones de descuento, compartí el link y canjeá al instante con
-              QR desde el celular.
+              Creá cupones de descuento, compartí el link y canjeá al instante
+              con QR desde el celular.
             </p>
           </Reveal>
 
           {/* Feature pills */}
           <Reveal delay={0.3} y={20} amount={0.2} className="mt-6 mb-10">
             <div className="flex flex-wrap justify-center gap-2">
-            {FEATURES.map((f) => (
-              <span
-                key={f.label}
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-surface/90 sm:bg-surface/70 sm:backdrop-blur-sm rounded-full border border-border-default/60 text-sm text-text-primary font-medium shadow-sm"
-              >
-                {f.icon}
-                {f.label}
-              </span>
-            ))}
+              {FEATURES.map((f) => (
+                <span
+                  key={f.label}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-surface/90 sm:bg-surface/70 sm:backdrop-blur-sm rounded-full border border-border-default/60 text-sm text-text-primary font-medium shadow-sm"
+                >
+                  {f.icon}
+                  {f.label}
+                </span>
+              ))}
             </div>
           </Reveal>
 
           {/* CTA Cards */}
           <Reveal delay={0.38} y={22} amount={0.15}>
             <div className="grid sm:grid-cols-2 gap-4">
-            {/* Para Negocios */}
-            <div className="group bg-surface/90 sm:bg-surface/75 sm:backdrop-blur-md rounded-2xl p-6 border border-surface/80 shadow-lg shadow-primary-soft/70 text-left hover:shadow-xl hover:shadow-accent-soft hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300">
-              <div className="w-11 h-11 rounded-xl bg-primary-soft flex items-center justify-center mb-4 text-primary">
-                <Building2 className="h-5 w-5" aria-hidden="true" />
+              {/* Para Negocios */}
+              <div className="group bg-surface/90 sm:bg-surface/75 sm:backdrop-blur-md rounded-2xl p-6 border border-surface/80 shadow-lg shadow-primary-soft/70 text-left hover:shadow-xl hover:shadow-accent-soft hover:-translate-y-0.5 transition-[transform,box-shadow] duration-300">
+                <div className="w-11 h-11 rounded-xl bg-primary-soft flex items-center justify-center mb-4 text-primary">
+                  <Building2 className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <h2 className="font-semibold text-text-primary mb-1.5">
+                  Para Negocios
+                </h2>
+                <p className="text-text-muted text-sm mb-5 leading-relaxed">
+                  Registrá tu negocio, creá cupones y gestioná los canjes.
+                </p>
+                <LinkButton href="/login">
+                  Ingresar
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </LinkButton>
               </div>
-              <h2 className="font-semibold text-text-primary mb-1.5">
-                Para Negocios
-              </h2>
-              <p className="text-text-muted text-sm mb-5 leading-relaxed">
-                Registrá tu negocio, creá cupones y gestioná los canjes.
-              </p>
-              <LinkButton href="/login">
-                Ingresar
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </LinkButton>
-            </div>
 
-            {/* Para Clientes */}
-            <div className="group bg-primary rounded-2xl p-6 border border-primary-foreground/20 shadow-lg shadow-primary/30 text-left hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 hover:bg-accent transition-[transform,box-shadow,background-color] duration-300">
-              <div className="w-11 h-11 rounded-xl bg-surface/20 flex items-center justify-center mb-4 text-primary-foreground">
-                <Gift className="h-5 w-5" aria-hidden="true" />
+              {/* Para Clientes */}
+              <div className="group bg-primary rounded-2xl p-6 border border-primary-foreground/20 shadow-lg shadow-primary/30 text-left hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 hover:bg-accent transition-[transform,box-shadow,background-color] duration-300">
+                <div className="w-11 h-11 rounded-xl bg-surface/20 flex items-center justify-center mb-4 text-primary-foreground">
+                  <Gift className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <h2 className="font-semibold text-primary-foreground mb-1.5">
+                  Para Clientes
+                </h2>
+                <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
+                  Accedé a todos tus cupones y descuentos en un solo lugar.
+                </p>
+                <LinkButton href="/mis-beneficios" variant="light">
+                  Ver mis cupones
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </LinkButton>
               </div>
-              <h2 className="font-semibold text-primary-foreground mb-1.5">Para Clientes</h2>
-              <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
-                Accedé a todos tus cupones y descuentos en un solo lugar.
-              </p>
-              <LinkButton href="/mis-beneficios" variant="light">
-                Ver mis cupones
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-              </LinkButton>
-            </div>
             </div>
           </Reveal>
         </div>

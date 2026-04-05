@@ -26,14 +26,16 @@ export default async function OnboardingPage() {
 
       <div className="relative mx-auto my-auto flex w-full max-w-md flex-col items-center">
         <Reveal y={12} amount={0.2} className="mb-5 sm:mb-6">
-          <Image
-            src="/logo.png"
-            alt="Qupón"
-            width={88}
-            height={88}
-            priority
-            className="rounded-3xl shadow-xl shadow-primary/30"
-          />
+          <div className="w-22">
+            <Image
+              src="/logo.png"
+              alt="Qupón"
+              width={250}
+              height={180}
+              priority
+              className="w-full h-auto"
+            />
+          </div>
         </Reveal>
 
         <Reveal delay={0.06} y={14} amount={0.25} className="w-full">

@@ -48,14 +48,16 @@ export default function ClienteHeader() {
           className="inline-flex items-center"
           aria-label="Ir a mis cupones"
         >
-          <Image
-            src="/logo.png"
-            alt="Qupón"
-            width={64}
-            height={64}
-            priority
-            className="rounded-2xl shadow-md"
-          />
+          <div className="w-20">
+            <Image
+              src="/logo.png"
+              alt="Qupón"
+              width={250}
+              height={180}
+              priority
+              className="w-full h-auto"
+            />
+          </div>
         </Link>
       </div>
     </header>
