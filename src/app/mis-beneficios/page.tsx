@@ -1,10 +1,9 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
+import { getMisBeneficiosPageData } from "@/server/services/misBeneficiosService";
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
-import Image from "next/image";
-import Link from "next/link";
-import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
-import ClienteLoginForm from "@/components/cliente/ClienteLoginForm";
-import { getMisBeneficiosPageData } from "@/server/services/misBeneficiosService";
 
 const PAGE_SIZE = 10;
 
@@ -18,27 +17,8 @@ export default async function MisBeneficiosPage({
 
   const session = await getClienteSessionFromCookies();
 
-  // Sin sesión → mostrar formulario de acceso
   if (!session || session.userType !== UserType.CLIENTE) {
-    return (
-      <main className="flex-1 flex flex-col items-center px-4 py-8 relative">
-        {/* Logo + form — centrado */}
-        <div className="w-full flex-1 flex flex-col items-center justify-center animate-[fade-up_0.45s_ease-out_both]">
-          <div className="mb-6">
-            <div className="w-24">
-              <Image
-                src="/logo.png"
-                alt="Qupón"
-                width={250}
-                height={180}
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
-          <ClienteLoginForm />
-        </div>
-      </main>
-    );
+    redirect("/acceso");
   }
 
   const { reclamos, total, totalPages } = await getMisBeneficiosPageData(

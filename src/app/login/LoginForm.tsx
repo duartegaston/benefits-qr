@@ -11,7 +11,9 @@ import Reveal from "@/components/ui/Reveal";
 
 export default function LoginForm() {
   const router = useRouter();
-  const [step, setStep] = useState<"email" | "pending-approval" | "otp">("email");
+  const [step, setStep] = useState<"email" | "pending-approval" | "otp">(
+    "email",
+  );
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
@@ -85,17 +87,23 @@ export default function LoginForm() {
         <Reveal y={14} amount={0.3}>
           <div className="text-center mb-7">
             <div className="flex justify-center mb-4">
-              <Image
-                src="/logo.png"
-                alt="Qupón"
-                width={88}
-                height={88}
-                priority
-                className="rounded-3xl shadow-2xl shadow-primary/30 ring-4 ring-surface/60"
-              />
+              <div className="w-24">
+                <Image
+                  src="/logo.png"
+                  alt="Qupón"
+                  width={500}
+                  height={450}
+                  priority
+                  className="w-full h-auto"
+                />
+              </div>
             </div>
-            <h1 className="text-2xl font-bold text-text-primary mb-1">Bienvenido</h1>
-            <p className="text-text-muted text-sm">Accedé al dashboard de tu negocio</p>
+            <h1 className="text-2xl font-bold text-text-primary mb-1">
+              Bienvenido
+            </h1>
+            <p className="text-text-muted text-sm">
+              Accedé al dashboard de tu negocio
+            </p>
           </div>
         </Reveal>
 
@@ -112,10 +120,14 @@ export default function LoginForm() {
                   <p className="inline-flex items-center rounded-full border border-warning-border bg-warning-soft px-3 py-1 text-xs font-medium text-warning">
                     Pendiente de aprobación
                   </p>
-                  <h2 className="font-semibold text-text-primary text-lg">Solicitud en revisión</h2>
+                  <h2 className="font-semibold text-text-primary text-lg">
+                    Solicitud en revisión
+                  </h2>
                 </div>
                 <div className="rounded-xl border border-warning-border/70 bg-warning-soft/80 p-4 text-sm text-warning leading-relaxed">
-                  Tu solicitud está siendo revisada. Te avisaremos por email cuando sea aprobada y ahí vas a recibir un link directo para completar tu registro.
+                  Tu solicitud está siendo revisada. Te avisaremos por email
+                  cuando sea aprobada y ahí vas a recibir un link directo para
+                  completar tu registro.
                 </div>
                 <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
                   <Mail className="w-4 h-4" aria-hidden="true" />
@@ -146,7 +158,13 @@ export default function LoginForm() {
                   required
                 />
                 {error && <p className="text-sm text-danger">{error}</p>}
-                <Button variant="primary" type="submit" loading={loading} className="w-full" size="lg">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  loading={loading}
+                  className="w-full"
+                  size="lg"
+                >
                   Acceder
                 </Button>
               </form>
@@ -162,13 +180,21 @@ export default function LoginForm() {
                   label="Código de acceso"
                   type="text"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  onChange={(e) =>
+                    setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                  }
                   placeholder="123456"
                   inputMode="numeric"
                   required
                 />
                 {error && <p className="text-sm text-danger">{error}</p>}
-                <Button variant="primary" type="submit" loading={loading} className="w-full" size="lg">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  loading={loading}
+                  className="w-full"
+                  size="lg"
+                >
                   Ingresar
                 </Button>
                 <Button

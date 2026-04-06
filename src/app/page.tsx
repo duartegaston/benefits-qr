@@ -46,8 +46,8 @@ export default function Home() {
               <Image
                 src="/logo.png"
                 alt="Qupón"
-                width={250}
-                height={180}
+                width={500}
+                height={450}
                 priority
                 className="w-full h-auto"
               />
@@ -127,7 +127,7 @@ export default function Home() {
                 <p className="text-primary-foreground/80 text-sm mb-5 leading-relaxed">
                   Accedé a todos tus cupones y descuentos en un solo lugar.
                 </p>
-                <LinkButton href="/mis-beneficios" variant="light">
+                <LinkButton href="/acceso" variant="light">
                   Ver mis cupones
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </LinkButton>
