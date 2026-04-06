@@ -3,7 +3,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 interface BadgeProps {
   children: React.ReactNode;
-  color?: "gray" | "violet" | "green" | "red" | "yellow";
+  color?:
+    | "gray"
+    | "violet"
+    | "green"
+    | "red"
+    | "yellow"
+    | "info"
+    | "warning";
   variant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
   className?: string;
 }
@@ -18,6 +25,8 @@ const badgeVariants = cva(
         green: "bg-success-soft text-success",
         red: "bg-danger-soft text-danger",
         yellow: "bg-warning-soft text-warning",
+        info: "bg-primary-soft text-accent",
+        warning: "bg-warning-soft text-warning",
       },
     },
     defaultVariants: {
