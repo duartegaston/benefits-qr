@@ -121,7 +121,6 @@ export default async function AccesoPage({
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Badge color="info">Enlace listo para usar</Badge>
                   <h2 className="text-lg font-semibold text-text-primary">
                     ¡Tu Qupón llegó!
                   </h2>

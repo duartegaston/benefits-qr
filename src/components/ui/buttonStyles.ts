@@ -20,7 +20,7 @@ export const buttonVariants = cva(
         danger:
           "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
         muted:
-          "bg-surface-muted text-text-muted hover:bg-primary-soft hover:text-accent focus-visible:ring-primary-soft",
+          "bg-surface-muted text-text-muted hover:bg-border-default/80 hover:text-text-primary focus-visible:ring-primary-soft",
         success:
           "bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success",
         light:
