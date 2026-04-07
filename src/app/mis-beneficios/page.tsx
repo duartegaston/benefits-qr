@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import MisBeneficiosList from "@/components/cliente/MisBeneficiosList";
+import MisBeneficiosList from "@/components/cliente/beneficio/MisBeneficiosList";
 import { getMisBeneficiosPageData } from "@/server/services/misBeneficiosService";
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";

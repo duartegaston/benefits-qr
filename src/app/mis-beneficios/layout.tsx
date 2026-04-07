@@ -1,4 +1,4 @@
-import ClienteHeader from "@/components/ClienteHeader";
+import ClienteHeader from "@/components/cliente/mis-beneficios/ClienteHeader";
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import { redirect } from "next/navigation";

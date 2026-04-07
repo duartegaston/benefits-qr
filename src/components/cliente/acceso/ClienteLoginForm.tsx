@@ -1,10 +1,9 @@
 "use client";
 import { useState } from "react";
-import { Mail } from "lucide-react";
 import Card, { CardContent } from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import ClienteMagicLinkSentState from "@/components/cliente/shared/ClienteMagicLinkSentState";
 
 export default function ClienteLoginForm() {
   const [email, setEmail] = useState("");
@@ -41,38 +40,15 @@ export default function ClienteLoginForm() {
     return (
       <Card className="w-full max-w-md bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60">
         <CardContent className="p-6 sm:p-8">
-            <div className="space-y-5 text-center">
-              <div className="flex justify-center">
-                <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-primary-soft to-primary-soft/70 flex items-center justify-center text-primary shadow-sm">
-                  <Mail className="w-8 h-8" aria-hidden="true" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Badge color="info">
-                  Link enviado
-                </Badge>
-                <h2 className="text-lg font-semibold text-text-primary">
-                  Revisá tu email
-                </h2>
-              </div>
-              <div className="rounded-2xl bg-primary-soft/80 px-4 py-3 text-sm leading-relaxed text-accent">
-                Te enviamos un link a <strong>{email}</strong>. Hacé clic en él para
-                acceder a tus cupones.
-              </div>
-            <Button
-              type="button"
-              variant="muted"
-              size="sm"
-              onClick={() => {
-                setStep("form");
-                setEmail("");
-                setError("");
-              }}
-              className="w-full"
-            >
-              Usar otro email
-            </Button>
-          </div>
+          <ClienteMagicLinkSentState
+            email={email}
+            description={<>Te enviamos un link a</>}
+            onReset={() => {
+              setStep("form");
+              setEmail("");
+              setError("");
+            }}
+          />
         </CardContent>
       </Card>
     );

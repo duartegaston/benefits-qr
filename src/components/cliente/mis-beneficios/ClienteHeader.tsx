@@ -30,10 +30,10 @@ export default function ClienteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b shadow-sm transition-[background-color,border-color,box-shadow] duration-200",
+        "sticky top-0 z-40 transition-[background-color,box-shadow] duration-200",
         scrolled
-          ? "border-border-strong/70 bg-surface-soft/95 shadow-md sm:bg-surface-soft/85 sm:backdrop-blur-md"
-          : "border-border-strong/60 bg-transparent"
+          ? "  shadow-md  backdrop-blur-md"
+          : "shadow-md bg-transparent"
       )}
     >
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">

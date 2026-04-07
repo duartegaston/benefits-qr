@@ -2,9 +2,10 @@
 import { useState } from "react";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
-import QRDisplay from "@/components/cliente/QRDisplay";
+import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
 import Button from "@/components/ui/Button";
 import { EstadoReclamo } from "@/lib/enums";
+import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
 
 type Reclamo = {
   id: string;
@@ -78,7 +79,7 @@ export default function MisBeneficiosList({
                   </h3>
                   <p className="text-xs text-text-muted mt-1">
                     Reclamado:{" "}
-                    {new Date(r.fechaReclamo).toLocaleDateString("es-AR")}
+                    {formatDateAR(r.fechaReclamo)}
                   </p>
                 </div>
                 <Badge color={estadoBadge[r.estado]}>{r.estado}</Badge>
@@ -90,8 +91,8 @@ export default function MisBeneficiosList({
                   onClick={() =>
                     setExpandedId(expandedId === r.id ? null : r.id)
                   }
-                  variant="ghost"
-                  className="mt-4 w-full h-auto py-2 text-sm font-medium text-primary bg-primary-soft rounded-xl hover:bg-accent-soft transition-colors active:scale-100"
+                  variant="light"
+                  className="mt-4 w-full"
                 >
                   {expandedId === r.id ? "Ocultar QR" : "Mostrar QR"}
                 </Button>
@@ -100,7 +101,7 @@ export default function MisBeneficiosList({
               {r.estado === EstadoReclamo.CANJEADO && r.fechaCanje && (
                 <p className="text-xs text-success mt-3">
                   Canjeado:{" "}
-                  {new Date(r.fechaCanje).toLocaleString("es-AR")}
+                  {formatDateTimeAR(r.fechaCanje)}
                 </p>
               )}
 
