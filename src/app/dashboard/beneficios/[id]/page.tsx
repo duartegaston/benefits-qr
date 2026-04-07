@@ -8,6 +8,7 @@ import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
+import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
 import { EstadoReclamo } from "@/generated/prisma/client";
 import {
   expirePendingReclamosAsyncIfNeeded,
@@ -90,7 +91,7 @@ export default async function BeneficioStatsPage({
                 )}
               </div>
               <p className="text-sm font-medium text-text-muted">
-                Vence: {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
+                Vence: {formatDateAR(beneficio.fechaExpiracion)}
                 {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
               </p>
               <p className="text-xs font-medium text-text-muted sm:text-sm">
@@ -148,9 +149,9 @@ export default async function BeneficioStatsPage({
                       {!r.cliente.email && !r.cliente.phone ? <span>Sin contacto cargado</span> : null}
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs">
-                      <span>Reclamó: {new Date(r.fechaReclamo).toLocaleString("es-AR")}</span>
+                      <span>Reclamó: {formatDateTimeAR(r.fechaReclamo)}</span>
                       {r.fechaCanje ? (
-                        <span>Canjeó: {new Date(r.fechaCanje).toLocaleString("es-AR")}</span>
+                        <span>Canjeó: {formatDateTimeAR(r.fechaCanje)}</span>
                       ) : null}
                     </div>
                   </div>

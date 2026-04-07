@@ -10,6 +10,7 @@ import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
+import { formatDateAR } from "@/lib/dates";
 import { getDashboardPageData } from "@/server/services/dashboardService";
 
 function getBenefitStatus(isExpired: boolean, isAgotado: boolean) {
@@ -165,9 +166,7 @@ export default async function DashboardPage({
             const canjeados = b.canjeados;
             const isAgotado = b.maxUsos !== null && canjeados >= b.maxUsos;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
-            const vencimiento = new Date(b.fechaExpiracion).toLocaleDateString(
-              "es-AR",
-            );
+            const vencimiento = formatDateAR(b.fechaExpiracion);
             const status = getBenefitStatus(isExpired, isAgotado);
 
             return (
