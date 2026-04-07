@@ -51,7 +51,6 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  const t0 = performance.now();
   const {
     local,
     beneficios,
@@ -60,7 +59,6 @@ export default async function DashboardPage({
     totalCanjeados,
     totalPages,
   } = await getDashboardPageData(session.userId, page, PAGE_SIZE);
-  console.log(`[dashboard] DB: ${Math.round(performance.now() - t0)}ms`);
 
   if (!local) redirect("/login");
   if (local.nombre === null) redirect("/onboarding");

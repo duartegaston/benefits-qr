@@ -43,14 +43,12 @@ export default async function BeneficioStatsPage({
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) redirect("/login");
 
-  const t0 = performance.now();
   const { beneficio, stats, reclamos, totalPages } = await getBeneficioDetailPageData(
     id,
     session.userId,
     page,
     PAGE_SIZE
   );
-  console.log(`[beneficio-detail] DB: ${Math.round(performance.now() - t0)}ms`);
 
   if (!beneficio) redirect("/dashboard");
 
