@@ -26,7 +26,7 @@ export const buttonVariants = cva(
         light:
           "border border-primary-soft/70 bg-primary-soft text-accent shadow-sm hover:border-primary hover:bg-primary-soft focus-visible:ring-primary-soft focus-visible:ring-offset-primary",
         subtle:
-          "bg-surface/80 text-accent shadow-sm hover:border-primary hover:bg-surface hover:text-accent-foreground focus-visible:ring-primary-soft",
+          "bg-surface text-accent shadow-sm hover:border-primary hover:bg-surface/80 hover:text-accent-foreground focus-visible:ring-primary-soft",
         logout:
           "border border-danger-border/80 bg-danger-soft/70 text-danger shadow-sm hover:border-danger-border hover:bg-danger-soft hover:text-danger focus-visible:ring-danger-soft",
         link: "bg-transparent text-primary underline-offset-4 hover:underline focus-visible:ring-primary-soft",
