@@ -27,7 +27,6 @@ export default function ClienteMagicLinkSentState({
       </div>
 
       <div className="space-y-2">
-        <Badge color="info">Link enviado</Badge>
         <h2 className="text-lg font-semibold text-text-primary">Revisá tu email</h2>
       </div>
 

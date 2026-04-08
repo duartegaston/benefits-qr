@@ -9,7 +9,10 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
-import { getReclamoStatusPresentation } from "@/lib/reclamoStatus";
+import {
+  getBeneficioStatusPresentation,
+  getReclamoStatusPresentation,
+} from "@/lib/statusPresentation";
 import {
   expirePendingReclamosAsyncIfNeeded,
   getBeneficioDetailPageData,
@@ -40,6 +43,7 @@ export default async function BeneficioStatsPage({
 
   const isExpired = beneficio.fechaExpiracion < new Date();
   const isAgotado = beneficio.maxUsos !== null && stats.canjeados >= beneficio.maxUsos;
+  const benefitStatus = getBeneficioStatusPresentation(isExpired, isAgotado);
 
   // Fire-and-forget: marca PENDIENTE → VENCIDO sin bloquear el render
   expirePendingReclamosAsyncIfNeeded(id, isExpired, stats.pendientes);
@@ -64,13 +68,9 @@ export default async function BeneficioStatsPage({
                   {beneficio.descripcion}
                 </h1>
                 {isDeleted ? (
-                  <Badge color="red">Eliminado</Badge>
-                ) : isExpired ? (
-                  <Badge color="red">Vencido</Badge>
-                ) : isAgotado ? (
-                  <Badge color="yellow">Agotado</Badge>
+                  <Badge variant="danger">Eliminado</Badge>
                 ) : (
-                  <Badge color="green">Activo</Badge>
+                  <Badge variant={benefitStatus.badgeVariant}>{benefitStatus.label}</Badge>
                 )}
               </div>
               <p className="text-sm font-medium text-text-muted">
@@ -94,9 +94,9 @@ export default async function BeneficioStatsPage({
               Actividad del cupón
             </p>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
-              <MetricCard label="Reclamos" value={stats.total} color="gray" />
-              <MetricCard label="Canjeados" value={stats.canjeados} color="green" />
-              <MetricCard label="Pendientes" value={stats.pendientes} color="violet" />
+              <MetricCard label="Reclamos" value={stats.total} variant="secondary" />
+              <MetricCard label="Canjeados" value={stats.canjeados} variant="light" />
+              <MetricCard label="Pendientes" value={stats.pendientes} variant="warning" />
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@ export default async function BeneficioStatsPage({
                     </div>
                   </div>
                   <div className="shrink-0">
-                    <Badge color={status.color}>{status.label}</Badge>
+                    <Badge variant={status.badgeVariant}>{status.label}</Badge>
                   </div>
                 </div>
               </Card>

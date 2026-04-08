@@ -1,12 +1,22 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
+export const semanticVisualVariants = [
+  "primary",
+  "secondary",
+  "light",
+  "muted",
+  "success",
+  "warning",
+  "danger",
+] as const;
+
+export type SemanticVisualVariant = (typeof semanticVisualVariants)[number];
+
 export const buttonVariants = cva(
   "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-[transform,background-color,color,box-shadow,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
         primary:
           "bg-primary text-primary-foreground hover:bg-accent focus-visible:ring-primary",
         secondary:
@@ -15,21 +25,16 @@ export const buttonVariants = cva(
           "border border-border-default bg-transparent text-text-primary shadow-sm hover:bg-surface-muted focus-visible:ring-primary-soft",
         ghost:
           "bg-transparent text-text-muted hover:bg-surface-muted focus-visible:ring-primary-soft",
-        destructive:
-          "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
         danger:
           "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
         muted:
           "bg-border-default/80 text-text-primary hover:bg-border-default focus-visible:ring-primary-soft",
-        success:
-          "bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success",
         light:
           "border border-primary-soft/70 bg-primary-soft text-accent shadow-sm hover:bg-primary-soft/80 focus-visible:ring-primary-soft focus-visible:ring-offset-primary",
         subtle:
           "bg-surface text-accent shadow-sm hover:border-primary hover:bg-surface/80 hover:text-accent-foreground focus-visible:ring-primary-soft",
         logout:
           "border border-danger-border/80 bg-danger-soft/70 text-danger shadow-sm hover:border-danger-border hover:bg-danger-soft hover:text-danger focus-visible:ring-danger-soft",
-        link: "bg-transparent text-primary underline-offset-4 hover:underline focus-visible:ring-primary-soft",
       },
       size: {
         default: "h-10 px-4 py-2.5 text-sm",
@@ -45,7 +50,7 @@ export const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   },

@@ -61,7 +61,7 @@ export default function Playbooks() {
                 <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
                   <h3 className="font-bold text-text-primary min-w-0 flex-1">{play.name}</h3>
                   <Badge
-                    color="violet"
+                    variant="light"
                     className="shrink-0 py-1 whitespace-normal sm:whitespace-nowrap max-w-full"
                   >
                     {play.config}

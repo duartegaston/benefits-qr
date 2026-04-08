@@ -38,7 +38,7 @@ export default async function MisBeneficiosPage({
       </div>
 
       <div className="mb-5 sm:mb-6">
-        <MetricCard label="Beneficios guardados" value={total} color="violet-strong" />
+        <MetricCard label="Beneficios guardados" value={total} variant="primary" />
       </div>
 
       <div className="space-y-4">
