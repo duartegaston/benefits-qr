@@ -63,10 +63,6 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="rounded-2xl bg-primary-soft/70 px-4 py-3 text-sm leading-relaxed text-accent">
-        Completá tus datos y te mandamos un link para guardar este beneficio en tu cuenta.
-      </div>
-
       <fieldset disabled={loading} className="space-y-4 disabled:opacity-100">
         <Input
           label="Tu nombre"

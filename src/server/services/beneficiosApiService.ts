@@ -1,5 +1,5 @@
 import { EstadoReclamo } from "@/generated/prisma/client";
-import { TIMEZONE_AR } from "@/lib/constants";
+import { getCurrentISODateInArgentina } from "@/lib/argentinaTime";
 import {
   createBeneficio,
   findBeneficioOwnedByLocal,
@@ -73,7 +73,7 @@ export async function createBeneficioFlow(
     };
   }
 
-  const todayAR = new Date().toLocaleString("en-CA", { timeZone: TIMEZONE_AR }).slice(0, 10);
+  const todayAR = getCurrentISODateInArgentina();
   if (fechaExpiracion < todayAR) {
     return {
       ok: false,

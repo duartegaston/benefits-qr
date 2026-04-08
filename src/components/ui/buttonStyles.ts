@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-[transform,background-color,color,box-shadow,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-[transform,background-color,color,box-shadow,border-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -20,11 +20,11 @@ export const buttonVariants = cva(
         danger:
           "bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger",
         muted:
-          "bg-surface-muted text-text-muted hover:bg-border-default/80 hover:text-text-primary focus-visible:ring-primary-soft",
+          "bg-border-default/80 text-text-primary hover:bg-border-default focus-visible:ring-primary-soft",
         success:
           "bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success",
         light:
-          "border border-primary-soft/70 bg-primary-soft text-accent shadow-sm hover:border-primary hover:bg-primary-soft focus-visible:ring-primary-soft focus-visible:ring-offset-primary",
+          "border border-primary-soft/70 bg-primary-soft text-accent shadow-sm hover:bg-primary-soft/80 focus-visible:ring-primary-soft focus-visible:ring-offset-primary",
         subtle:
           "bg-surface text-accent shadow-sm hover:border-primary hover:bg-surface/80 hover:text-accent-foreground focus-visible:ring-primary-soft",
         logout:

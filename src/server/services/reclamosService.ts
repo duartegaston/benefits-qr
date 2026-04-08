@@ -1,5 +1,7 @@
 import { createClienteSession } from "@/lib/auth";
-import { EMAIL_REGEX, PHONE_REGEX, SESSION_DURATION, TIMEZONE_AR } from "@/lib/constants";
+import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
+import { EMAIL_REGEX, PHONE_REGEX, SESSION_DURATION } from "@/lib/constants";
 import { EstadoReclamo } from "@/generated/prisma/client";
 import {
   createCliente,
@@ -71,17 +73,16 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
   }
 
   if (beneficio.diasValidos.length > 0) {
-    const hoy = new Date(new Date().toLocaleString("en-US", { timeZone: TIMEZONE_AR })).getDay();
+    const hoy = getCurrentDayInArgentina();
     if (!beneficio.diasValidos.includes(hoy)) {
-      const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-      const nombres = beneficio.diasValidos
-        .sort((a: number, b: number) => a - b)
-        .map((d: number) => DIAS[d])
-        .join(", ");
       return {
         ok: false,
         status: 400,
-        error: `Este cupón solo aplica los: ${nombres}`,
+        error: `Este cupón solo aplica ${formatDiasValidosSentence(beneficio.diasValidos, {
+          emptyLabel: "todos los días",
+          prefix: "los",
+          style: "full",
+        })}`,
         code: "BENEFICIO_INVALID_DAY",
       };
     }

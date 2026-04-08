@@ -9,6 +9,8 @@ import Card from "@/components/ui/Card";
 import ReclamarForm from "@/components/cliente/beneficio/ReclamarForm";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
+import SectionHeader from "@/components/ui/SectionHeader";
+import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
 import { formatDateAR } from "@/lib/dates";
 import {
   formatDiasValidosSentence,
@@ -27,7 +29,6 @@ export default async function BeneficioPublicoPage({
     where: { id, deletedAt: null },
     include: {
       local: { select: { nombre: true, logoUrl: true } },
-      _count: { select: { reclamos: true } },
       reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
     },
   });
@@ -38,13 +39,13 @@ export default async function BeneficioPublicoPage({
   const canjeados = beneficio.reclamos.length;
   const isAgotado = beneficio.maxUsos !== null && canjeados >= beneficio.maxUsos;
 
-  const todayIndex = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })
-  ).getDay();
+  const todayIndex = getCurrentDayInArgentina();
   const diasValidos: number[] = beneficio.diasValidos as number[];
   const tieneRestriccion = diasValidos.length > 0;
   const isWrongDay = tieneRestriccion && !diasValidos.includes(todayIndex);
   const diasValidosOrdenados = sortDiasValidos(diasValidos);
+  const isClaimAvailable = !isExpired && !isAgotado && !isWrongDay;
+  const localName = beneficio.local.nombre ?? "Local adherido";
   const availability = isExpired
     ? {
         badgeColor: "red" as const,
@@ -73,10 +74,9 @@ export default async function BeneficioPublicoPage({
         : {
             badgeColor: "green" as const,
             badgeLabel: "Disponible",
-            message: "Completá tus datos y te mandamos un link para guardar este beneficio en tu cuenta.",
           };
 
-  const initials = (beneficio.local.nombre ?? "")
+  const initials = localName
     .split(" ")
     .map((w: string) => w[0])
     .filter(Boolean)
@@ -115,19 +115,12 @@ export default async function BeneficioPublicoPage({
               </div>
             </div>
 
-            <div className="space-y-3">
-              <Badge
-                color={availability.badgeColor}
-                className="px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
-              >
-                {availability.badgeLabel}
-              </Badge>
-              <div className="space-y-1">
-                <h1 className="text-2xl font-bold text-text-primary">
-                  {beneficio.descripcion}
-                </h1>
-              </div>
-            </div>
+            <SectionHeader
+              eyebrow="Beneficio"
+              title="Reclamá tu cupón"
+              description="Completá tus datos para recibir el acceso por email y guardarlo en tu cuenta."
+              className="mb-0"
+            />
           </div>
         </Reveal>
 
@@ -136,6 +129,22 @@ export default async function BeneficioPublicoPage({
             <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
 
             <div className="space-y-5 p-6 sm:p-8">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0 space-y-1">
+                    <h1 className="text-2xl font-bold text-text-primary">{beneficio.descripcion}</h1>
+                    <p className="text-sm text-text-muted">Guardalo ahora y usalo cuando corresponda.</p>
+                  </div>
+
+                  <Badge
+                    color={availability.badgeColor}
+                    className="px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
+                  >
+                    {availability.badgeLabel}
+                  </Badge>
+                </div>
+              </div>
+
               <div className="rounded-2xl border border-border-default/70 bg-surface-muted/70 p-4">
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
@@ -143,11 +152,11 @@ export default async function BeneficioPublicoPage({
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={beneficio.local.logoUrl}
-                        alt={beneficio.local.nombre ?? ""}
+                        alt={localName}
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="text-sm font-bold">{initials}</span>
+                      <span className="text-sm font-bold">{initials || "LO"}</span>
                     )}
                   </div>
 
@@ -157,7 +166,7 @@ export default async function BeneficioPublicoPage({
                       <span>Local adherido</span>
                     </div>
                     <p className="text-sm font-semibold text-text-primary">
-                      {beneficio.local.nombre}
+                      {localName}
                     </p>
                   </div>
                 </div>
@@ -180,7 +189,7 @@ export default async function BeneficioPublicoPage({
                 </div>
               </div>
 
-              {!isExpired && !isAgotado && !isWrongDay ? (
+              {isClaimAvailable ? (
                 <div className="space-y-4">
                   <ReclamarForm beneficioId={beneficio.id} />
                 </div>

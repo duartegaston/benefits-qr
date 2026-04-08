@@ -85,9 +85,6 @@ export default function MisBeneficiosList({
                     </h3>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-text-muted">
                       <span>Vence: {formatDateAR(r.beneficio.fechaExpiracion)}</span>
-                      {r.estado === EstadoReclamo.CANJEADO && r.fechaCanje ? (
-                        <span>Canjeado: {formatDateTimeAR(r.fechaCanje)}</span>
-                      ) : null}
                     </div>
                   </div>
                 </div>
