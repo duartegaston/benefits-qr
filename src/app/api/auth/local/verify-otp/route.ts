@@ -4,14 +4,19 @@ import { apiError, apiSuccess } from "@/lib/apiResponse";
 import { verifyLocalOtpFlow } from "@/server/services/authApiService";
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const result = await verifyLocalOtpFlow(body);
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return apiError("Cuerpo de la solicitud inválido", 400, "INVALID_BODY");
+  }
+
+  const result = await verifyLocalOtpFlow(body as Record<string, unknown>);
 
   if (!result.ok) {
     return apiError(result.error, result.status, result.code);
   }
 
   const response = apiSuccess(result.data, result.status);
-  setSessionCookie(response, result.sessionToken, result.userType);
-  return response;
+  return setSessionCookie(response, result.sessionToken, result.userType);
 }

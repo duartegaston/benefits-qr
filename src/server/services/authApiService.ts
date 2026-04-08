@@ -1,5 +1,6 @@
 import { randomInt, timingSafeEqual } from "crypto";
 import { createClienteSession, createSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/jwt";
 import { generateApprovalToken, verifyApprovalToken } from "@/lib/approvalToken";
 import { EMAIL_REGEX, SESSION_DURATION } from "@/lib/constants";
@@ -16,7 +17,11 @@ import {
   upsertLocalOtp,
 } from "@/server/repositories/authApiRepository";
 
-const OWNER_EMAIL = process.env.OWNER_EMAIL || "duartegaston07@gmail.com";
+function getOwnerEmail(): string {
+  const email = process.env.OWNER_EMAIL;
+  if (!email) throw new Error("OWNER_EMAIL env var is not set");
+  return email;
+}
 
 type ServiceError = {
   ok: false;
@@ -103,7 +108,7 @@ export async function requestLocalOtpFlow(
   const approveUrl = `${baseUrl}/api/auth/local/approve?token=${encodeURIComponent(token)}`;
 
   try {
-    await sendApprovalRequestEmail(OWNER_EMAIL, normalized, approveUrl);
+    await sendApprovalRequestEmail(getOwnerEmail(), normalized, approveUrl);
   } catch (err) {
     console.error("[request-otp] Error enviando email de aprobación:", err instanceof Error ? err.message : String(err));
     return {
@@ -218,6 +223,12 @@ export async function verifyClienteMagicLinkFlow(token: string | null, redirect:
     return { ok: false as const, redirectTo: "/acceso?error=expired" };
   }
 
+  const dbSession = await prisma.session.findUnique({ where: { token } });
+  if (!dbSession || dbSession.expiresAt < new Date()) {
+    return { ok: false as const, redirectTo: "/login?error=expired" };
+  }
+  await prisma.session.delete({ where: { token } });
+
   const newSession = await createSession(payload.userId, UserType.CLIENTE);
 
   return {
@@ -238,6 +249,12 @@ export async function verifyLocalMagicLinkFlow(token: string | null) {
   if (!payload || payload.userType !== UserType.LOCAL) {
     return { ok: false as const, redirectTo: "/login?error=expired" };
   }
+
+  const dbSession = await prisma.session.findUnique({ where: { token } });
+  if (!dbSession || dbSession.expiresAt < new Date()) {
+    return { ok: false as const, redirectTo: "/login?error=expired" };
+  }
+  await prisma.session.delete({ where: { token } });
 
   const newSession = await createSession(payload.userId, UserType.LOCAL);
 

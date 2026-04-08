@@ -1,4 +1,5 @@
 import {
+  findLocalById,
   findReclamosByCliente,
   updateLocalLogo,
   updateLocalProfile,
@@ -12,6 +13,12 @@ type ServiceError = {
   error: string;
   code: string;
 };
+
+export async function getLocalMeFlow(localId: string) {
+  const local = await findLocalById(localId);
+  if (!local) return { ok: false as const, status: 404, error: "Local no encontrado", code: "NOT_FOUND" };
+  return { ok: true as const, status: 200, data: local };
+}
 
 export async function updateLocalMeFlow(
   localId: string,

@@ -1,14 +1,12 @@
-import { countMisBeneficios, getMisBeneficiosRows } from "@/server/repositories/misBeneficiosRepository";
+import { getMisBeneficiosRows } from "@/server/repositories/misBeneficiosRepository";
 
 export async function getMisBeneficiosPageData(
   clienteId: string,
   page: number,
   pageSize: number
 ) {
-  const [rows, total] = await Promise.all([
-    getMisBeneficiosRows(clienteId, page, pageSize),
-    countMisBeneficios(clienteId),
-  ]);
+  const rows = await getMisBeneficiosRows(clienteId, page, pageSize);
+  const total = rows[0]?.totalCount ?? 0;
 
   const reclamos = rows.map((r) => ({
     id: r.id,
@@ -25,6 +23,6 @@ export async function getMisBeneficiosPageData(
   return {
     reclamos,
     total,
-    totalPages: Math.ceil(total / pageSize),
+    totalPages: total === 0 ? 0 : Math.ceil(total / pageSize),
   };
 }

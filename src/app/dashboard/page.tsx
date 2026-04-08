@@ -5,7 +5,6 @@ import { UserType } from "@/lib/enums";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import ShareButtons from "@/components/local/dashboard/ShareButtons";
-import LogoUpload from "@/components/local/LogoUpload";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import MetricCard from "@/components/ui/MetricCard";
@@ -57,21 +56,45 @@ export default async function DashboardPage({
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-start gap-4">
               <div className="shrink-0">
-                <LogoUpload
-                  currentLogoUrl={local.logoUrl}
-                  nombre={local.nombre!}
-                />
+                {local.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={local.logoUrl}
+                    alt={`Logo de ${local.nombre}`}
+                    className="h-16 w-16 rounded-2xl object-cover sm:h-20 sm:w-20"
+                  />
+                ) : (
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-soft sm:h-20 sm:w-20">
+                    <span className="text-2xl font-bold text-primary sm:text-3xl">
+                      {local.nombre!.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
+                    </span>
+                  </div>
+                )}
               </div>
-              <div className="min-w-0 space-y-1">
+              <div className="min-w-0 space-y-0.5">
                 <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl">
                   {local.nombre}
                 </h1>
                 <p className="text-sm font-medium text-text-muted break-all">
                   {local.email}
                 </p>
+                {local.direccion && (
+                  <p className="text-xs text-text-muted">{local.direccion}</p>
+                )}
+                {local.telefono && (
+                  <p className="text-xs text-text-muted">{local.telefono}</p>
+                )}
               </div>
             </div>
-            <div className="w-full sm:w-auto">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+              <LinkButton
+                href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}${local.logoUrl && !local.logoUrl.startsWith("data:") ? `&logoUrl=${encodeURIComponent(local.logoUrl)}` : ""}`}
+                variant="subtle"
+                size="sm"
+                className="w-full sm:w-auto"
+              >
+                Editar perfil
+              </LinkButton>
               <LinkButton
                 href="/dashboard/escanear"
                 variant="light"
