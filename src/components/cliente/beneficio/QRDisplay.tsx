@@ -102,7 +102,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
       <div className="space-y-4 text-center">
         <div className="rounded-2xl border border-border-default/70 bg-surface/80 px-6 py-8">
           <div className="space-y-2">
-            <Badge color="red">QR no disponible</Badge>
+            <Badge variant="danger">QR no disponible</Badge>
             <p className="text-sm font-medium text-text-primary">No pudimos cargar el código.</p>
             {error ? <p className="text-xs text-text-muted">{error}</p> : null}
           </div>

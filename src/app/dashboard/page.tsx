@@ -11,31 +11,8 @@ import Reveal from "@/components/ui/Reveal";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
+import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
 import { getDashboardPageData } from "@/server/services/dashboardService";
-
-function getBenefitStatus(isExpired: boolean, isAgotado: boolean) {
-  if (isExpired) {
-    return {
-      label: "Vencido",
-      color: "red" as const,
-      cardTone: "border-l-danger-border ",
-    };
-  }
-
-  if (isAgotado) {
-    return {
-      label: "Agotado",
-      color: "yellow" as const,
-      cardTone: "border-l-warning-border",
-    };
-  }
-
-  return {
-    label: "Activo",
-    color: "green" as const,
-    cardTone: "border-l-success-border",
-  };
-}
 
 const PAGE_SIZE = 10;
 
@@ -112,17 +89,13 @@ export default async function DashboardPage({
       {/* Stats */}
       <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3">
         <Reveal y={14} amount={0.25}>
-          <MetricCard label="Cupones" value={totalBeneficios} color="white" />
+          <MetricCard label="Cupones" value={totalBeneficios} variant="muted" />
         </Reveal>
         <Reveal delay={0.06} y={14} amount={0.25}>
-          <MetricCard label="Reclamos" value={totalReclamos} color="white" />
+          <MetricCard label="Reclamos" value={totalReclamos} variant="muted" />
         </Reveal>
         <Reveal delay={0.12} y={14} amount={0.25}>
-          <MetricCard
-            label="Canjeados"
-            value={totalCanjeados}
-            color="violet-strong"
-          />
+          <MetricCard label="Canjeados" value={totalCanjeados} variant="primary" />
         </Reveal>
       </div>
 
@@ -172,7 +145,7 @@ export default async function DashboardPage({
             const isAgotado = b.maxUsos !== null && canjeados >= b.maxUsos;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
             const vencimiento = formatDateAR(b.fechaExpiracion);
-            const status = getBenefitStatus(isExpired, isAgotado);
+            const status = getBeneficioStatusPresentation(isExpired, isAgotado);
 
             return (
               <Reveal
@@ -182,9 +155,7 @@ export default async function DashboardPage({
                 amount={0.15}
               >
                 <Card
-                  className={`border border-surface/80 border-l-4 ${status.cardTone} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5 ${
-                    !isExpired && !isAgotado ? "sm:bg-surface/85" : ""
-                  }`}
+                  className={`border border-surface/80 border-l-4 ${status.dashboardCardToneClassName} ${status.dashboardCardSurfaceClassName} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5`}
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                     <div className="min-w-0 flex-1">
@@ -192,7 +163,7 @@ export default async function DashboardPage({
                         <h3 className="truncate text-base font-semibold text-text-primary sm:text-lg">
                           {b.descripcion}
                         </h3>
-                        <Badge color={status.color}>{status.label}</Badge>
+                        <Badge variant={status.badgeVariant}>{status.label}</Badge>
                       </div>
 
                       <div className="grid gap-1 text-[13px] leading-tight sm:grid-cols-2 sm:gap-1.5 sm:text-sm">
@@ -216,10 +187,10 @@ export default async function DashboardPage({
                       </div>
 
                       <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
-                        <Badge color="gray">
+                        <Badge variant="muted">
                           Reclamos: {b.totalReclamos}
                         </Badge>
-                        <Badge color="violet">Canjeados: {canjeados}</Badge>
+                        <Badge variant="light">Canjeados: {canjeados}</Badge>
                       </div>
                     </div>
 

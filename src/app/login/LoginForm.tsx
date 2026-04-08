@@ -118,7 +118,7 @@ export default function LoginForm() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Badge color="warning">
+                  <Badge variant="warning">
                     Pendiente de aprobación
                   </Badge>
                   <h2 className="font-semibold text-text-primary text-lg">

@@ -14,9 +14,9 @@ import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
 import { formatDateAR } from "@/lib/dates";
 import {
   formatDiasValidosSentence,
-  getDiaLabel,
   sortDiasValidos,
 } from "@/lib/beneficioSchedule";
+import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
 
 export default async function BeneficioPublicoPage({
   params,
@@ -44,37 +44,14 @@ export default async function BeneficioPublicoPage({
   const tieneRestriccion = diasValidos.length > 0;
   const isWrongDay = tieneRestriccion && !diasValidos.includes(todayIndex);
   const diasValidosOrdenados = sortDiasValidos(diasValidos);
-  const isClaimAvailable = !isExpired && !isAgotado && !isWrongDay;
   const localName = beneficio.local.nombre ?? "Local adherido";
-  const availability = isExpired
-    ? {
-        badgeColor: "red" as const,
-        badgeLabel: "Vencido",
-        message: "Este cupón ya expiró.",
-      }
-    : isAgotado
-      ? {
-          badgeColor: "red" as const,
-          badgeLabel: "Agotado",
-          message: "Este cupón alcanzó el límite de usos disponibles.",
-        }
-      : isWrongDay
-        ? {
-            badgeColor: "warning" as const,
-            badgeLabel: "No disponible hoy",
-            message: `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}. Aplica los ${formatDiasValidosSentence(
-              diasValidosOrdenados,
-              {
-                emptyLabel: "",
-                prefix: "",
-                style: "full",
-              }
-            )}.`,
-          }
-        : {
-            badgeColor: "green" as const,
-            badgeLabel: "Disponible",
-          };
+  const availability = getBeneficioAvailabilityPresentation({
+    isExpired,
+    isAgotado,
+    isWrongDay,
+    todayIndex,
+    diasValidos,
+  });
 
   const initials = localName
     .split(" ")
@@ -137,7 +114,7 @@ export default async function BeneficioPublicoPage({
                   </div>
 
                   <Badge
-                    color={availability.badgeColor}
+                    variant={availability.badgeVariant}
                     className="px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
                   >
                     {availability.badgeLabel}
@@ -174,12 +151,12 @@ export default async function BeneficioPublicoPage({
 
               <div className="space-y-3">
                 <div className="flex flex-wrap gap-2">
-                  <Badge color="gray" className="gap-1.5 px-3 py-1">
+                  <Badge variant="muted" className="gap-1.5 px-3 py-1">
                     <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
                     Vence {formatDateAR(beneficio.fechaExpiracion)}
                   </Badge>
                   {tieneRestriccion ? (
-                    <Badge color="gray" className="px-3 py-1">
+                    <Badge variant="muted" className="px-3 py-1">
                       {formatDiasValidosSentence(diasValidosOrdenados, {
                         emptyLabel: "",
                         prefix: "Válido los",
@@ -189,7 +166,7 @@ export default async function BeneficioPublicoPage({
                 </div>
               </div>
 
-              {isClaimAvailable ? (
+              {availability.isAvailable ? (
                 <div className="space-y-4">
                   <ReclamarForm beneficioId={beneficio.id} />
                 </div>

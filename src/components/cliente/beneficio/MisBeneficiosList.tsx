@@ -7,7 +7,7 @@ import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
 import Button from "@/components/ui/Button";
 import { EstadoReclamo } from "@/lib/enums";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
-import { getReclamoStatusPresentation } from "@/lib/reclamoStatus";
+import { getReclamoStatusPresentation } from "@/lib/statusPresentation";
 
 type Reclamo = {
   id: string;
@@ -88,7 +88,7 @@ export default function MisBeneficiosList({
                     </div>
                   </div>
                 </div>
-                <Badge color={status.color}>{status.label}</Badge>
+                <Badge variant={status.badgeVariant}>{status.label}</Badge>
               </div>
 
               {r.estado === EstadoReclamo.PENDIENTE && (
