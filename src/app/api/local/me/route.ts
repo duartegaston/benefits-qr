@@ -1,7 +1,17 @@
 import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
 import { apiError, apiSuccess } from "@/lib/apiResponse";
-import { updateLocalMeFlow } from "@/server/services/localApiService";
+import { getLocalMeFlow, updateLocalMeFlow } from "@/server/services/localApiService";
+
+export async function GET(req: NextRequest) {
+  const { error, session } = await requireLocalAuth(req);
+  if (error) return error;
+
+  const result = await getLocalMeFlow(session!.userId);
+  if (!result.ok) return apiError(result.error, result.status, result.code);
+
+  return apiSuccess(result.data, result.status);
+}
 
 export async function PATCH(req: NextRequest) {
   const { error, session } = await requireLocalAuth(req);
