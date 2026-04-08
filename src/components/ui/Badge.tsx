@@ -10,7 +10,12 @@ interface BadgeProps {
     | "red"
     | "yellow"
     | "info"
-    | "warning";
+    | "warning"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "danger"
+    | "light";
   variant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
   className?: string;
 }
@@ -27,6 +32,11 @@ const badgeVariants = cva(
         yellow: "bg-warning-soft text-warning",
         info: "bg-primary-soft text-accent",
         warning: "bg-warning-soft text-warning",
+        primary: "bg-primary-soft text-accent",
+        secondary: "bg-surface-muted text-text-primary",
+        success: "bg-success-soft text-success",
+        danger: "bg-danger-soft text-danger",
+        light: "border border-primary-soft/70 bg-primary-soft text-accent",
       },
     },
     defaultVariants: {

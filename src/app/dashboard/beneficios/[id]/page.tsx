@@ -9,27 +9,12 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { getReclamoStatusPresentation } from "@/lib/reclamoStatus";
 import {
   expirePendingReclamosAsyncIfNeeded,
   getBeneficioDetailPageData,
 } from "@/server/services/beneficioDetailService";
 const PAGE_SIZE = 10;
-
-function getReclamoStatusPresentation(status: EstadoReclamo) {
-  if (status === EstadoReclamo.CANCELADO) {
-    return { label: "Cancelado", color: "gray" as const };
-  }
-  if (status === EstadoReclamo.CANJEADO) {
-    return { label: "Canjeado", color: "green" as const };
-  }
-
-  if (status === EstadoReclamo.VENCIDO) {
-    return { label: "Vencido", color: "red" as const };
-  }
-
-  return { label: "Pendiente", color: "violet" as const };
-}
 
 export default async function BeneficioStatsPage({
   params,
@@ -44,14 +29,12 @@ export default async function BeneficioStatsPage({
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) redirect("/login");
 
-  const t0 = performance.now();
   const { beneficio, stats, reclamos, totalPages } = await getBeneficioDetailPageData(
     id,
     session.userId,
     page,
     PAGE_SIZE
   );
-  console.log(`[beneficio-detail] DB: ${Math.round(performance.now() - t0)}ms`);
 
   if (!beneficio) redirect("/dashboard");
 

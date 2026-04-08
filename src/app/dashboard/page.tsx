@@ -52,7 +52,6 @@ export default async function DashboardPage({
     redirect("/login");
   }
 
-  const t0 = performance.now();
   const {
     local,
     beneficios,
@@ -61,7 +60,6 @@ export default async function DashboardPage({
     totalCanjeados,
     totalPages,
   } = await getDashboardPageData(session.userId, page, PAGE_SIZE);
-  console.log(`[dashboard] DB: ${Math.round(performance.now() - t0)}ms`);
 
   if (!local) redirect("/login");
   if (local.nombre === null) redirect("/onboarding");
@@ -71,6 +69,13 @@ export default async function DashboardPage({
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16">
       <Reveal y={10} amount={0.2} className="mb-5 sm:mb-6">
+        <div className="mb-5 space-y-1 sm:mb-6">
+          <h1 className="text-2xl font-bold text-text-primary">Dashboard del local</h1>
+          <p className="text-sm text-text-muted">
+            Gestioná tus cupones, seguí los reclamos y validá canjes desde un solo lugar.
+          </p>
+        </div>
+
         <div className="rounded-2xl border border-surface/80 bg-surface/95 p-3 shadow-sm shadow-primary-soft/40 sm:bg-surface/85 sm:p-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-start gap-4">

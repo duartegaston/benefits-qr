@@ -61,7 +61,7 @@ export default async function BeneficioPublicoPage({
         ? {
             badgeColor: "warning" as const,
             badgeLabel: "No disponible hoy",
-            message: `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}s. Aplica los ${formatDiasValidosSentence(
+            message: `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}. Aplica los ${formatDiasValidosSentence(
               diasValidosOrdenados,
               {
                 emptyLabel: "",
