@@ -41,10 +41,10 @@ export default function DashboardHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 shadow-sm transition-[background-color,border-color,box-shadow] duration-200",
+        "sticky top-0 z-40 shadow-sm transition-[background-color,box-shadow] duration-200",
         scrolled
-          ? "border-border-strong/70 bg-surface-soft/95 shadow-xl sm:bg-surface-soft/85 sm:backdrop-blur-md"
-          : "border-border-strong/60 bg-transparent"
+          ? " shadow-xl  backdrop-blur-md"
+          : "bg-transparent backdrop-blur-md"
       )}
     >
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">

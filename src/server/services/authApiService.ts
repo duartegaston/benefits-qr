@@ -214,13 +214,13 @@ function getSafeRedirect(value: string | null): string {
 
 export async function verifyClienteMagicLinkFlow(token: string | null, redirect: string | null) {
   if (!token) {
-    return { ok: false as const, redirectTo: "/login?error=invalid" };
+    return { ok: false as const, redirectTo: "/acceso?error=invalid" };
   }
 
   const payload = await verifyToken(token);
 
   if (!payload || payload.userType !== UserType.CLIENTE) {
-    return { ok: false as const, redirectTo: "/login?error=expired" };
+    return { ok: false as const, redirectTo: "/acceso?error=expired" };
   }
 
   const dbSession = await prisma.session.findUnique({ where: { token } });
