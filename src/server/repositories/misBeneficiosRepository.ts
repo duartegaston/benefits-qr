@@ -11,6 +11,7 @@ export type ReclamoRow = {
   beneficioDeletedAt: Date | null;
   localNombre: string | null;
   localLogoUrl: string | null;
+  totalCount: number;
 };
 
 export async function getMisBeneficiosRows(
@@ -28,7 +29,8 @@ export async function getMisBeneficiosRows(
       b."fechaExpiracion"     AS "beneficioFechaExpiracion",
       b."deletedAt"           AS "beneficioDeletedAt",
       l.nombre                AS "localNombre",
-      l."logoUrl"             AS "localLogoUrl"
+      l."logoUrl"             AS "localLogoUrl",
+      COUNT(*) OVER ()::int   AS "totalCount"
     FROM "Reclamo" r
     JOIN "Beneficio" b ON b.id = r."beneficioId"
     JOIN "Local"     l ON l.id = b."localId"
@@ -36,8 +38,4 @@ export async function getMisBeneficiosRows(
     ORDER BY r."fechaReclamo" DESC
     LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
   `;
-}
-
-export async function countMisBeneficios(clienteId: string): Promise<number> {
-  return prisma.reclamo.count({ where: { clienteId } });
 }
