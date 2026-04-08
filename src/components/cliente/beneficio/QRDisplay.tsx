@@ -63,7 +63,6 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
             clearInterval(timerRef.current);
             timerRef.current = null;
           }
-          void generateQR();
           return 0;
         }
 
@@ -74,11 +73,12 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [qrDataURL, generateQR]);
+  }, [qrDataURL]);
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
   const isUrgent = secondsLeft < 20;
+  const isExpired = secondsLeft === 0;
 
   if (loading && !qrDataURL) {
     return (
@@ -145,7 +145,9 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
           Mostralo en el local para validar tu beneficio.
         </p>
         <p className="text-xs text-text-muted">
-          Se renueva automáticamente cada 2 minutos para mantenerlo vigente.
+          {isExpired
+            ? "El QR venció. Presioná \"Renovar ahora\" para generar uno nuevo."
+            : 'Este QR vence en 2 minutos. Si se vence, presioná "Renovar ahora" para generar uno nuevo.'}
         </p>
         {error ? <p className="text-xs text-text-muted">{error}</p> : null}
       </div>
