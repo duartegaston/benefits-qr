@@ -8,27 +8,13 @@ import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
+import { getReclamoStatusPresentation } from "@/lib/reclamoStatus";
 import {
   expirePendingReclamosAsyncIfNeeded,
   getBeneficioDetailPageData,
 } from "@/server/services/beneficioDetailService";
 const PAGE_SIZE = 10;
-
-function getReclamoStatusPresentation(status: EstadoReclamo) {
-  if (status === EstadoReclamo.CANCELADO) {
-    return { label: "Cancelado", color: "gray" as const };
-  }
-  if (status === EstadoReclamo.CANJEADO) {
-    return { label: "Canjeado", color: "green" as const };
-  }
-
-  if (status === EstadoReclamo.VENCIDO) {
-    return { label: "Vencido", color: "red" as const };
-  }
-
-  return { label: "Pendiente", color: "violet" as const };
-}
 
 export default async function BeneficioStatsPage({
   params,
@@ -43,14 +29,12 @@ export default async function BeneficioStatsPage({
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) redirect("/login");
 
-  const t0 = performance.now();
   const { beneficio, stats, reclamos, totalPages } = await getBeneficioDetailPageData(
     id,
     session.userId,
     page,
     PAGE_SIZE
   );
-  console.log(`[beneficio-detail] DB: ${Math.round(performance.now() - t0)}ms`);
 
   if (!beneficio) redirect("/dashboard");
 
@@ -90,7 +74,7 @@ export default async function BeneficioStatsPage({
                 )}
               </div>
               <p className="text-sm font-medium text-text-muted">
-                Vence: {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
+                Vence: {formatDateAR(beneficio.fechaExpiracion)}
                 {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
               </p>
               <p className="text-xs font-medium text-text-muted sm:text-sm">
@@ -148,9 +132,9 @@ export default async function BeneficioStatsPage({
                       {!r.cliente.email && !r.cliente.phone ? <span>Sin contacto cargado</span> : null}
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs">
-                      <span>Reclamó: {new Date(r.fechaReclamo).toLocaleString("es-AR")}</span>
+                      <span>Reclamó: {formatDateTimeAR(r.fechaReclamo)}</span>
                       {r.fechaCanje ? (
-                        <span>Canjeó: {new Date(r.fechaCanje).toLocaleString("es-AR")}</span>
+                        <span>Canjeó: {formatDateTimeAR(r.fechaCanje)}</span>
                       ) : null}
                     </div>
                   </div>

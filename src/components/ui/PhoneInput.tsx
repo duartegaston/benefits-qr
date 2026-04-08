@@ -1,5 +1,5 @@
 "use client";
-import { useId } from "react";
+import { useId, type HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -23,6 +23,9 @@ interface PhoneInputProps {
   onChange: (fullPhone: string) => void;
   error?: string;
   required?: boolean;
+  name?: string;
+  autoComplete?: string;
+  enterKeyHint?: HTMLAttributes<HTMLInputElement>["enterKeyHint"];
 }
 
 export default function PhoneInput({
@@ -31,6 +34,9 @@ export default function PhoneInput({
   onChange,
   error,
   required,
+  name,
+  autoComplete,
+  enterKeyHint,
 }: PhoneInputProps) {
   const id = useId();
 
@@ -100,6 +106,9 @@ export default function PhoneInput({
         <input
           id={id}
           type="tel"
+          name={name}
+          autoComplete={autoComplete}
+          enterKeyHint={enterKeyHint}
           inputMode="numeric"
           value={localNumber}
           onChange={handleNumberChange}

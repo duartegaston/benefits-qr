@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Check, Copy, Mail, MessageCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
+import { formatDateAR } from "@/lib/dates";
 
 interface ShareButtonsProps {
   url: string;
@@ -12,7 +13,7 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpiracion }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const fechaStr = new Date(fechaExpiracion).toLocaleDateString("es-AR");
+  const fechaStr = formatDateAR(fechaExpiracion);
   const texto = `Tenés este cupón para canjear en ${nombreLocal}: ${descripcion}\nVence el ${fechaStr}\n${url}`;
 
   async function handleCopy() {

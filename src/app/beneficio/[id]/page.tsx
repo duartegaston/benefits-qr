@@ -1,11 +1,17 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
+import { ArrowLeft, CalendarDays, CircleAlert, Store } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { EstadoReclamo } from "@/generated/prisma/client";
-
 export const revalidate = 60;
-import Image from "next/image";
 import Badge from "@/components/ui/Badge";
-import ReclamarForm from "@/components/cliente/ReclamarForm";
+import Card from "@/components/ui/Card";
+import ReclamarForm from "@/components/cliente/beneficio/ReclamarForm";
+import LinkButton from "@/components/ui/LinkButton";
+import Reveal from "@/components/ui/Reveal";
+import SectionHeader from "@/components/ui/SectionHeader";
+import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
+import { formatDateAR } from "@/lib/dates";
 import {
   formatDiasValidosSentence,
   getDiaLabel,
@@ -23,7 +29,6 @@ export default async function BeneficioPublicoPage({
     where: { id, deletedAt: null },
     include: {
       local: { select: { nombre: true, logoUrl: true } },
-      _count: { select: { reclamos: true } },
       reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
     },
   });
@@ -34,15 +39,44 @@ export default async function BeneficioPublicoPage({
   const canjeados = beneficio.reclamos.length;
   const isAgotado = beneficio.maxUsos !== null && canjeados >= beneficio.maxUsos;
 
-  const todayIndex = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" })
-  ).getDay();
+  const todayIndex = getCurrentDayInArgentina();
   const diasValidos: number[] = beneficio.diasValidos as number[];
   const tieneRestriccion = diasValidos.length > 0;
   const isWrongDay = tieneRestriccion && !diasValidos.includes(todayIndex);
   const diasValidosOrdenados = sortDiasValidos(diasValidos);
+  const isClaimAvailable = !isExpired && !isAgotado && !isWrongDay;
+  const localName = beneficio.local.nombre ?? "Local adherido";
+  const availability = isExpired
+    ? {
+        badgeColor: "red" as const,
+        badgeLabel: "Vencido",
+        message: "Este cupón ya expiró.",
+      }
+    : isAgotado
+      ? {
+          badgeColor: "red" as const,
+          badgeLabel: "Agotado",
+          message: "Este cupón alcanzó el límite de usos disponibles.",
+        }
+      : isWrongDay
+        ? {
+            badgeColor: "warning" as const,
+            badgeLabel: "No disponible hoy",
+            message: `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}. Aplica los ${formatDiasValidosSentence(
+              diasValidosOrdenados,
+              {
+                emptyLabel: "",
+                prefix: "",
+                style: "full",
+              }
+            )}.`,
+          }
+        : {
+            badgeColor: "green" as const,
+            badgeLabel: "Disponible",
+          };
 
-  const initials = (beneficio.local.nombre ?? "")
+  const initials = localName
     .split(" ")
     .map((w: string) => w[0])
     .filter(Boolean)
@@ -51,102 +85,130 @@ export default async function BeneficioPublicoPage({
     .toUpperCase();
 
   return (
-    <main className="h-screen overflow-hidden flex flex-col items-center px-4 py-4 sm:py-8 relative">
-      {/* Decorative blobs — desktop only */}
-      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/20 blur-3xl hidden sm:block" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-accent-soft/60 blur-3xl hidden sm:block" />
+    <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden px-4 py-14 sm:overflow-hidden">
+      <div className="pointer-events-none absolute -top-40 -left-40 hidden h-[600px] w-[600px] rounded-full bg-primary/25 blur-3xl sm:block" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 hidden h-[500px] w-[500px] rounded-full bg-primary-soft/80 blur-3xl sm:block" />
 
-      <div className="w-full max-w-md relative my-auto animate-[fade-up_0.45s_ease-out_both]">
-        {/* Logo Qupón */}
-        <div className="flex justify-center mb-3">
-          <div className="w-13">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={250}
-              height={180}
-              className="w-full h-auto"
+      <LinkButton
+        href="/"
+        variant="subtle"
+        size="sm"
+        className="absolute top-5 left-5 z-40 sm:top-6 sm:left-6"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Inicio
+      </LinkButton>
+
+      <div className="my-auto w-full max-w-md">
+        <Reveal y={14} amount={0.3}>
+          <div className="mb-7 text-center">
+            <div className="mb-4 flex justify-center">
+              <div className="w-24">
+                <Image
+                  src="/logo.png"
+                  alt="Qupón"
+                  width={500}
+                  height={450}
+                  priority
+                  className="h-auto w-full"
+                />
+              </div>
+            </div>
+
+            <SectionHeader
+              eyebrow="Beneficio"
+              title="Reclamá tu cupón"
+              description="Completá tus datos para recibir el acceso por email y guardarlo en tu cuenta."
+              className="mb-0"
             />
           </div>
-        </div>
+        </Reveal>
 
-        {/* Card */}
-        <div className="overflow-hidden rounded-2xl shadow-xl shadow-accent-soft/60">
-          {/* Accent bar */}
-          <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
+        <Reveal delay={0.06} y={16} amount={0.35}>
+          <Card className="overflow-hidden border-surface/80 bg-surface/90 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md">
+            <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
 
-          <div className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border border-t-0 border-border-default p-4 sm:p-6">
-            {/* Local info */}
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-9 h-9 rounded-xl overflow-hidden bg-primary-soft flex items-center justify-center shrink-0 shadow-sm">
-                {beneficio.local.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={beneficio.local.logoUrl}
-                    alt={beneficio.local.nombre ?? ""}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-primary font-bold text-sm">{initials}</span>
-                )}
+            <div className="space-y-5 p-6 sm:p-8">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0 space-y-1">
+                    <h1 className="text-2xl font-bold text-text-primary">{beneficio.descripcion}</h1>
+                    <p className="text-sm text-text-muted">Guardalo ahora y usalo cuando corresponda.</p>
+                  </div>
+
+                  <Badge
+                    color={availability.badgeColor}
+                    className="px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]"
+                  >
+                    {availability.badgeLabel}
+                  </Badge>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-text-muted leading-none mb-0.5">Cupón de</p>
-                <p className="text-sm font-semibold text-text-primary">{beneficio.local.nombre}</p>
+
+              <div className="rounded-2xl border border-border-default/70 bg-surface-muted/70 p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
+                    {beneficio.local.logoUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={beneficio.local.logoUrl}
+                        alt={localName}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-sm font-bold">{initials || "LO"}</span>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 space-y-1">
+                    <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
+                      <Store className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Local adherido</span>
+                    </div>
+                    <p className="text-sm font-semibold text-text-primary">
+                      {localName}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <h1 className="text-xl font-bold text-text-primary mb-2 leading-tight">
-              {beneficio.descripcion}
-            </h1>
-
-            <div className="flex gap-2 flex-wrap mb-3">
-              {isExpired && <Badge color="red">Vencido</Badge>}
-              {isAgotado && <Badge color="red">Agotado</Badge>}
-              {isWrongDay && !isExpired && !isAgotado && (
-                <Badge color="red">No disponible hoy</Badge>
-              )}
-              {!isExpired && !isAgotado && !isWrongDay && (
-                <Badge color="green">Disponible</Badge>
-              )}
-              <Badge color="gray">
-                Vence:{" "}
-                {new Date(beneficio.fechaExpiracion).toLocaleDateString("es-AR")}
-              </Badge>
-              {tieneRestriccion && (
-                <Badge color="gray">
-                  {formatDiasValidosSentence(diasValidosOrdenados, {
-                    emptyLabel: "",
-                    prefix: "Válido los",
-                  })}
-                </Badge>
-              )}
-            </div>
-
-            {!isExpired && !isAgotado && !isWrongDay ? (
-              <ReclamarForm beneficioId={beneficio.id} />
-            ) : (
-              <div className="bg-danger-soft rounded-xl p-4 text-center">
-                <p className="text-danger font-medium text-sm">
-                  {isExpired
-                    ? "Este cupón ya expiró"
-                    : isAgotado
-                    ? "Este cupón está agotado"
-                    : `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}s. Aplica los: ${formatDiasValidosSentence(diasValidosOrdenados, {
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  <Badge color="gray" className="gap-1.5 px-3 py-1">
+                    <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+                    Vence {formatDateAR(beneficio.fechaExpiracion)}
+                  </Badge>
+                  {tieneRestriccion ? (
+                    <Badge color="gray" className="px-3 py-1">
+                      {formatDiasValidosSentence(diasValidosOrdenados, {
                         emptyLabel: "",
-                        prefix: "",
-                        style: "full",
-                      })}`}
-                </p>
+                        prefix: "Válido los",
+                      })}
+                    </Badge>
+                  ) : null}
+                </div>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Footer branding */}
-        <p className="text-center text-xs text-text-muted/80 mt-3">
-          Powered by Qupón
-        </p>
+              {isClaimAvailable ? (
+                <div className="space-y-4">
+                  <ReclamarForm beneficioId={beneficio.id} />
+                </div>
+              ) : (
+                <div
+                  aria-live="polite"
+                  className="rounded-2xl border border-danger-border bg-danger-soft/60 px-4 py-3 text-sm text-danger"
+                >
+                  <div className="flex items-start gap-2">
+                    <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+                    <p>{availability.message}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        </Reveal>
+
+        <p className="mt-3 text-center text-xs text-text-muted/80">Powered by Qupón</p>
       </div>
     </main>
   );

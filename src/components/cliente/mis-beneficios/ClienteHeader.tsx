@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LogOut } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -30,15 +31,16 @@ export default function ClienteHeader() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b shadow-sm transition-[background-color,border-color,box-shadow] duration-200",
+        "sticky top-0 z-40 shadow-sm transition-[background-color,box-shadow] duration-200",
         scrolled
-          ? "border-border-strong/70 bg-surface-soft/95 shadow-md sm:bg-surface-soft/85 sm:backdrop-blur-md"
-          : "border-border-strong/60 bg-transparent"
+          ? " shadow-xl  backdrop-blur-md"
+          : "bg-transparent backdrop-blur-md"
       )}
     >
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">
         <div>
           <Button onClick={handleLogout} variant="logout" size="sm">
+            <LogOut aria-hidden="true" className="h-4 w-4" />
             Salir
           </Button>
         </div>
