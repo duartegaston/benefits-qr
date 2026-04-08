@@ -4,12 +4,36 @@ import { UserType } from "@/lib/enums";
 import { findLocalById } from "@/server/repositories/localApiRepository";
 import EditPerfilForm from "@/components/local/dashboard/EditPerfilForm";
 
-export default async function EditPerfilPage() {
+export default async function EditPerfilPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ nombre?: string; email?: string; direccion?: string; telefono?: string; logoUrl?: string }>;
+}) {
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) {
     redirect("/login");
   }
 
+  const params = await searchParams;
+
+  // Common case: data passed via URL params from the dashboard — no DB call needed.
+  if (params.nombre && params.email) {
+    return (
+      <main className="min-h-screen flex flex-col items-center py-14 px-4">
+        <div className="my-auto w-full max-w-md">
+          <EditPerfilForm
+            email={params.email}
+            nombre={params.nombre}
+            logoUrl={params.logoUrl ?? null}
+            direccion={params.direccion || null}
+            telefono={params.telefono || null}
+          />
+        </div>
+      </main>
+    );
+  }
+
+  // Fallback: direct navigation (bookmark, etc.) — fetch from DB.
   const local = await findLocalById(session.userId);
   if (!local) redirect("/login");
 
