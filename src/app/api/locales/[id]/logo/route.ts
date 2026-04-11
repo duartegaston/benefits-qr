@@ -17,7 +17,7 @@ export async function GET(
   }
 
   if (local.logoUrl.startsWith("data:")) {
-    const match = local.logoUrl.match(/^data:([^;]+);base64,(.+)$/s);
+    const match = local.logoUrl.match(/^data:([^;]+);base64,([A-Za-z0-9+/=]+)$/);
     if (!match) return new Response(null, { status: 400 });
     const [, mimeType, base64] = match;
     const buffer = Buffer.from(base64, "base64");
