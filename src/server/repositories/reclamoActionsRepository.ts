@@ -25,7 +25,16 @@ export async function findReclamoForCanje(reclamoId: string, qrToken: string) {
     select: {
       estado: true,
       qrTokenExpira: true,
-      beneficio: { select: { localId: true, deletedAt: true } },
+      beneficio: {
+        select: {
+          localId: true,
+          deletedAt: true,
+          fechaExpiracion: true,
+          diasValidos: true,
+          maxUsos: true,
+          _count: { select: { reclamos: { where: { estado: EstadoReclamo.CANJEADO } } } },
+        },
+      },
     },
   });
 }

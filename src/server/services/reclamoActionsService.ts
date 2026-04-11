@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 import { QR_EXPIRY_MINUTES } from "@/lib/constants";
 import { buildQRPayload, generateQRDataURL } from "@/lib/qr";
 import { EstadoReclamo } from "@/generated/prisma/client";
+import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import {
   findReclamoForCanje,
   findReclamoForQr,
@@ -100,6 +102,37 @@ export async function canjearReclamo(
       status: 400,
       error: "Este beneficio ya no está disponible",
       code: "BENEFICIO_UNAVAILABLE",
+    };
+  }
+
+  if (reclamo.beneficio.fechaExpiracion < new Date()) {
+    return { ok: false, status: 400, error: "Este cupón ya expiró", code: "BENEFICIO_EXPIRED" };
+  }
+
+  if (reclamo.beneficio.diasValidos.length > 0) {
+    const hoy = getCurrentDayInArgentina();
+    if (!(reclamo.beneficio.diasValidos as number[]).includes(hoy)) {
+      return {
+        ok: false,
+        status: 400,
+        error: `Este cupón solo se puede canjear ${formatDiasValidosSentence(
+          reclamo.beneficio.diasValidos as number[],
+          { emptyLabel: "todos los días", prefix: "los", style: "full" }
+        )}`,
+        code: "BENEFICIO_INVALID_DAY",
+      };
+    }
+  }
+
+  if (
+    reclamo.beneficio.maxUsos !== null &&
+    reclamo.beneficio._count.reclamos >= reclamo.beneficio.maxUsos
+  ) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Este cupón ya alcanzó el máximo de usos",
+      code: "BENEFICIO_MAX_USOS_REACHED",
     };
   }
 

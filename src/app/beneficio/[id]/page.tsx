@@ -166,19 +166,25 @@ export default async function BeneficioPublicoPage({
                 </div>
               </div>
 
-              {availability.isAvailable ? (
-                <div className="space-y-4">
-                  <ReclamarForm beneficioId={beneficio.id} />
-                </div>
-              ) : (
+              {availability.message && (
                 <div
                   aria-live="polite"
-                  className="rounded-2xl border border-danger-border bg-danger-soft/60 px-4 py-3 text-sm text-danger"
+                  className={`rounded-2xl border px-4 py-3 text-sm ${
+                    isExpired
+                      ? "border-danger-border bg-danger-soft/60 text-danger"
+                      : "border-warning-border bg-warning-soft/60 text-warning"
+                  }`}
                 >
                   <div className="flex items-start gap-2">
                     <CircleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                     <p>{availability.message}</p>
                   </div>
+                </div>
+              )}
+
+              {!isExpired && (
+                <div className="space-y-4">
+                  <ReclamarForm beneficioId={beneficio.id} />
                 </div>
               )}
             </div>

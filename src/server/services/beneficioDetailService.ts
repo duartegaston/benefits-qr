@@ -9,6 +9,7 @@ export async function getBeneficioDetailPageData(
   page: number,
   pageSize: number
 ) {
+  await expirePendingReclamos(beneficioId);
   const raw = await getBeneficioDetailRaw(beneficioId, localId, page, pageSize);
 
   const beneficio = raw.beneficio
@@ -34,11 +35,3 @@ export async function getBeneficioDetailPageData(
   };
 }
 
-export function expirePendingReclamosAsyncIfNeeded(
-  beneficioId: string,
-  isExpired: boolean,
-  pendientes: number
-) {
-  if (!isExpired || pendientes <= 0) return;
-  void expirePendingReclamos(beneficioId);
-}
