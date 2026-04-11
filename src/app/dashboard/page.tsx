@@ -88,7 +88,7 @@ export default async function DashboardPage({
             </div>
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <LinkButton
-                href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}${local.logoUrl && !local.logoUrl.startsWith("data:") ? `&logoUrl=${encodeURIComponent(local.logoUrl)}` : ""}`}
+                href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}&localId=${encodeURIComponent(local.id)}`}
                 variant="subtle"
                 size="sm"
                 className="w-full sm:w-auto"
