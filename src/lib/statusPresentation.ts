@@ -86,7 +86,7 @@ export function getBeneficioAvailabilityPresentation({
     return {
       badgeVariant: "danger",
       badgeLabel: "Agotado",
-      message: "Este cupón alcanzó el límite de usos disponibles.",
+      message: "Este cupón ya alcanzó el límite de usos disponibles.",
       isAvailable: false,
     };
   }
@@ -96,16 +96,16 @@ export function getBeneficioAvailabilityPresentation({
 
     return {
       badgeVariant: "warning",
-      badgeLabel: "No disponible hoy",
-      message: `Este cupón no está disponible los ${getDiaLabel(todayIndex, "full")}. Aplica los ${formatDiasValidosSentence(
+      badgeLabel: "No canjeable hoy",
+      message: `Hoy no es un día válido para canjear este cupón. Podés reclamarlo ahora y presentarlo ${formatDiasValidosSentence(
         diasValidosOrdenados,
         {
           emptyLabel: "",
-          prefix: "",
+          prefix: "los",
           style: "full",
         }
       )}.`,
-      isAvailable: false,
+      isAvailable: true,
     };
   }
 

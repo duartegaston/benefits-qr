@@ -9,6 +9,7 @@ export type ReclamoRow = {
   beneficioDescripcion: string;
   beneficioFechaExpiracion: Date;
   beneficioDeletedAt: Date | null;
+  beneficioDiasValidos: number[];
   localNombre: string | null;
   localLogoUrl: string | null;
   totalCount: number;
@@ -28,6 +29,7 @@ export async function getMisBeneficiosRows(
       b.descripcion           AS "beneficioDescripcion",
       b."fechaExpiracion"     AS "beneficioFechaExpiracion",
       b."deletedAt"           AS "beneficioDeletedAt",
+      b."diasValidos"         AS "beneficioDiasValidos",
       l.nombre                AS "localNombre",
       l."logoUrl"             AS "localLogoUrl",
       COUNT(*) OVER ()::int   AS "totalCount"

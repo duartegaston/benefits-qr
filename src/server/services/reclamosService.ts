@@ -1,6 +1,4 @@
 import { createClienteSession } from "@/lib/auth";
-import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
-import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { EMAIL_REGEX, PHONE_REGEX, SESSION_DURATION } from "@/lib/constants";
 import { EstadoReclamo } from "@/generated/prisma/client";
 import {
@@ -70,22 +68,6 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
 
   if (beneficio.fechaExpiracion < new Date()) {
     return { ok: false, status: 400, error: "Este cupón ya expiró", code: "BENEFICIO_EXPIRED" };
-  }
-
-  if (beneficio.diasValidos.length > 0) {
-    const hoy = getCurrentDayInArgentina();
-    if (!beneficio.diasValidos.includes(hoy)) {
-      return {
-        ok: false,
-        status: 400,
-        error: `Este cupón solo aplica ${formatDiasValidosSentence(beneficio.diasValidos, {
-          emptyLabel: "todos los días",
-          prefix: "los",
-          style: "full",
-        })}`,
-        code: "BENEFICIO_INVALID_DAY",
-      };
-    }
   }
 
   if (beneficio.maxUsos !== null && beneficio.reclamos.length >= beneficio.maxUsos) {

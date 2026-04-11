@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { QrCode } from "lucide-react";
+import { QrCode, CircleAlert } from "lucide-react";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
@@ -8,6 +8,24 @@ import Button from "@/components/ui/Button";
 import { EstadoReclamo } from "@/lib/enums";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
 import { getReclamoStatusPresentation } from "@/lib/statusPresentation";
+import { formatDiasValidosSentence, sortDiasValidos } from "@/lib/beneficioSchedule";
+
+function getCurrentDayInArgentina(): number {
+  return Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Argentina/Buenos_Aires",
+      weekday: "short",
+    })
+      .format(new Date())
+      .replace(/Sun/, "0")
+      .replace(/Mon/, "1")
+      .replace(/Tue/, "2")
+      .replace(/Wed/, "3")
+      .replace(/Thu/, "4")
+      .replace(/Fri/, "5")
+      .replace(/Sat/, "6")
+  );
+}
 
 type Reclamo = {
   id: string;
@@ -17,6 +35,7 @@ type Reclamo = {
   beneficio: {
     descripcion: string;
     fechaExpiracion: Date | string;
+    diasValidos: number[];
     local: { nombre: string | null; logoUrl: string | null };
   };
 };
@@ -27,6 +46,7 @@ export default function MisBeneficiosList({
   reclamos: Reclamo[];
 }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const todayIndex = getCurrentDayInArgentina();
 
   if (reclamos.length === 0) {
     return (
@@ -47,6 +67,13 @@ export default function MisBeneficiosList({
           .join("")
           .toUpperCase();
         const isExpanded = expandedId === r.id;
+
+        const diasValidos = r.beneficio.diasValidos;
+        const isWrongDay =
+          diasValidos.length > 0 && !diasValidos.includes(todayIndex);
+        const isExpiredBeneficio =
+          new Date(r.beneficio.fechaExpiracion) < new Date();
+        const canShowQR = !isWrongDay && !isExpiredBeneficio;
 
         return (
           <Card
@@ -91,7 +118,7 @@ export default function MisBeneficiosList({
                 <Badge variant={status.badgeVariant}>{status.label}</Badge>
               </div>
 
-              {r.estado === EstadoReclamo.PENDIENTE && (
+              {r.estado === EstadoReclamo.PENDIENTE && canShowQR && (
                 <Button
                   type="button"
                   onClick={() => setExpandedId(isExpanded ? null : r.id)}
@@ -101,6 +128,17 @@ export default function MisBeneficiosList({
                   <QrCode className="h-4 w-4" aria-hidden="true" />
                   {isExpanded ? "Ocultar QR" : "Mostrar QR"}
                 </Button>
+              )}
+
+              {r.estado === EstadoReclamo.PENDIENTE && !canShowQR && (
+                <div className="mt-3 flex items-start gap-2 rounded-xl border border-warning-border bg-warning-soft/60 px-3 py-2.5 text-xs text-warning">
+                  <CircleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <p>
+                    {isWrongDay
+                      ? `Este cupón solo se puede canjear ${formatDiasValidosSentence(sortDiasValidos(diasValidos), { emptyLabel: "todos los días", prefix: "los", style: "full" })}.`
+                      : "Este cupón ya no se puede canjear porque venció."}
+                  </p>
+                </div>
               )}
 
               {r.estado === EstadoReclamo.VENCIDO && (
