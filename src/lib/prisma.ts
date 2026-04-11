@@ -1,14 +1,18 @@
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
-
-function createPrismaClient() {
-  const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL });
-  return new PrismaClient({ adapter });
-}
+import { PrismaPg } from "@prisma/adapter-pg";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
+
+function createPrismaClient() {
+  const connectionString = process.env.DATABASE_URL?.replace(
+    /sslmode=\w+/,
+    "sslmode=verify-full"
+  );
+  const adapter = new PrismaPg({ connectionString });
+  return new PrismaClient({ adapter });
+}
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 

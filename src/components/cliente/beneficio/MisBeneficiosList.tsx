@@ -36,7 +36,7 @@ type Reclamo = {
     descripcion: string;
     fechaExpiracion: Date | string;
     diasValidos: number[];
-    local: { nombre: string | null; logoUrl: string | null };
+    local: { nombre: string | null; id: string };
   };
 };
 
@@ -85,17 +85,15 @@ export default function MisBeneficiosList({
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
-                      {r.beneficio.local.logoUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={r.beneficio.local.logoUrl}
-                          alt={r.beneficio.local.nombre ?? ""}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xs font-bold">{initials || "LO"}</span>
-                      )}
+                    <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
+                      <span className="text-xs font-bold">{initials || "LO"}</span>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/api/locales/${r.beneficio.local.id}/logo`}
+                        alt={r.beneficio.local.nombre ?? ""}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        onError={(e) => { e.currentTarget.style.display = "none"; }}
+                      />
                     </div>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-primary">

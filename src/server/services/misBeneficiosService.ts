@@ -17,7 +17,7 @@ export async function getMisBeneficiosPageData(
       descripcion: r.beneficioDescripcion,
       fechaExpiracion: r.beneficioFechaExpiracion,
       diasValidos: r.beneficioDiasValidos,
-      local: { nombre: r.localNombre, logoUrl: r.localLogoUrl },
+      local: { nombre: r.localNombre, id: r.localId },
     },
   }));
 
