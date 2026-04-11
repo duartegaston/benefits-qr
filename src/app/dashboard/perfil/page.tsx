@@ -7,7 +7,7 @@ import EditPerfilForm from "@/components/local/dashboard/EditPerfilForm";
 export default async function EditPerfilPage({
   searchParams,
 }: {
-  searchParams: Promise<{ nombre?: string; email?: string; direccion?: string; telefono?: string; logoUrl?: string }>;
+  searchParams: Promise<{ nombre?: string; email?: string; direccion?: string; telefono?: string; localId?: string }>;
 }) {
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) {
@@ -18,13 +18,14 @@ export default async function EditPerfilPage({
 
   // Common case: data passed via URL params from the dashboard — no DB call needed.
   if (params.nombre && params.email) {
+    const logoUrl = params.localId ? `/api/locales/${params.localId}/logo` : null;
     return (
       <main className="min-h-screen flex flex-col items-center py-14 px-4">
         <div className="my-auto w-full max-w-md">
           <EditPerfilForm
             email={params.email}
             nombre={params.nombre}
-            logoUrl={params.logoUrl ?? null}
+            logoUrl={logoUrl}
             direccion={params.direccion || null}
             telefono={params.telefono || null}
           />
@@ -43,7 +44,7 @@ export default async function EditPerfilPage({
         <EditPerfilForm
           email={local.email}
           nombre={local.nombre ?? ""}
-          logoUrl={local.logoUrl}
+          logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo` : null}
           direccion={local.direccion}
           telefono={local.telefono}
         />

@@ -1,10 +1,17 @@
 type DateValue = Date | string | number;
 
-const dateFormatterAR = new Intl.DateTimeFormat("es-AR");
+const dateFormatterAR = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/Buenos_Aires",
+});
 
 const dateTimeFormatterAR = new Intl.DateTimeFormat("es-AR", {
-  dateStyle: "short",
-  timeStyle: "short",
+  year: "2-digit",
+  month: "numeric",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+  timeZone: "America/Argentina/Buenos_Aires",
 });
 
 export function formatDateAR(value: DateValue) {

@@ -13,10 +13,7 @@ import {
   getBeneficioStatusPresentation,
   getReclamoStatusPresentation,
 } from "@/lib/statusPresentation";
-import {
-  expirePendingReclamosAsyncIfNeeded,
-  getBeneficioDetailPageData,
-} from "@/server/services/beneficioDetailService";
+import { getBeneficioDetailPageData } from "@/server/services/beneficioDetailService";
 const PAGE_SIZE = 10;
 
 export default async function BeneficioStatsPage({
@@ -45,8 +42,6 @@ export default async function BeneficioStatsPage({
   const isAgotado = beneficio.maxUsos !== null && stats.canjeados >= beneficio.maxUsos;
   const benefitStatus = getBeneficioStatusPresentation(isExpired, isAgotado);
 
-  // Fire-and-forget: marca PENDIENTE → VENCIDO sin bloquear el render
-  expirePendingReclamosAsyncIfNeeded(id, isExpired, stats.pendientes);
   const isDeleted = beneficio.deletedAt !== null;
 
   return (
