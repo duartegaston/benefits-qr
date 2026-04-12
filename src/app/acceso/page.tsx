@@ -6,7 +6,6 @@ import { UserType } from "@/lib/enums";
 import Image from "next/image";
 import { ArrowLeft, Mail } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";

@@ -107,10 +107,9 @@ export async function requireClienteAuth(req: NextRequest) {
 export async function createClienteSession(
   clienteId: string,
   email: string,
-  durationHours: number = SESSION_DURATION.CLIENTE_RECLAMO,
-  redirect = "/mis-beneficios"
+  durationHours: number = SESSION_DURATION.CLIENTE_RECLAMO
 ) {
   const session = await createSession(clienteId, UserType.CLIENTE, durationHours);
-  await sendMagicLink(email, session.token, redirect);
+  await sendMagicLink(email, session.token);
   return session;
 }

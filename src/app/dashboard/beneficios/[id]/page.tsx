@@ -89,7 +89,7 @@ export default async function BeneficioStatsPage({
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <MetricCard label="Reclamos" value={stats.total} variant="secondary" />
               <MetricCard label="Canjeados" value={stats.canjeados} variant="light" />
-              <MetricCard label="Pendientes" value={stats.pendientes} variant="warning" />
+              <MetricCard label="Canjeables hoy" value={stats.canjeablesHoy} variant="warning" />
             </div>
           </div>
         </div>
