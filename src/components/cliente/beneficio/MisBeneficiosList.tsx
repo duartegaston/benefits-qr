@@ -19,7 +19,6 @@ type Reclamo = {
   beneficio: {
     descripcion: string;
     fechaExpiracion: Date | string;
-    diasValidos: number[];
     local: { nombre: string | null; id: string };
   };
 };

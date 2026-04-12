@@ -9,6 +9,7 @@ export async function getBeneficioDetailPageData(
 ) {
   const raw = await getBeneficioDetailRaw(beneficioId, localId, page, pageSize);
   const rawStats = raw.stats ?? { total: 0, canjeados: 0, pendientes: 0 };
+  let beneficioCanRedeemToday = false;
 
   const beneficio = raw.beneficio
     ? (() => {
@@ -21,12 +22,12 @@ export async function getBeneficioDetailPageData(
           canjeados: raw.stats?.canjeados ?? 0,
           diasValidos: raw.beneficio.diasValidos,
         });
+        beneficioCanRedeemToday = beneficioState.canRedeemToday;
 
         return {
           ...raw.beneficio,
           fechaExpiracion,
           deletedAt,
-          canRedeemToday: beneficioState.canRedeemToday,
           effectiveStatus: beneficioState.status,
         };
       })()
@@ -34,7 +35,7 @@ export async function getBeneficioDetailPageData(
 
   const stats = {
     ...rawStats,
-    canjeablesHoy: beneficio?.canRedeemToday ? rawStats.pendientes : 0,
+    canjeablesHoy: beneficioCanRedeemToday ? rawStats.pendientes : 0,
   };
   const reclamos = (raw.reclamos ?? []).map((r) => {
     const fechaReclamo = new Date(r.fechaReclamo);

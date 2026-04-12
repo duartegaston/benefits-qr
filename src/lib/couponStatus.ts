@@ -1,14 +1,13 @@
 import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
 import { formatDiasValidosSentence, sortDiasValidos } from "@/lib/beneficioSchedule";
 
-export const ReclamoPersistedStatus = {
+const ReclamoPersistedStatus = {
   PENDIENTE: "PENDIENTE",
   CANJEADO: "CANJEADO",
   CANCELADO: "CANCELADO",
-  VENCIDO: "VENCIDO",
 } as const;
 
-export type ReclamoPersistedStatus =
+type ReclamoPersistedStatus =
   (typeof ReclamoPersistedStatus)[keyof typeof ReclamoPersistedStatus];
 
 export const BeneficioEffectiveStatus = {
@@ -181,7 +180,6 @@ export function evaluateBeneficioState({
 
   return {
     status,
-    todayIndex,
     isDeleted,
     isExpired,
     isAgotado,

@@ -25,7 +25,6 @@ export async function getMisBeneficiosPageData(
 
     return {
       id: r.id,
-      estado: r.estado,
       effectiveStatus: reclamoState.status,
       canShowQr: reclamoState.canGenerateQr,
       blockedMessage:
@@ -42,7 +41,6 @@ export async function getMisBeneficiosPageData(
       beneficio: {
         descripcion: r.beneficioDescripcion,
         fechaExpiracion: r.beneficioFechaExpiracion,
-        diasValidos: r.beneficioDiasValidos,
         local: { nombre: r.localNombre, id: r.localId },
       },
     };

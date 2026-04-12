@@ -7,7 +7,6 @@ export type BeneficioRow = {
   fechaExpiracion: Date;
   maxUsos: number | null;
   diasValidos: number[];
-  createdAt: Date;
   totalReclamos: number;
   canjeados: number;
   effectiveStatus: BeneficioEffectiveStatus;
@@ -28,7 +27,6 @@ export async function getDashboardPageData(
 
   const beneficios: BeneficioRow[] = (raw.beneficios ?? []).map((b) => {
     const fechaExpiracion = new Date(b.fechaExpiracion);
-    const createdAt = new Date(b.createdAt);
     const beneficioState = evaluateBeneficioState({
       fechaExpiracion,
       deletedAt: null,
@@ -40,7 +38,6 @@ export async function getDashboardPageData(
     return {
       ...b,
       fechaExpiracion,
-      createdAt,
       effectiveStatus: beneficioState.status,
     };
   });
