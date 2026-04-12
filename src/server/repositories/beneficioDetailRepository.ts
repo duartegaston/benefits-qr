@@ -82,17 +82,3 @@ export async function getBeneficioDetailRaw(
 
   return raw;
 }
-
-export async function expirePendingReclamos(beneficioId: string): Promise<void> {
-  await prisma.$executeRaw`
-    UPDATE "Reclamo"
-    SET estado = 'VENCIDO'
-    WHERE "beneficioId" = ${beneficioId}
-      AND estado = 'PENDIENTE'
-      AND EXISTS (
-        SELECT 1 FROM "Beneficio"
-        WHERE id = ${beneficioId}
-          AND "fechaExpiracion" < NOW()
-      )
-  `;
-}

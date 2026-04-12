@@ -4,7 +4,18 @@ import { EstadoReclamo } from "@/generated/prisma/client";
 export async function findReclamoForQr(reclamoId: string, clienteId: string) {
   return prisma.reclamo.findFirst({
     where: { id: reclamoId, clienteId },
-    select: { estado: true },
+    select: {
+      estado: true,
+      beneficio: {
+        select: {
+          deletedAt: true,
+          fechaExpiracion: true,
+          diasValidos: true,
+          maxUsos: true,
+          _count: { select: { reclamos: { where: { estado: EstadoReclamo.CANJEADO } } } },
+        },
+      },
+    },
   });
 }
 

@@ -10,12 +10,12 @@ import ReclamarForm from "@/components/cliente/beneficio/ReclamarForm";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
-import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
 import { formatDateAR } from "@/lib/dates";
 import {
   formatDiasValidosSentence,
   sortDiasValidos,
 } from "@/lib/beneficioSchedule";
+import { evaluateBeneficioState } from "@/lib/couponStatus";
 import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
 
 export default async function BeneficioPublicoPage({
@@ -35,21 +35,20 @@ export default async function BeneficioPublicoPage({
 
   if (!beneficio) notFound();
 
-  const isExpired = beneficio.fechaExpiracion < new Date();
-  const canjeados = beneficio.reclamos.length;
-  const isAgotado = beneficio.maxUsos !== null && canjeados >= beneficio.maxUsos;
-
-  const todayIndex = getCurrentDayInArgentina();
   const diasValidos: number[] = beneficio.diasValidos as number[];
+  const beneficioState = evaluateBeneficioState({
+    fechaExpiracion: beneficio.fechaExpiracion,
+    deletedAt: beneficio.deletedAt,
+    maxUsos: beneficio.maxUsos,
+    canjeados: beneficio.reclamos.length,
+    diasValidos,
+  });
   const tieneRestriccion = diasValidos.length > 0;
-  const isWrongDay = tieneRestriccion && !diasValidos.includes(todayIndex);
   const diasValidosOrdenados = sortDiasValidos(diasValidos);
   const localName = beneficio.local.nombre ?? "Local adherido";
   const availability = getBeneficioAvailabilityPresentation({
-    isExpired,
-    isAgotado,
-    isWrongDay,
-    todayIndex,
+    status: beneficioState.status,
+    isWrongDay: beneficioState.isWrongDay,
     diasValidos,
   });
 
@@ -170,7 +169,7 @@ export default async function BeneficioPublicoPage({
                 <div
                   aria-live="polite"
                   className={`rounded-2xl border px-4 py-3 text-sm ${
-                    isExpired
+                    beneficioState.isExpired
                       ? "border-danger-border bg-danger-soft/60 text-danger"
                       : "border-warning-border bg-warning-soft/60 text-warning"
                   }`}
@@ -182,7 +181,7 @@ export default async function BeneficioPublicoPage({
                 </div>
               )}
 
-              {!isExpired && (
+              {beneficioState.canClaim && (
                 <div className="space-y-4">
                   <ReclamarForm beneficioId={beneficio.id} />
                 </div>

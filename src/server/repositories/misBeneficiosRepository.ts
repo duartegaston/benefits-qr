@@ -10,6 +10,8 @@ export type ReclamoRow = {
   beneficioFechaExpiracion: Date;
   beneficioDeletedAt: Date | null;
   beneficioDiasValidos: number[];
+  beneficioMaxUsos: number | null;
+  beneficioCanjeados: number;
   localNombre: string | null;
   localId: string;
   totalCount: number;
@@ -30,6 +32,13 @@ export async function getMisBeneficiosRows(
       b."fechaExpiracion"     AS "beneficioFechaExpiracion",
       b."deletedAt"           AS "beneficioDeletedAt",
       b."diasValidos"         AS "beneficioDiasValidos",
+      b."maxUsos"             AS "beneficioMaxUsos",
+      (
+        SELECT COUNT(*)::int
+        FROM "Reclamo" rc
+        WHERE rc."beneficioId" = b.id
+          AND rc.estado = 'CANJEADO'
+      )                       AS "beneficioCanjeados",
       l.nombre                AS "localNombre",
       l.id                    AS "localId",
       COUNT(*) OVER ()::int   AS "totalCount"

@@ -38,9 +38,7 @@ export default async function BeneficioStatsPage({
 
   if (!beneficio) redirect("/dashboard");
 
-  const isExpired = beneficio.fechaExpiracion < new Date();
-  const isAgotado = beneficio.maxUsos !== null && stats.canjeados >= beneficio.maxUsos;
-  const benefitStatus = getBeneficioStatusPresentation(isExpired, isAgotado);
+  const benefitStatus = getBeneficioStatusPresentation(beneficio.effectiveStatus);
 
   const isDeleted = beneficio.deletedAt !== null;
 
@@ -108,7 +106,7 @@ export default async function BeneficioStatsPage({
       ) : (
         <div className="space-y-2.5">
           {reclamos.map((r) => {
-            const status = getReclamoStatusPresentation(r.estado);
+            const status = getReclamoStatusPresentation(r.effectiveStatus);
 
             return (
               <Card
