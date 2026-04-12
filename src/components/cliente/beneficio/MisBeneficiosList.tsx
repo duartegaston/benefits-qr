@@ -5,13 +5,16 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
 import Button from "@/components/ui/Button";
-import type { ReclamoEffectiveStatus } from "@/lib/couponStatus";
+import {
+  ReclamoEffectiveStatus,
+  type ReclamoEffectiveStatus as ReclamoEffectiveStatusType,
+} from "@/lib/couponStatus";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
 import { getReclamoStatusPresentation } from "@/lib/statusPresentation";
 
 type Reclamo = {
   id: string;
-  effectiveStatus: ReclamoEffectiveStatus;
+  effectiveStatus: ReclamoEffectiveStatusType;
   canShowQr: boolean;
   blockedMessage: string | null;
   fechaReclamo: Date | string;
@@ -110,19 +113,19 @@ export default function MisBeneficiosList({
                 </div>
               )}
 
-              {r.effectiveStatus === "VENCIDO" && (
+              {r.effectiveStatus === ReclamoEffectiveStatus.VENCIDO && (
                 <p className="mt-3 text-xs text-danger">
                   Este cupón venció y ya no puede canjearse.
                 </p>
               )}
 
-              {r.effectiveStatus === "CANJEADO" && r.fechaCanje && (
+              {r.effectiveStatus === ReclamoEffectiveStatus.CANJEADO && r.fechaCanje && (
                 <p className="mt-3 text-xs text-success">
                   El local registró el canje el {formatDateTimeAR(r.fechaCanje)}.
                 </p>
               )}
 
-              {r.effectiveStatus === "CANCELADO" && (
+              {r.effectiveStatus === ReclamoEffectiveStatus.CANCELADO && (
                 <p className="mt-3 text-xs text-text-muted">
                   Este cupón ya no está disponible porque el local lo dio de baja.
                 </p>
