@@ -33,19 +33,19 @@ const PLAYBOOKS = [
 
 export default function Playbooks() {
   return (
-    <section className="bg-surface py-16 px-6 sm:px-8">
+    <section className="bg-surface px-6 py-16 lg:px-8 lg:py-14 2xl:py-16">
       <div className="max-w-4xl mx-auto">
         <Reveal y={20} amount={0.35}>
           <SectionHeader
             eyebrow="Ideas listas para usar"
             title="Estrategias que funcionan"
             description="Casos de uso reales que podés replicar en minutos."
-            className="[&>p]:max-w-md"
+            className="lg:mb-10 2xl:mb-12 [&>p]:max-w-md [&>span]:lg:mb-2 [&>span]:lg:text-xs [&>h2]:lg:text-3xl [&>p]:lg:text-sm"
           />
         </Reveal>
 
         {/* Cards grid — 2x2 on desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-3.5 2xl:gap-4">
           {PLAYBOOKS.map((play, index) => (
             <Reveal
               key={play.name}
@@ -55,20 +55,20 @@ export default function Playbooks() {
               className="h-full"
             >
               <Card
-                className="p-5 hover:-translate-y-0.5 hover:shadow-md duration-200 h-full"
+                className="h-full p-5 duration-200 hover:-translate-y-0.5 hover:shadow-md lg:p-4 2xl:p-5"
                 style={{ transitionProperty: "transform, box-shadow" }}
               >
-                <div className="flex flex-wrap items-start justify-between gap-2.5 mb-3">
-                  <h3 className="font-bold text-text-primary min-w-0 flex-1">{play.name}</h3>
+                <div className="mb-3 flex flex-wrap items-start justify-between gap-2.5 lg:mb-2.5 lg:gap-2">
+                  <h3 className="min-w-0 flex-1 font-bold text-text-primary lg:text-sm 2xl:text-base">{play.name}</h3>
                   <Badge
                     variant="light"
-                    className="shrink-0 py-1 whitespace-normal sm:whitespace-nowrap max-w-full"
+                    className="max-w-full shrink-0 py-1 whitespace-normal lg:px-2 lg:py-1 lg:text-xs lg:whitespace-nowrap 2xl:px-2.5 2xl:py-1 2xl:text-xs"
                   >
                     {play.config}
                   </Badge>
                 </div>
-                <p className="text-sm text-text-muted leading-relaxed mb-4">{play.description}</p>
-                <div className="flex items-center gap-1.5 text-xs text-text-muted/80">
+                <p className="mb-4 text-sm leading-relaxed text-text-muted lg:mb-3.5 lg:text-xs 2xl:mb-4 2xl:text-sm">{play.description}</p>
+                <div className="flex items-center gap-1.5 text-xs text-text-muted/80 lg:gap-1 lg:text-xs 2xl:gap-1.5 2xl:text-xs">
                   <Phone className="h-3 w-3" aria-hidden="true" />
                   <span>{play.channel}</span>
                 </div>
