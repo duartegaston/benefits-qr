@@ -1,6 +1,7 @@
 import { createClienteSession } from "@/lib/auth";
 import { EMAIL_REGEX, PHONE_REGEX, SESSION_DURATION } from "@/lib/constants";
 import { EstadoReclamo } from "@/generated/prisma/client";
+import { evaluateBeneficioState, getCouponBlockError } from "@/lib/couponStatus";
 import {
   createCliente,
   createReclamo,
@@ -66,16 +67,25 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
     return { ok: false, status: 404, error: "Cupón no encontrado", code: "BENEFICIO_NOT_FOUND" };
   }
 
-  if (beneficio.fechaExpiracion < new Date()) {
-    return { ok: false, status: 400, error: "Este cupón ya expiró", code: "BENEFICIO_EXPIRED" };
-  }
+  const beneficioState = evaluateBeneficioState({
+    fechaExpiracion: beneficio.fechaExpiracion,
+    deletedAt: null,
+    maxUsos: beneficio.maxUsos,
+    canjeados: beneficio.reclamos.length,
+    diasValidos: beneficio.diasValidos as number[],
+  });
 
-  if (beneficio.maxUsos !== null && beneficio.reclamos.length >= beneficio.maxUsos) {
+  if (!beneficioState.canClaim) {
+    const error = getCouponBlockError(beneficioState.claimBlockReason, {
+      diasValidos: beneficio.diasValidos as number[],
+      context: "claim",
+    });
+
     return {
       ok: false,
-      status: 400,
-      error: "Este cupón ya alcanzó el máximo de usos",
-      code: "BENEFICIO_MAX_USOS_REACHED",
+      status: error!.status,
+      error: error!.error,
+      code: error!.code,
     };
   }
 

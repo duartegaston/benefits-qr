@@ -1,10 +1,12 @@
-import { EstadoReclamo, type EstadoReclamo as ReclamoStatus } from "@/lib/enums";
-import type { SemanticVisualVariant } from "@/components/ui/buttonStyles";
 import {
-  formatDiasValidosSentence,
-  getDiaLabel,
-  sortDiasValidos,
-} from "@/lib/beneficioSchedule";
+  BeneficioEffectiveStatus,
+  type BeneficioEffectiveStatus as BeneficioStatus,
+  getCouponBlockMessage,
+  ReclamoEffectiveStatus,
+  type ReclamoEffectiveStatus as ReclamoStatus,
+} from "@/lib/couponStatus";
+import type { SemanticVisualVariant } from "@/components/ui/buttonStyles";
+import { CouponBlockReason } from "@/lib/couponStatus";
 
 type StatusVariant = Extract<
   SemanticVisualVariant,
@@ -30,11 +32,17 @@ type ReclamoStatusPresentation = {
   badgeVariant: StatusVariant;
 };
 
-export function getBeneficioStatusPresentation(
-  isExpired: boolean,
-  isAgotado: boolean
-): BeneficioStatusPresentation {
-  if (isExpired) {
+export function getBeneficioStatusPresentation(status: BeneficioStatus): BeneficioStatusPresentation {
+  if (status === BeneficioEffectiveStatus.ELIMINADO) {
+    return {
+      label: "Eliminado",
+      badgeVariant: "danger",
+      dashboardCardToneClassName: "border-l-danger-border",
+      dashboardCardSurfaceClassName: "",
+    };
+  }
+
+  if (status === BeneficioEffectiveStatus.VENCIDO) {
     return {
       label: "Vencido",
       badgeVariant: "danger",
@@ -43,7 +51,7 @@ export function getBeneficioStatusPresentation(
     };
   }
 
-  if (isAgotado) {
+  if (status === BeneficioEffectiveStatus.AGOTADO) {
     return {
       label: "Agotado",
       badgeVariant: "warning",
@@ -61,50 +69,49 @@ export function getBeneficioStatusPresentation(
 }
 
 export function getBeneficioAvailabilityPresentation({
-  isExpired,
-  isAgotado,
+  status,
   isWrongDay,
-  todayIndex,
   diasValidos,
 }: {
-  isExpired: boolean;
-  isAgotado: boolean;
+  status: BeneficioStatus;
   isWrongDay: boolean;
-  todayIndex: number;
   diasValidos: number[];
 }): BeneficioAvailabilityPresentation {
-  if (isExpired) {
+  if (status === BeneficioEffectiveStatus.ELIMINADO) {
     return {
       badgeVariant: "danger",
-      badgeLabel: "Vencido",
-      message: "Este cupón ya expiró.",
+      badgeLabel: "No disponible",
+      message: getCouponBlockMessage(CouponBlockReason.BENEFICIO_UNAVAILABLE),
       isAvailable: false,
     };
   }
 
-  if (isAgotado) {
+  if (status === BeneficioEffectiveStatus.VENCIDO) {
+    return {
+      badgeVariant: "danger",
+      badgeLabel: "Vencido",
+      message: getCouponBlockMessage(CouponBlockReason.BENEFICIO_EXPIRED),
+      isAvailable: false,
+    };
+  }
+
+  if (status === BeneficioEffectiveStatus.AGOTADO) {
     return {
       badgeVariant: "danger",
       badgeLabel: "Agotado",
-      message: "Este cupón ya alcanzó el límite de usos disponibles.",
+      message: getCouponBlockMessage(CouponBlockReason.BENEFICIO_MAX_USOS_REACHED),
       isAvailable: false,
     };
   }
 
   if (isWrongDay) {
-    const diasValidosOrdenados = sortDiasValidos(diasValidos);
-
     return {
       badgeVariant: "warning",
       badgeLabel: "No canjeable hoy",
-      message: `Hoy no es un día válido para canjear este cupón. Podés reclamarlo ahora y presentarlo ${formatDiasValidosSentence(
-        diasValidosOrdenados,
-        {
-          emptyLabel: "",
-          prefix: "los",
-          style: "full",
-        }
-      )}.`,
+      message: getCouponBlockMessage(CouponBlockReason.BENEFICIO_INVALID_DAY, {
+        diasValidos,
+        context: "claim",
+      }),
       isAvailable: true,
     };
   }
@@ -118,16 +125,20 @@ export function getBeneficioAvailabilityPresentation({
 }
 
 export function getReclamoStatusPresentation(status: ReclamoStatus): ReclamoStatusPresentation {
-  if (status === EstadoReclamo.CANCELADO) {
+  if (status === ReclamoEffectiveStatus.CANCELADO) {
     return { label: "Cancelado", badgeVariant: "muted" };
   }
 
-  if (status === EstadoReclamo.CANJEADO) {
+  if (status === ReclamoEffectiveStatus.CANJEADO) {
     return { label: "Canjeado", badgeVariant: "success" };
   }
 
-  if (status === EstadoReclamo.VENCIDO) {
+  if (status === ReclamoEffectiveStatus.VENCIDO) {
     return { label: "Vencido", badgeVariant: "danger" };
+  }
+
+  if (status === ReclamoEffectiveStatus.AGOTADO) {
+    return { label: "Agotado", badgeVariant: "warning" };
   }
 
   return { label: "Pendiente", badgeVariant: "warning" };

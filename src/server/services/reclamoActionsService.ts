@@ -1,9 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { QR_EXPIRY_MINUTES } from "@/lib/constants";
 import { buildQRPayload, generateQRDataURL } from "@/lib/qr";
-import { EstadoReclamo } from "@/generated/prisma/client";
-import { getCurrentDayInArgentina } from "@/lib/argentinaTime";
-import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
+import { evaluateReclamoState, getCouponBlockError } from "@/lib/couponStatus";
 import {
   findReclamoForCanje,
   findReclamoForQr,
@@ -44,21 +42,26 @@ export async function generateReclamoQr(
     return { ok: false, status: 404, error: "Reclamo no encontrado", code: "RECLAMO_NOT_FOUND" };
   }
 
-  if (reclamo.estado === EstadoReclamo.CANJEADO) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Este cupón ya fue canjeado",
-      code: "RECLAMO_ALREADY_REDEEMED",
-    };
-  }
+  const reclamoState = evaluateReclamoState({
+    estado: reclamo.estado,
+    fechaExpiracion: reclamo.beneficio.fechaExpiracion,
+    deletedAt: reclamo.beneficio.deletedAt,
+    maxUsos: reclamo.beneficio.maxUsos,
+    canjeados: reclamo.beneficio._count.reclamos,
+    diasValidos: reclamo.beneficio.diasValidos as number[],
+  });
 
-  if (reclamo.estado === EstadoReclamo.CANCELADO) {
+  if (!reclamoState.canGenerateQr) {
+    const error = getCouponBlockError(reclamoState.blockReason, {
+      diasValidos: reclamo.beneficio.diasValidos as number[],
+      context: "qr",
+    });
+
     return {
       ok: false,
-      status: 409,
-      error: "Este cupón ha sido eliminado por el local",
-      code: "RECLAMO_CANCELLED",
+      status: error!.status,
+      error: error!.error,
+      code: error!.code,
     };
   }
 
@@ -96,61 +99,26 @@ export async function canjearReclamo(
     return { ok: false, status: 400, error: "QR expirado", code: "QR_EXPIRED" };
   }
 
-  if (reclamo.beneficio.deletedAt !== null) {
+  const reclamoState = evaluateReclamoState({
+    estado: reclamo.estado,
+    fechaExpiracion: reclamo.beneficio.fechaExpiracion,
+    deletedAt: reclamo.beneficio.deletedAt,
+    maxUsos: reclamo.beneficio.maxUsos,
+    canjeados: reclamo.beneficio._count.reclamos,
+    diasValidos: reclamo.beneficio.diasValidos as number[],
+  });
+
+  if (!reclamoState.canRedeem) {
+    const error = getCouponBlockError(reclamoState.blockReason, {
+      diasValidos: reclamo.beneficio.diasValidos as number[],
+      context: "redeem",
+    });
+
     return {
       ok: false,
-      status: 400,
-      error: "Este beneficio ya no está disponible",
-      code: "BENEFICIO_UNAVAILABLE",
-    };
-  }
-
-  if (reclamo.beneficio.fechaExpiracion < new Date()) {
-    return { ok: false, status: 400, error: "Este cupón ya expiró", code: "BENEFICIO_EXPIRED" };
-  }
-
-  if (reclamo.beneficio.diasValidos.length > 0) {
-    const hoy = getCurrentDayInArgentina();
-    if (!(reclamo.beneficio.diasValidos as number[]).includes(hoy)) {
-      return {
-        ok: false,
-        status: 400,
-        error: `Este cupón solo se puede canjear ${formatDiasValidosSentence(
-          reclamo.beneficio.diasValidos as number[],
-          { emptyLabel: "todos los días", prefix: "los", style: "full" }
-        )}`,
-        code: "BENEFICIO_INVALID_DAY",
-      };
-    }
-  }
-
-  if (
-    reclamo.beneficio.maxUsos !== null &&
-    reclamo.beneficio._count.reclamos >= reclamo.beneficio.maxUsos
-  ) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Este cupón ya alcanzó el máximo de usos",
-      code: "BENEFICIO_MAX_USOS_REACHED",
-    };
-  }
-
-  if (reclamo.estado === EstadoReclamo.CANCELADO) {
-    return {
-      ok: false,
-      status: 409,
-      error: "Este cupón ha sido eliminado por el local",
-      code: "RECLAMO_CANCELLED",
-    };
-  }
-
-  if (reclamo.estado === EstadoReclamo.CANJEADO) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Este cupón ya fue canjeado",
-      code: "RECLAMO_ALREADY_REDEEMED",
+      status: error!.status,
+      error: error!.error,
+      code: error!.code,
     };
   }
 

@@ -1,7 +1,5 @@
-import {
-  expirePendingReclamos,
-  getBeneficioDetailRaw,
-} from "@/server/repositories/beneficioDetailRepository";
+import { evaluateBeneficioState, evaluateReclamoState } from "@/lib/couponStatus";
+import { getBeneficioDetailRaw } from "@/server/repositories/beneficioDetailRepository";
 
 export async function getBeneficioDetailPageData(
   beneficioId: string,
@@ -9,23 +7,57 @@ export async function getBeneficioDetailPageData(
   page: number,
   pageSize: number
 ) {
-  await expirePendingReclamos(beneficioId);
   const raw = await getBeneficioDetailRaw(beneficioId, localId, page, pageSize);
+  const rawStats = raw.stats ?? { total: 0, canjeados: 0, pendientes: 0 };
+  let beneficioCanRedeemToday = false;
 
   const beneficio = raw.beneficio
-    ? {
-        ...raw.beneficio,
-        fechaExpiracion: new Date(raw.beneficio.fechaExpiracion),
-        deletedAt: raw.beneficio.deletedAt ? new Date(raw.beneficio.deletedAt) : null,
-      }
+    ? (() => {
+        const fechaExpiracion = new Date(raw.beneficio.fechaExpiracion);
+        const deletedAt = raw.beneficio.deletedAt ? new Date(raw.beneficio.deletedAt) : null;
+        const beneficioState = evaluateBeneficioState({
+          fechaExpiracion,
+          deletedAt,
+          maxUsos: raw.beneficio.maxUsos,
+          canjeados: raw.stats?.canjeados ?? 0,
+          diasValidos: raw.beneficio.diasValidos,
+        });
+        beneficioCanRedeemToday = beneficioState.canRedeemToday;
+
+        return {
+          ...raw.beneficio,
+          fechaExpiracion,
+          deletedAt,
+          effectiveStatus: beneficioState.status,
+        };
+      })()
     : null;
 
-  const stats = raw.stats ?? { total: 0, canjeados: 0, pendientes: 0 };
-  const reclamos = (raw.reclamos ?? []).map((r) => ({
-    ...r,
-    fechaReclamo: new Date(r.fechaReclamo),
-    fechaCanje: r.fechaCanje ? new Date(r.fechaCanje) : null,
-  }));
+  const stats = {
+    ...rawStats,
+    canjeablesHoy: beneficioCanRedeemToday ? rawStats.pendientes : 0,
+  };
+  const reclamos = (raw.reclamos ?? []).map((r) => {
+    const fechaReclamo = new Date(r.fechaReclamo);
+    const fechaCanje = r.fechaCanje ? new Date(r.fechaCanje) : null;
+    const reclamoState = beneficio
+      ? evaluateReclamoState({
+          estado: r.estado,
+          fechaExpiracion: beneficio.fechaExpiracion,
+          deletedAt: beneficio.deletedAt,
+          maxUsos: beneficio.maxUsos,
+          canjeados: stats.canjeados,
+          diasValidos: beneficio.diasValidos,
+        })
+      : null;
+
+    return {
+      ...r,
+      fechaReclamo,
+      fechaCanje,
+      effectiveStatus: reclamoState?.status ?? r.estado,
+    };
+  });
 
   return {
     beneficio,

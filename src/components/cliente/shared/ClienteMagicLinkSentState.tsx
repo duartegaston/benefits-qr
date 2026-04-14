@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import { Mail } from "lucide-react";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 
 interface ClienteMagicLinkSentStateProps {

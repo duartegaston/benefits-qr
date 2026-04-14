@@ -166,12 +166,10 @@ export default async function DashboardPage({
       ) : (
         <div className="space-y-3 sm:space-y-4">
           {beneficios.map((b, index) => {
-            const isExpired = b.fechaExpiracion < new Date();
             const canjeados = b.canjeados;
-            const isAgotado = b.maxUsos !== null && canjeados >= b.maxUsos;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
             const vencimiento = formatDateAR(b.fechaExpiracion);
-            const status = getBeneficioStatusPresentation(isExpired, isAgotado);
+            const status = getBeneficioStatusPresentation(b.effectiveStatus);
 
             return (
               <Reveal
