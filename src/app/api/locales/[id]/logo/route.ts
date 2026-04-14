@@ -1,8 +1,13 @@
+import { createHash } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+function shortHash(data: string | Buffer): string {
+  return createHash("sha1").update(data).digest("hex").slice(0, 16);
+}
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -16,6 +21,12 @@ export async function GET(
     return new Response(null, { status: 404 });
   }
 
+  const etag = `"${shortHash(local.logoUrl)}"`;
+
+  if (req.headers.get("if-none-match") === etag) {
+    return new Response(null, { status: 304 });
+  }
+
   if (local.logoUrl.startsWith("data:")) {
     const match = local.logoUrl.match(/^data:([^;]+);base64,([A-Za-z0-9+/=]+)$/);
     if (!match) return new Response(null, { status: 400 });
@@ -24,10 +35,14 @@ export async function GET(
     return new Response(buffer, {
       headers: {
         "Content-Type": mimeType,
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "public, no-cache",
+        "ETag": etag,
       },
     });
   }
 
-  return Response.redirect(local.logoUrl, 302);
+  return NextResponse.redirect(local.logoUrl, {
+    status: 302,
+    headers: { "Cache-Control": "no-store" },
+  });
 }
