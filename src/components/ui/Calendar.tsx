@@ -43,8 +43,14 @@ export default function Calendar({
           "rounded-lg border border-transparent p-0 text-sm font-medium text-text-primary hover:bg-primary-soft hover:text-accent focus-visible:ring-2 focus-visible:ring-primary-soft aria-selected:bg-primary aria-selected:text-primary-foreground aria-selected:hover:bg-primary aria-selected:hover:text-primary-foreground",
           defaultClassNames.day_button,
         ),
-        today: cn("font-semibold text-accent", defaultClassNames.today),
-        selected: defaultClassNames.selected,
+        today: cn(
+          "rounded-lg border border-primary/35 bg-primary-soft/70 font-semibold text-primary",
+          defaultClassNames.today,
+        ),
+        selected: cn(
+          "rounded-lg bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground [&>button]:bg-primary [&>button]:text-primary-foreground [&>button]:hover:bg-primary [&>button]:hover:text-primary-foreground [&>button]:focus:bg-primary [&>button]:focus:text-primary-foreground",
+          defaultClassNames.selected,
+        ),
         outside: cn("text-text-muted/45 aria-selected:bg-surface-muted aria-selected:text-text-muted/70", defaultClassNames.outside),
         disabled: cn("text-text-muted/50 opacity-50", defaultClassNames.disabled),
         hidden: cn("invisible", defaultClassNames.hidden),

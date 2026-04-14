@@ -127,33 +127,41 @@ export default function NuevoBeneficioForm() {
         </div>
 
         <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
-          <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant={todosLosDias ? "primary" : "secondary"}
-              size="sm"
-              onClick={() => setDiasValidos([])}
-            >
-              Todos los días
-            </Button>
+          <div className="space-y-2.5 sm:flex sm:flex-wrap sm:items-start sm:gap-2 sm:space-y-0 lg:gap-2 2xl:gap-2.5">
+            <div className="flex sm:flex-none">
+              <Button
+                type="button"
+                variant={todosLosDias ? "primary" : "secondary"}
+                size="sm"
+                onClick={() => setDiasValidos([])}
+                className="w-full sm:w-auto"
+              >
+                Todos los días
+              </Button>
+            </div>
 
-            {BENEFICIO_WEEKDAYS.map((day) => {
-              const selected = !todosLosDias && diasValidos.includes(day.value);
+            <div className="flex flex-wrap gap-2 sm:flex-1 lg:gap-2 2xl:gap-2.5">
+              {BENEFICIO_WEEKDAYS.map((day) => {
+                const selected = !todosLosDias && diasValidos.includes(day.value);
 
-              return (
-                <Button
-                  key={day.value}
-                  type="button"
-                  variant={selected ? "primary" : "secondary"}
-                  size="sm"
-                  onClick={() => handleDiaToggle(day.value)}
-                  aria-pressed={selected}
-                  className={cn("min-w-12 px-3", todosLosDias && "border-dashed")}
-                >
-                  {day.shortLabel}
-                </Button>
-              );
-            })}
+                return (
+                  <Button
+                    key={day.value}
+                    type="button"
+                    variant={selected ? "primary" : "secondary"}
+                    size="sm"
+                    onClick={() => handleDiaToggle(day.value)}
+                    aria-pressed={selected}
+                    className={cn(
+                      "min-w-12 px-3",
+                      todosLosDias && "border-dashed",
+                    )}
+                  >
+                    {day.shortLabel}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
 
           <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
