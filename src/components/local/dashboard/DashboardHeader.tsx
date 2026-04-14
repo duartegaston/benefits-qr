@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Button from "@/components/ui/Button";
 import LinkButton from "@/components/ui/LinkButton";
 import { cn } from "@/lib/utils";
@@ -47,7 +47,7 @@ export default function DashboardHeader() {
           : "bg-transparent backdrop-blur-md"
       )}
     >
-      <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">
+      <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:h-20 lg:max-w-4xl lg:px-5 2xl:h-24 2xl:max-w-5xl 2xl:px-6">
         <div>
           {isDashboardHome(pathname) ? (
             <Button onClick={handleLogout} variant="logout" size="sm">
@@ -70,16 +70,7 @@ export default function DashboardHeader() {
           className="inline-flex items-center"
           aria-label="Ir al dashboard"
         >
-          <div className="w-20">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={250}
-              height={180}
-              priority
-              className="w-full h-auto"
-            />
-          </div>
+          <BrandLogo variant="header" priority />
         </Link>
       </div>
     </header>

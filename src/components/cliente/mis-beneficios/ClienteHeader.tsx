@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +37,7 @@ export default function ClienteHeader() {
           : "bg-transparent backdrop-blur-md"
       )}
     >
-      <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-24 sm:px-6">
+      <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:h-20 lg:max-w-2xl lg:px-5 2xl:h-24 2xl:max-w-3xl 2xl:px-6">
         <div>
           <Button onClick={handleLogout} variant="logout" size="sm">
             <LogOut aria-hidden="true" className="h-4 w-4" />
@@ -50,16 +50,7 @@ export default function ClienteHeader() {
           className="inline-flex items-center"
           aria-label="Ir a mis cupones"
         >
-          <div className="w-20">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={250}
-              height={180}
-              priority
-              className="w-full h-auto"
-            />
-          </div>
+          <BrandLogo variant="header" priority />
         </Link>
       </div>
     </header>

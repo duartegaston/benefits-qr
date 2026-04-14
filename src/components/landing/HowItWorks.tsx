@@ -26,17 +26,18 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section className="bg-surface-muted py-16 px-6 sm:px-8">
+    <section className="bg-surface-muted px-6 py-16 lg:px-8 lg:py-14 2xl:py-16">
       <div className="max-w-4xl mx-auto">
         <Reveal y={20} amount={0.35}>
           <SectionHeader
             eyebrow="Cómo funciona"
             title="Tres pasos, sin complicaciones"
+            className="lg:mb-10 2xl:mb-12 [&>span]:lg:mb-2 [&>span]:lg:text-xs [&>h2]:lg:text-3xl [&>p]:lg:text-sm"
           />
         </Reveal>
 
         {/* Steps grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-5 2xl:gap-6">
           {STEPS.map((step, index) => (
             <Reveal
               key={step.number}
@@ -46,22 +47,22 @@ export default function HowItWorks() {
               className="h-full"
             >
               <Card
-                className="p-6 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-md duration-200 h-full"
+                className="relative h-full overflow-hidden p-6 duration-200 hover:-translate-y-0.5 hover:shadow-md lg:p-5 2xl:p-6"
                 style={{ transitionProperty: "transform, box-shadow" }}
               >
                 {/* Decorative number */}
-                <span className="absolute -top-4 -right-2 text-8xl font-black text-primary/10 select-none leading-none">
+                <span className="absolute -top-4 -right-2 select-none text-8xl leading-none font-black text-primary/10 lg:-top-3.5 lg:text-7xl 2xl:-top-4 2xl:text-8xl">
                   {step.number}
                 </span>
 
                 {/* Icon */}
-                <div className="w-10 h-10 rounded-xl bg-primary-soft flex items-center justify-center text-primary mb-4 relative z-10">
+                <div className="relative z-10 mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-primary-soft text-primary lg:mb-3.5 lg:h-9 lg:w-9 2xl:mb-4 2xl:h-10 2xl:w-10">
                   {step.icon}
                 </div>
 
                 {/* Text */}
-                <h3 className="font-semibold text-text-primary mb-2 relative z-10">{step.title}</h3>
-                <p className="text-sm text-text-muted leading-relaxed relative z-10">{step.description}</p>
+                <h3 className="relative z-10 mb-2 font-semibold text-text-primary lg:text-sm 2xl:text-base">{step.title}</h3>
+                <p className="relative z-10 text-sm leading-relaxed text-text-muted lg:text-xs 2xl:text-sm">{step.description}</p>
               </Card>
             </Reveal>
           ))}

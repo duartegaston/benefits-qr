@@ -17,7 +17,7 @@ export default async function MisBeneficiosLayout({
   return (
     <div className="min-h-screen">
       <ClienteHeader />
-      {children}
+      <div className="px-0 lg:px-0">{children}</div>
     </div>
   );
 }
