@@ -3,11 +3,12 @@ import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import { findLocalById } from "@/server/repositories/localApiRepository";
 import EditPerfilForm from "@/components/local/dashboard/EditPerfilForm";
+import { logoVersion } from "@/lib/logoVersion";
 
 export default async function EditPerfilPage({
   searchParams,
 }: {
-  searchParams: Promise<{ nombre?: string; email?: string; direccion?: string; telefono?: string; localId?: string }>;
+  searchParams: Promise<{ nombre?: string; email?: string; direccion?: string; telefono?: string; localId?: string; logoV?: string }>;
 }) {
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) {
@@ -18,7 +19,9 @@ export default async function EditPerfilPage({
 
   // Common case: data passed via URL params from the dashboard — no DB call needed.
   if (params.nombre && params.email) {
-    const logoUrl = params.localId ? `/api/locales/${params.localId}/logo` : null;
+    const logoUrl = params.localId
+      ? `/api/locales/${params.localId}/logo${params.logoV ? `?v=${params.logoV}` : ""}`
+      : null;
     return (
       <main className="min-h-screen flex flex-col items-center py-14 px-4">
         <div className="my-auto w-full max-w-md">
@@ -44,7 +47,7 @@ export default async function EditPerfilPage({
         <EditPerfilForm
           email={local.email}
           nombre={local.nombre ?? ""}
-          logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo` : null}
+          logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo?v=${logoVersion(local.logoUrl)}` : null}
           direccion={local.direccion}
           telefono={local.telefono}
         />

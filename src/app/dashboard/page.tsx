@@ -12,6 +12,7 @@ import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
 import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
 import { getDashboardPageData } from "@/server/services/dashboardService";
+import { logoVersion } from "@/lib/logoVersion";
 
 const PAGE_SIZE = 10;
 
@@ -88,7 +89,7 @@ export default async function DashboardPage({
             </div>
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <LinkButton
-                href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}&localId=${encodeURIComponent(local.id)}`}
+                href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}&localId=${encodeURIComponent(local.id)}&logoV=${logoVersion(local.logoUrl)}`}
                 variant="subtle"
                 size="sm"
                 className="w-full sm:w-auto"
