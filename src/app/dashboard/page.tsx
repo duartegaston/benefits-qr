@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { QrCode } from "lucide-react";
+import { PencilLine, QrCode } from "lucide-react";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import Card from "@/components/ui/Card";
@@ -89,20 +89,12 @@ export default async function DashboardPage({
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <LinkButton
                 href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}&localId=${encodeURIComponent(local.id)}`}
-                variant="subtle"
+                variant="outline"
                 size="sm"
                 className="w-full sm:w-auto"
               >
+                <PencilLine className="h-4 w-4" aria-hidden="true" />
                 Editar perfil
-              </LinkButton>
-              <LinkButton
-                href="/dashboard/escanear"
-                variant="light"
-                size="sm"
-                className="w-full sm:w-auto"
-              >
-                <QrCode className="h-4 w-4" aria-hidden="true" />
-                Escanear QR
               </LinkButton>
             </div>
           </div>
@@ -131,14 +123,25 @@ export default async function DashboardPage({
               Gestioná estado, vigencia y acciones de cada cupón.
             </p>
           </div>
-          <LinkButton
-            href="/dashboard/beneficios/nuevo"
-            variant="primary"
-            size="md"
-            className="w-full justify-center sm:w-auto"
-          >
-            + Nuevo cupón
-          </LinkButton>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            <LinkButton
+              href="/dashboard/escanear"
+              variant="light"
+              size="md"
+              className="w-full justify-center sm:w-auto"
+            >
+              <QrCode className="h-4 w-4" aria-hidden="true" />
+              Escanear QR
+            </LinkButton>
+            <LinkButton
+              href="/dashboard/beneficios/nuevo"
+              variant="primary"
+              size="md"
+              className="w-full justify-center sm:w-auto"
+            >
+              + Nuevo cupón
+            </LinkButton>
+          </div>
         </div>
       </Reveal>
 

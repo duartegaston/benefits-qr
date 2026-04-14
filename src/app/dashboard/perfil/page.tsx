@@ -1,54 +1,42 @@
 import { redirect } from "next/navigation";
+import Reveal from "@/components/ui/Reveal";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import { findLocalById } from "@/server/repositories/localApiRepository";
-import EditPerfilForm from "@/components/local/dashboard/EditPerfilForm";
+import EditPerfilForm from "@/components/local/dashboard/perfil/EditPerfilForm";
 
-export default async function EditPerfilPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ nombre?: string; email?: string; direccion?: string; telefono?: string; localId?: string }>;
-}) {
+export default async function EditPerfilPage() {
   const session = await getSessionFromCookies();
   if (!session || session.userType !== UserType.LOCAL) {
     redirect("/login");
   }
-
-  const params = await searchParams;
-
-  // Common case: data passed via URL params from the dashboard — no DB call needed.
-  if (params.nombre && params.email) {
-    const logoUrl = params.localId ? `/api/locales/${params.localId}/logo` : null;
-    return (
-      <main className="min-h-screen flex flex-col items-center py-14 px-4">
-        <div className="my-auto w-full max-w-md">
-          <EditPerfilForm
-            email={params.email}
-            nombre={params.nombre}
-            logoUrl={logoUrl}
-            direccion={params.direccion || null}
-            telefono={params.telefono || null}
-          />
-        </div>
-      </main>
-    );
-  }
-
-  // Fallback: direct navigation (bookmark, etc.) — fetch from DB.
   const local = await findLocalById(session.userId);
   if (!local) redirect("/login");
 
   return (
-    <main className="min-h-screen flex flex-col items-center py-14 px-4">
-      <div className="my-auto w-full max-w-md">
-        <EditPerfilForm
-          email={local.email}
-          nombre={local.nombre ?? ""}
-          logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo` : null}
-          direccion={local.direccion}
-          telefono={local.telefono}
+    <main className="mx-auto max-w-xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
+      <Reveal y={10} amount={0.2} className="mb-6 sm:mb-8">
+        <SectionHeader
+          eyebrow="Perfil del local"
+          title="Datos del local"
+          description="Actualizá los datos públicos de tu local para que clientes y equipo vean información clara y consistente."
+          align="left"
+          className="mb-0"
         />
-      </div>
+      </Reveal>
+
+      <Reveal delay={0.04} y={12} amount={0.2}>
+        <div className="mx-auto w-full max-w-md">
+          <EditPerfilForm
+            email={local.email}
+            nombre={local.nombre ?? ""}
+            logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo` : null}
+            direccion={local.direccion}
+            telefono={local.telefono}
+          />
+        </div>
+      </Reveal>
     </main>
   );
 }
