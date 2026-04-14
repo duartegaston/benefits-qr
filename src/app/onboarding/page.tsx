@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { UserType } from "@/lib/enums";
-import Image from "next/image";
 import OnboardingForm from "@/components/local/onboarding/OnboardingForm";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Reveal from "@/components/ui/Reveal";
 
 export default async function OnboardingPage() {
@@ -24,18 +24,9 @@ export default async function OnboardingPage() {
       <div className="pointer-events-none absolute -top-32 -left-32 hidden h-120 w-120 rounded-full bg-primary/25 blur-3xl sm:block" />
       <div className="pointer-events-none absolute -right-32 -bottom-32 hidden h-120 w-120 rounded-full bg-primary-soft/80 blur-3xl sm:block" />
 
-      <div className="relative mx-auto my-auto flex w-full max-w-md flex-col items-center">
-        <Reveal y={12} amount={0.2} className="mb-5 sm:mb-6">
-          <div className="w-22">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={250}
-              height={180}
-              priority
-              className="w-full h-auto"
-            />
-          </div>
+      <div className="relative mx-auto my-auto flex w-full max-w-md flex-col items-center lg:max-w-sm 2xl:max-w-md">
+        <Reveal y={12} amount={0.2} className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6">
+          <BrandLogo priority />
         </Reveal>
 
         <Reveal delay={0.06} y={14} amount={0.25} className="w-full">

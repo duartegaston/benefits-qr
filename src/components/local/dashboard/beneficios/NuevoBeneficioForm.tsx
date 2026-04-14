@@ -6,6 +6,7 @@ import { CalendarDays } from "lucide-react";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/DatePicker";
 import Input from "@/components/ui/Input";
+import SectionHeader from "@/components/ui/SectionHeader";
 import {
   BENEFICIO_WEEKDAYS,
   formatDiasValidosSentence,
@@ -84,15 +85,8 @@ export default function NuevoBeneficioForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-1">
-        <h1 className="text-xl font-bold text-text-primary sm:text-2xl">Nuevo cupón</h1>
-        <p className="text-sm text-text-muted">
-          Completá la información básica y elegí cómo querés manejar la vigencia.
-        </p>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className="space-y-5 lg:space-y-4 2xl:space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:gap-3.5 2xl:gap-4">
         <div className="sm:col-span-2">
           <Input
             label="Descripción"
@@ -122,47 +116,55 @@ export default function NuevoBeneficioForm() {
         />
       </div>
 
-      <section className="rounded-2xl border border-border-default/80 bg-surface-muted/50 p-4">
-        <div className="mb-3 flex items-start gap-3">
+      <section className="rounded-2xl border border-border-default/80 bg-surface-muted/50 p-4 lg:p-3.5 2xl:p-4">
+        <div className="mb-3 flex items-start gap-3 lg:mb-2.5 lg:gap-2.5 2xl:mb-3 2xl:gap-3">
           <div className="rounded-xl bg-primary-soft p-2 text-primary">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-text-primary">Días disponibles</h2>
+                <h2 className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">Días disponibles</h2>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant={todosLosDias ? "primary" : "secondary"}
-              size="sm"
-              onClick={() => setDiasValidos([])}
-            >
-              Todos los días
-            </Button>
+        <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
+          <div className="space-y-2.5 sm:flex sm:flex-wrap sm:items-start sm:gap-2 sm:space-y-0 lg:gap-2 2xl:gap-2.5">
+            <div className="flex sm:flex-none">
+              <Button
+                type="button"
+                variant={todosLosDias ? "primary" : "secondary"}
+                size="sm"
+                onClick={() => setDiasValidos([])}
+                className="w-full sm:w-auto"
+              >
+                Todos los días
+              </Button>
+            </div>
 
-            {BENEFICIO_WEEKDAYS.map((day) => {
-              const selected = !todosLosDias && diasValidos.includes(day.value);
+            <div className="flex flex-wrap gap-2 sm:flex-1 lg:gap-2 2xl:gap-2.5">
+              {BENEFICIO_WEEKDAYS.map((day) => {
+                const selected = !todosLosDias && diasValidos.includes(day.value);
 
-              return (
-                <Button
-                  key={day.value}
-                  type="button"
-                  variant={selected ? "primary" : "secondary"}
-                  size="sm"
-                  onClick={() => handleDiaToggle(day.value)}
-                  aria-pressed={selected}
-                  className={cn("min-w-12 px-3", todosLosDias && "border-dashed")}
-                >
-                  {day.shortLabel}
-                </Button>
-              );
-            })}
+                return (
+                  <Button
+                    key={day.value}
+                    type="button"
+                    variant={selected ? "primary" : "secondary"}
+                    size="sm"
+                    onClick={() => handleDiaToggle(day.value)}
+                    aria-pressed={selected}
+                    className={cn(
+                      "min-w-12 px-3",
+                      todosLosDias && "border-dashed",
+                    )}
+                  >
+                    {day.shortLabel}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
 
-          <p className="text-sm text-text-muted">
+          <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
             {formatDiasValidosSentence(diasSeleccionados, {
               emptyLabel: "Aplica todos los días.",
               prefix: "Aplica los",
@@ -170,7 +172,7 @@ export default function NuevoBeneficioForm() {
           </p>
 
           {!todosLosDias ? (
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
               Tocá un día para quitarlo. Si desmarcás el último, vuelve a “Todos los días”.
             </p>
           ) : null}
@@ -179,7 +181,7 @@ export default function NuevoBeneficioForm() {
 
       {error ? <p className="text-sm text-danger">{error}</p> : null}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end lg:gap-2.5 2xl:gap-3">
         <Button type="button" variant="secondary" onClick={() => router.push("/dashboard") }>
           Cancelar
         </Button>

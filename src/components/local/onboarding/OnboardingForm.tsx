@@ -6,6 +6,7 @@ import Input from "@/components/ui/Input";
 import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 interface OnboardingFormProps {
   localId: string;
@@ -51,21 +52,24 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
   }
 
   return (
-    <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7">
-      <div className="mb-6 text-center sm:mb-7">
-        <h1 className="mb-1.5 text-2xl font-bold text-text-primary">Completá tu perfil</h1>
-        <p className="text-sm text-text-muted">Esto es lo que verán tus clientes</p>
-      </div>
+    <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7 lg:max-w-sm lg:p-6 2xl:max-w-md 2xl:p-7">
+      <SectionHeader
+        eyebrow="Onboarding del negocio"
+        title="Completá tu perfil"
+        description="Esto es lo que verán tus clientes"
+        align="center"
+        className="!mb-6 sm:!mb-7 lg:!mb-6 2xl:!mb-7"
+      />
 
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        <div className="mb-1.5 flex flex-col items-center gap-1">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 lg:space-y-4 2xl:space-y-5">
+        <div className="mb-1.5 flex flex-col items-center gap-1 lg:mb-1 2xl:mb-1.5">
           <LogoUpload
             currentLogoUrl={logoUrl}
             nombre={nombre || "?"}
             onUploaded={() => setHasLogo(true)}
           />
           {!hasLogo && (
-            <p className="text-xs text-text-muted">Foto del local (requerida)</p>
+            <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">Foto del local (requerida)</p>
           )}
         </div>
 
@@ -104,7 +108,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
         />
 
         {error && (
-          <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger">
+          <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger lg:text-[13px] 2xl:text-sm">
             {error}
           </p>
         )}
@@ -113,7 +117,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           Guardar y continuar
         </Button>
 
-        <p className="text-center text-xs text-text-muted">
+        <p className="text-center text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
           Podés editar estos datos después desde tu dashboard.
         </p>
       </form>

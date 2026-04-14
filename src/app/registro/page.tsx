@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { createSession } from "@/lib/auth";
+import { createSession, getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
-import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 async function verifyOnboardingLink(formData: FormData) {
   "use server";
@@ -41,33 +42,39 @@ export default async function RegistroPage({
   searchParams: Promise<{ token?: string }>;
 }) {
   const { token } = await searchParams;
+  const session = await getSessionFromCookies();
+
+  if (session?.userType === UserType.LOCAL) {
+    redirect("/dashboard");
+  }
+
+  if (!token) {
+    redirect("/");
+  }
 
   return (
-    <main className="h-screen overflow-hidden flex flex-col items-center justify-center px-4 relative">
+    <main className="relative flex h-screen flex-col items-center justify-center overflow-hidden px-4">
       <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/25 blur-3xl hidden sm:block" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary-soft/80 blur-3xl hidden sm:block" />
 
-        <div className="w-full max-w-sm text-center animate-[fade-up_0.45s_ease-out_both]">
-          <div className="flex justify-center mb-6">
-            <div className="w-20">
-              <Image
-                src="/logo.png"
-                alt="Qupón"
-                width={250}
-                height={180}
-                className="w-full h-auto"
-              />
+      <div className="w-full max-w-sm animate-[fade-up_0.45s_ease-out_both] text-center lg:max-w-xs 2xl:max-w-sm">
+        <div className="mb-6 flex justify-center lg:mb-5 2xl:mb-6">
+          <BrandLogo />
+        </div>
+
+        <Card className="border-surface/80 bg-surface/90 p-8 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md lg:p-6 2xl:p-8">
+          <div className="mb-6 flex justify-center lg:mb-5 2xl:mb-6">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
+              <BadgeCheck aria-hidden="true" className="h-7 w-7 text-primary" />
             </div>
           </div>
-
-        <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
-          <div className="w-14 h-14 bg-primary-soft rounded-full flex items-center justify-center mx-auto mb-4">
-            <BadgeCheck aria-hidden="true" className="w-7 h-7 text-primary" />
-          </div>
-          <h1 className="text-xl font-bold text-text-primary mb-2">¡Tu acceso fue aprobado!</h1>
-          <p className="text-sm text-text-muted mb-6">
-            Hacé clic para completar la configuración de tu local
-          </p>
+          <SectionHeader
+            eyebrow="Registro del negocio"
+            title="¡Tu acceso fue aprobado!"
+            description="Hacé clic para completar la configuración de tu negocio"
+            align="center"
+            className="!mb-6 lg:!mb-5 2xl:!mb-6"
+          />
 
           <form action={verifyOnboardingLink}>
             <input type="hidden" name="token" value={token ?? ""} />

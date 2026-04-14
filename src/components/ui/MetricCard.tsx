@@ -1,5 +1,6 @@
 import Card from "@/components/ui/Card";
 import type { SemanticVisualVariant } from "@/components/ui/buttonStyles";
+import { cn } from "@/lib/utils";
 
 export type MetricCardVariant = Extract<
   SemanticVisualVariant,
@@ -51,11 +52,24 @@ export default function MetricCard({
   const styles = metricCardStyles[variant];
 
   return (
-    <Card className={`rounded-xl p-3 sm:p-4 ${styles.wrapper}`} data-variant={variant}>
-      <p className={`mb-1 text-[10px] font-semibold uppercase tracking-wide sm:text-xs ${styles.label}`}>
+    <Card
+      className={cn(
+        "rounded-xl p-3 sm:p-4 lg:p-3.5 2xl:p-4",
+        styles.wrapper
+      )}
+      data-variant={variant}
+    >
+      <p
+        className={cn(
+          "mb-1 text-[10px] font-semibold uppercase tracking-wide sm:text-xs lg:text-[11px] 2xl:text-xs",
+          styles.label
+        )}
+      >
         {label}
       </p>
-      <p className={`text-xl font-bold sm:text-2xl ${styles.value}`}>{value}</p>
+      <p className={cn("text-xl font-bold sm:text-2xl lg:text-xl 2xl:text-2xl", styles.value)}>
+        {value}
+      </p>
     </Card>
   );
 }

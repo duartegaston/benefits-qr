@@ -61,7 +61,7 @@ export default function PhoneInput({
       {label && (
         <label
           htmlFor={id}
-          className="mb-1 block text-sm font-medium text-text-primary"
+          className="mb-1 block text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm"
         >
           {label}
         </label>
@@ -114,10 +114,10 @@ export default function PhoneInput({
           onChange={handleNumberChange}
           placeholder="911234567"
           required={required}
-          className="w-full min-w-0 rounded-r-xl bg-surface px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:outline-none sm:text-sm"
+          className="w-full min-w-0 rounded-r-xl bg-surface px-3 py-2.5 text-base text-text-primary placeholder:text-text-muted focus:outline-none sm:text-sm lg:px-3.5 lg:py-2 2xl:px-4 2xl:py-2.5"
         />
       </div>
-      {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+      {error && <p className="mt-1 text-xs text-danger lg:text-[11px] 2xl:text-xs">{error}</p>}
     </div>
   );
 }

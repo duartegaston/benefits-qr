@@ -38,8 +38,8 @@ export default function ClienteLoginForm() {
 
   if (step === "sent") {
     return (
-      <Card className="w-full max-w-md bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60">
-        <CardContent className="p-6 sm:p-8">
+      <Card className="w-full max-w-md border-surface/80 bg-surface/90 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md lg:max-w-sm 2xl:max-w-md">
+        <CardContent className="p-6 sm:p-8 lg:p-6 2xl:p-8">
           <ClienteMagicLinkSentState
             email={email}
             description={<>Te enviamos un link a</>}
@@ -55,9 +55,9 @@ export default function ClienteLoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60">
-      <CardContent className="p-6 sm:p-8">
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <Card className="w-full max-w-md border-surface/80 bg-surface/90 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md lg:max-w-sm 2xl:max-w-md">
+      <CardContent className="p-6 sm:p-8 lg:p-6 2xl:p-8">
+        <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
           <Input
             label="Email"
             type="email"

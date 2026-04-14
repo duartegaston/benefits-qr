@@ -1,14 +1,15 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { ArrowLeft, Clock3, Mail } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import LinkButton from "@/components/ui/LinkButton";
 import Card from "@/components/ui/Card";
 import Reveal from "@/components/ui/Reveal";
 import Badge from "@/components/ui/Badge";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -84,34 +85,26 @@ export default function LoginForm() {
         Inicio
       </LinkButton>
 
-      <div className="my-auto w-full max-w-md">
+      <div className="my-auto w-full max-w-md lg:max-w-sm 2xl:max-w-md">
         <Reveal y={14} amount={0.3}>
-          <div className="text-center mb-7">
-            <div className="flex justify-center mb-4">
-              <div className="w-24">
-                <Image
-                  src="/logo.png"
-                  alt="Qupón"
-                  width={500}
-                  height={450}
-                  priority
-                  className="w-full h-auto"
-                />
-              </div>
+          <div className="mb-7 text-center lg:mb-6 2xl:mb-7">
+            <div className="mb-4 flex justify-center lg:mb-3.5 2xl:mb-4">
+              <BrandLogo priority />
             </div>
-            <h1 className="text-2xl font-bold text-text-primary mb-1">
-              Bienvenido
-            </h1>
-            <p className="text-text-muted text-sm">
-              Accedé al dashboard de tu negocio
-            </p>
+            <SectionHeader
+              eyebrow="Acceso del negocio"
+              title="Bienvenido"
+              description="Accedé al dashboard de tu negocio"
+              align="center"
+              className="!mb-0"
+            />
           </div>
         </Reveal>
 
         <Reveal delay={0.06} y={16} amount={0.35}>
-          <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-6 sm:p-8">
+          <Card className="border-surface/80 bg-surface/90 p-6 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md sm:p-8 lg:p-6 2xl:p-8">
             {step === "pending-approval" ? (
-              <div className="space-y-5 text-center">
+              <div className="space-y-5 text-center lg:space-y-4 2xl:space-y-5">
                 <div className="flex justify-center">
                   <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-warning-soft to-warning-soft/70 flex items-center justify-center text-warning shadow-sm">
                     <Clock3 className="w-8 h-8" aria-hidden="true" />
@@ -121,19 +114,19 @@ export default function LoginForm() {
                   <Badge variant="warning">
                     Pendiente de aprobación
                   </Badge>
-                  <h2 className="font-semibold text-text-primary text-lg">
+                  <h2 className="text-lg font-semibold text-text-primary lg:text-base 2xl:text-lg">
                     Solicitud en revisión
                   </h2>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
                     Estamos validando tu negocio antes de habilitar el acceso.
                   </p>
                 </div>
-                <div className="rounded-2xl bg-warning-soft/80 px-4 py-3 text-sm leading-relaxed text-warning">
+                <div className="rounded-2xl bg-warning-soft/80 px-4 py-3 text-sm leading-relaxed text-warning lg:px-3.5 lg:py-2.5 lg:text-[13px] 2xl:px-4 2xl:py-3 2xl:text-sm">
                   Tu solicitud está siendo revisada. Te avisaremos por email
                   cuando sea aprobada y ahí vas a recibir un link directo para
                   completar tu registro.
                 </div>
-                <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
+                <div className="flex items-center justify-center gap-2 text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
                   <Mail className="w-4 h-4" aria-hidden="true" />
                   <span>{email}</span>
                 </div>
@@ -152,7 +145,7 @@ export default function LoginForm() {
                 </Button>
               </div>
             ) : step === "email" ? (
-              <form onSubmit={handleRequestOtp} className="space-y-4">
+              <form onSubmit={handleRequestOtp} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
                 <Input
                   label="Email"
                   type="email"
@@ -168,7 +161,7 @@ export default function LoginForm() {
                   enterKeyHint="send"
                   required
                 />
-                {error && <p className="text-sm text-danger">{error}</p>}
+                {error && <p className="text-sm text-danger lg:text-[13px] 2xl:text-sm">{error}</p>}
                 <Button
                   variant="primary"
                   type="submit"
@@ -180,9 +173,9 @@ export default function LoginForm() {
                 </Button>
               </form>
             ) : (
-              <form onSubmit={handleVerifyOtp} className="space-y-4">
-                <div className="mb-2 rounded-2xl bg-primary-soft/80 px-4 py-3 text-center">
-                  <p className="text-sm text-accent">
+              <form onSubmit={handleVerifyOtp} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+                <div className="mb-2 rounded-2xl bg-primary-soft/80 px-4 py-3 text-center lg:px-3.5 lg:py-2.5 2xl:px-4 2xl:py-3">
+                  <p className="text-sm text-accent lg:text-[13px] 2xl:text-sm">
                     Código enviado a{" "}
                     <span className="font-semibold">{email}</span>
                   </p>
@@ -198,7 +191,7 @@ export default function LoginForm() {
                   inputMode="numeric"
                   required
                 />
-                {error && <p className="text-sm text-danger">{error}</p>}
+                {error && <p className="text-sm text-danger lg:text-[13px] 2xl:text-sm">{error}</p>}
                 <Button
                   variant="primary"
                   type="submit"

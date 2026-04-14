@@ -18,17 +18,23 @@ export default function SectionHeader({
   const isCenter = align === "center";
 
   return (
-    <div className={cn("mb-12", isCenter ? "text-center" : "text-left", className)}>
-      <span className="text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">
+    <div
+      className={cn(
+        "mb-10 lg:mb-8 2xl:mb-12",
+        isCenter ? "text-center" : "text-left",
+        className
+      )}
+    >
+      <span className="mb-3 block text-xs font-semibold uppercase tracking-widest text-primary lg:mb-2.5 2xl:mb-3">
         {eyebrow}
       </span>
-      <h2 className="text-3xl sm:text-4xl font-bold text-text-primary tracking-tight">
+      <h2 className="text-2xl font-bold tracking-tight text-text-primary lg:text-xl 2xl:text-2xl">
         {title}
       </h2>
       {description ? (
         <p
           className={cn(
-            "text-text-muted mt-3 max-w-lg leading-relaxed",
+            "mt-3 max-w-full leading-relaxed text-text-muted lg:mt-2.5 lg:text-sm 2xl:mt-3 2xl:text-base",
             isCenter ? "mx-auto" : "mr-auto"
           )}
         >

@@ -4,6 +4,7 @@ import MisBeneficiosList from "@/components/cliente/beneficio/MisBeneficiosList"
 import LinkButton from "@/components/ui/LinkButton";
 import MetricCard from "@/components/ui/MetricCard";
 import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getMisBeneficiosPageData } from "@/server/services/misBeneficiosService";
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
@@ -13,7 +14,7 @@ const PAGE_SIZE = 10;
 function ReclamosListSkeleton() {
   return (
     <>
-      <div className="mb-5 sm:mb-6">
+      <div className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6">
         <Card className="rounded-xl border-border-strong/40 bg-primary p-3 sm:p-4">
           <div className="mb-1 h-3 w-32 animate-pulse rounded bg-primary-foreground/20" />
           <div className="h-7 w-8 animate-pulse rounded bg-primary-foreground/30" />
@@ -23,7 +24,7 @@ function ReclamosListSkeleton() {
         {[0, 1, 2].map((i) => (
           <Card key={i} className="overflow-hidden border-surface/80 bg-surface/95 shadow-sm shadow-accent-soft/25">
             <div className="h-1 bg-gradient-to-r from-primary to-accent opacity-30" />
-            <div className="p-4 sm:p-5">
+             <div className="p-4 sm:p-5 lg:p-4 2xl:p-5">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 space-y-3">
                   <div className="flex items-center gap-2">
@@ -63,11 +64,11 @@ async function ReclamosList({
 
   return (
     <>
-      <div className="mb-5 sm:mb-6">
+      <div className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6">
         <MetricCard label="Beneficios guardados" value={total} variant="primary" />
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
         <MisBeneficiosList reclamos={reclamos} />
 
         {totalPages > 1 && (
@@ -115,13 +116,14 @@ export default async function MisBeneficiosPage({
   }
 
   return (
-    <main className="mx-auto max-w-3xl animate-[fade-in_0.3s_ease-out_both] px-4 pt-6 pb-12 sm:px-6 sm:pt-8">
-      <div className="mb-5 space-y-1 sm:mb-6">
-        <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
-        <p className="text-sm text-text-muted">
-          Consultá tus beneficios guardados y mostrales el QR al local cuando quieras canjearlos.
-        </p>
-      </div>
+    <main className="mx-auto max-w-3xl animate-[fade-in_0.3s_ease-out_both] px-4 pt-6 pb-12 sm:px-6 sm:pt-8 lg:max-w-2xl lg:pt-7 2xl:max-w-3xl 2xl:pt-8">
+      <SectionHeader
+        eyebrow="Cliente"
+        title="Mis cupones"
+        description="Consultá tus beneficios guardados y mostrales el QR al local cuando quieras canjearlos."
+        align="left"
+        className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6"
+      />
 
       <Suspense fallback={<ReclamosListSkeleton />}>
         <ReclamosList clienteId={session.userId} page={page} />
