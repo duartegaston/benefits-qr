@@ -6,6 +6,7 @@ import Input from "@/components/ui/Input";
 import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 interface OnboardingFormProps {
   localId: string;
@@ -52,10 +53,13 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
 
   return (
     <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7">
-      <div className="mb-6 text-center sm:mb-7">
-        <h1 className="mb-1.5 text-2xl font-bold text-text-primary">Completá tu perfil</h1>
-        <p className="text-sm text-text-muted">Esto es lo que verán tus clientes</p>
-      </div>
+      <SectionHeader
+        eyebrow="Onboarding del negocio"
+        title="Completá tu perfil"
+        description="Esto es lo que verán tus clientes"
+        align="center"
+        className="!mb-6 sm:!mb-7"
+      />
 
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
         <div className="mb-1.5 flex flex-col items-center gap-1">

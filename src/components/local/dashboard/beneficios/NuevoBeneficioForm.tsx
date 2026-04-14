@@ -6,6 +6,7 @@ import { CalendarDays } from "lucide-react";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/DatePicker";
 import Input from "@/components/ui/Input";
+import SectionHeader from "@/components/ui/SectionHeader";
 import {
   BENEFICIO_WEEKDAYS,
   formatDiasValidosSentence,
@@ -85,12 +86,13 @@ export default function NuevoBeneficioForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-1">
-        <h1 className="text-xl font-bold text-text-primary sm:text-2xl">Nuevo cupón</h1>
-        <p className="text-sm text-text-muted">
-          Completá la información básica y elegí cómo querés manejar la vigencia.
-        </p>
-      </div>
+      <SectionHeader
+        eyebrow="Nuevo cupón"
+        title="Creá un beneficio"
+        description="Completá la información básica y elegí cómo querés manejar la vigencia."
+        align="left"
+        className="!mb-0"
+      />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">

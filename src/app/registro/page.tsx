@@ -7,6 +7,7 @@ import Image from "next/image";
 import { BadgeCheck } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 async function verifyOnboardingLink(formData: FormData) {
   "use server";
@@ -61,13 +62,18 @@ export default async function RegistroPage({
           </div>
 
         <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
-          <div className="w-14 h-14 bg-primary-soft rounded-full flex items-center justify-center mx-auto mb-4">
-            <BadgeCheck aria-hidden="true" className="w-7 h-7 text-primary" />
+          <div className="mb-6 flex justify-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
+              <BadgeCheck aria-hidden="true" className="h-7 w-7 text-primary" />
+            </div>
           </div>
-          <h1 className="text-xl font-bold text-text-primary mb-2">¡Tu acceso fue aprobado!</h1>
-          <p className="text-sm text-text-muted mb-6">
-            Hacé clic para completar la configuración de tu local
-          </p>
+          <SectionHeader
+            eyebrow="Registro del negocio"
+            title="¡Tu acceso fue aprobado!"
+            description="Hacé clic para completar la configuración de tu negocio"
+            align="center"
+            className="!mb-6"
+          />
 
           <form action={verifyOnboardingLink}>
             <input type="hidden" name="token" value={token ?? ""} />

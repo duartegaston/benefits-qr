@@ -22,13 +22,13 @@ export default function SectionHeader({
       <span className="text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">
         {eyebrow}
       </span>
-      <h2 className="text-3xl font-bold tracking-tight text-text-primary lg:text-4xl">
+      <h2 className="text-2xl font-bold tracking-tight text-text-primary lg:text-2xl">
         {title}
       </h2>
       {description ? (
         <p
           className={cn(
-            "text-text-muted mt-3 max-w-lg leading-relaxed",
+            "text-text-muted mt-3 max-w-full leading-relaxed",
             isCenter ? "mx-auto" : "mr-auto"
           )}
         >

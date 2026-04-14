@@ -8,6 +8,7 @@ import ShareButtons from "@/components/local/dashboard/ShareButtons";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import MetricCard from "@/components/ui/MetricCard";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
 import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
@@ -45,12 +46,13 @@ export default async function DashboardPage({
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16">
       <Reveal y={10} amount={0.2} className="mb-5 sm:mb-6">
-        <div className="mb-5 space-y-1 sm:mb-6">
-          <h1 className="text-2xl font-bold text-text-primary">Dashboard del local</h1>
-          <p className="text-sm text-text-muted">
-            Gestioná tus cupones, seguí los reclamos y validá canjes desde un solo lugar.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Negocio"
+          title="Dashboard del negocio"
+          description="Gestioná tus cupones, seguí los reclamos y validá canjes desde un solo lugar."
+          align="left"
+          className="!mb-5 sm:!mb-6"
+        />
 
         <div className="rounded-2xl border border-surface/80 bg-surface/95 p-3 shadow-sm shadow-primary-soft/40 sm:bg-surface/85 sm:p-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

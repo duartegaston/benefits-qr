@@ -9,6 +9,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
+import SectionHeader from "@/components/ui/SectionHeader";
 import ClienteLoginForm from "@/components/cliente/acceso/ClienteLoginForm";
 
 async function verifyMagicLink(formData: FormData) {
@@ -92,10 +93,13 @@ export default async function AccesoPage({
                 />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-text-primary mb-1">
-              {pageTitle}
-            </h1>
-            <p className="text-text-muted text-sm">{pageDescription}</p>
+
+            <SectionHeader
+              eyebrow="Acceso Cliente"
+              title={pageTitle}
+              description={pageDescription}
+              className="mb-0"
+            />
           </div>
         </Reveal>
 

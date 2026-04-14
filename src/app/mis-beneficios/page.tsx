@@ -4,6 +4,7 @@ import MisBeneficiosList from "@/components/cliente/beneficio/MisBeneficiosList"
 import LinkButton from "@/components/ui/LinkButton";
 import MetricCard from "@/components/ui/MetricCard";
 import Card from "@/components/ui/Card";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { getMisBeneficiosPageData } from "@/server/services/misBeneficiosService";
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
@@ -116,12 +117,13 @@ export default async function MisBeneficiosPage({
 
   return (
     <main className="mx-auto max-w-3xl animate-[fade-in_0.3s_ease-out_both] px-4 pt-6 pb-12 sm:px-6 sm:pt-8">
-      <div className="mb-5 space-y-1 sm:mb-6">
-        <h1 className="text-2xl font-bold text-text-primary">Mis cupones</h1>
-        <p className="text-sm text-text-muted">
-          Consultá tus beneficios guardados y mostrales el QR al local cuando quieras canjearlos.
-        </p>
-      </div>
+      <SectionHeader
+        eyebrow="Cliente"
+        title="Mis cupones"
+        description="Consultá tus beneficios guardados y mostrales el QR al local cuando quieras canjearlos."
+        align="left"
+        className="mb-5 sm:mb-6"
+      />
 
       <Suspense fallback={<ReclamosListSkeleton />}>
         <ReclamosList clienteId={session.userId} page={page} />

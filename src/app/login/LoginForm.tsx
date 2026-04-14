@@ -9,6 +9,7 @@ import LinkButton from "@/components/ui/LinkButton";
 import Card from "@/components/ui/Card";
 import Reveal from "@/components/ui/Reveal";
 import Badge from "@/components/ui/Badge";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -99,12 +100,13 @@ export default function LoginForm() {
                 />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-text-primary mb-1">
-              Bienvenido
-            </h1>
-            <p className="text-text-muted text-sm">
-              Accedé al dashboard de tu negocio
-            </p>
+            <SectionHeader
+              eyebrow="Acceso del negocio"
+              title="Bienvenido"
+              description="Accedé al dashboard de tu negocio"
+              align="center"
+              className="!mb-0"
+            />
           </div>
         </Reveal>
 

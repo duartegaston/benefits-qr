@@ -18,11 +18,11 @@ export default async function EditPerfilPage() {
     <main className="mx-auto max-w-xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
       <Reveal y={10} amount={0.2} className="mb-6 sm:mb-8">
         <SectionHeader
-          eyebrow="Perfil del local"
-          title="Datos del local"
-          description="Actualizá los datos públicos de tu local para que clientes y equipo vean información clara y consistente."
-          align="left"
-          className="mb-0"
+          eyebrow="Negocio"
+          title="Datos del negocio"
+          description="Actualizá los datos públicos de tu negocio"
+          align="center"
+          className="!mb-0"
         />
       </Reveal>
 
