@@ -48,9 +48,9 @@ export default async function RegistroPage({
       <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-primary/25 blur-3xl hidden sm:block" />
       <div className="pointer-events-none absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-primary-soft/80 blur-3xl hidden sm:block" />
 
-        <div className="w-full max-w-sm text-center animate-[fade-up_0.45s_ease-out_both]">
-          <div className="flex justify-center mb-6">
-            <div className="w-20">
+        <div className="w-full max-w-sm text-center animate-[fade-up_0.45s_ease-out_both] lg:max-w-xs 2xl:max-w-sm">
+          <div className="mb-6 flex justify-center lg:mb-5 2xl:mb-6">
+            <div className="w-20 lg:w-[4.5rem] 2xl:w-20">
               <Image
                 src="/logo.png"
                 alt="Qupón"
@@ -61,8 +61,8 @@ export default async function RegistroPage({
             </div>
           </div>
 
-        <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-8">
-          <div className="mb-6 flex justify-center">
+        <Card className="border-surface/80 bg-surface/90 p-8 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md lg:p-6 2xl:p-8">
+          <div className="mb-6 flex justify-center lg:mb-5 2xl:mb-6">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft">
               <BadgeCheck aria-hidden="true" className="h-7 w-7 text-primary" />
             </div>
@@ -72,7 +72,7 @@ export default async function RegistroPage({
             title="¡Tu acceso fue aprobado!"
             description="Hacé clic para completar la configuración de tu negocio"
             align="center"
-            className="!mb-6"
+            className="!mb-6 lg:!mb-5 2xl:!mb-6"
           />
 
           <form action={verifyOnboardingLink}>

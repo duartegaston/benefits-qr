@@ -54,15 +54,15 @@ export default function EditPerfilForm({
   }
 
   return (
-    <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7">
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-        <div className="mb-1.5 flex flex-col items-center gap-1">
+    <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7 lg:max-w-sm lg:p-6 2xl:max-w-md 2xl:p-7">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 lg:space-y-4 2xl:space-y-5">
+        <div className="mb-1.5 flex flex-col items-center gap-1 lg:mb-1 2xl:mb-1.5">
           <LogoUpload
             currentLogoUrl={logoUrl}
             nombre={nombre || "?"}
             onUploaded={(url) => setLogoUrl(url)}
           />
-          <p className="text-center text-xs text-text-muted">
+          <p className="text-center text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
             Logo del local. Podés cambiarlo cuando quieras.
           </p>
         </div>
@@ -109,7 +109,7 @@ export default function EditPerfilForm({
         />
 
         {error && (
-          <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger" aria-live="polite">
+          <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger lg:text-[13px] 2xl:text-sm" aria-live="polite">
             {error}
           </p>
         )}

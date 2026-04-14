@@ -62,8 +62,8 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <fieldset disabled={loading} className="space-y-4 disabled:opacity-100">
+    <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+      <fieldset disabled={loading} className="space-y-4 disabled:opacity-100 lg:space-y-3.5 2xl:space-y-4">
         <Input
           label="Tu nombre"
           type="text"
@@ -109,7 +109,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         <p
           role="alert"
           aria-live="polite"
-          className="rounded-2xl border border-danger-border bg-danger-soft/60 px-4 py-3 text-sm text-danger"
+          className="rounded-2xl border border-danger-border bg-danger-soft/60 px-4 py-3 text-sm text-danger lg:px-3.5 lg:py-2.5 lg:text-[13px] 2xl:px-4 2xl:py-3 2xl:text-sm"
         >
           {error}
         </p>

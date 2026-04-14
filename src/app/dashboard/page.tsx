@@ -44,18 +44,18 @@ export default async function DashboardPage({
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
   return (
-    <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16">
+    <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16 lg:max-w-4xl lg:pt-7 lg:pb-14 2xl:max-w-5xl 2xl:pt-8 2xl:pb-16">
       <Reveal y={10} amount={0.2} className="mb-5 sm:mb-6">
         <SectionHeader
           eyebrow="Negocio"
           title="Dashboard del negocio"
           description="Gestioná tus cupones, seguí los reclamos y validá canjes desde un solo lugar."
           align="left"
-          className="!mb-5 sm:!mb-6"
+          className="!mb-5 sm:!mb-6 lg:!mb-5 2xl:!mb-6"
         />
 
-        <div className="rounded-2xl border border-surface/80 bg-surface/95 p-3 shadow-sm shadow-primary-soft/40 sm:bg-surface/85 sm:p-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="rounded-2xl border border-surface/80 bg-surface/95 p-3 shadow-sm shadow-primary-soft/40 sm:bg-surface/85 sm:p-4 lg:p-3.5 2xl:p-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between lg:gap-3 2xl:gap-4">
             <div className="flex min-w-0 items-start gap-4">
               <div className="shrink-0">
                 {local.logoUrl ? (
@@ -63,28 +63,28 @@ export default async function DashboardPage({
                   <img
                     src={local.logoUrl}
                     alt={`Logo de ${local.nombre}`}
-                    className="h-16 w-16 rounded-2xl object-cover sm:h-20 sm:w-20"
+                   className="h-16 w-16 rounded-2xl object-cover sm:h-20 sm:w-20 lg:h-[4.5rem] lg:w-[4.5rem] 2xl:h-20 2xl:w-20"
                   />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-soft sm:h-20 sm:w-20">
-                    <span className="text-2xl font-bold text-primary sm:text-3xl">
+                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-soft sm:h-20 sm:w-20 lg:h-[4.5rem] lg:w-[4.5rem] 2xl:h-20 2xl:w-20">
+                     <span className="text-2xl font-bold text-primary sm:text-3xl lg:text-[1.625rem] 2xl:text-3xl">
                       {local.nombre!.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
                     </span>
                   </div>
                 )}
               </div>
-              <div className="min-w-0 space-y-0.5">
-                <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl">
+               <div className="min-w-0 space-y-0.5 lg:space-y-0">
+                 <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
                   {local.nombre}
                 </h1>
-                <p className="text-sm font-medium text-text-muted break-all">
+                 <p className="break-all text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
                   {local.email}
                 </p>
                 {local.direccion && (
-                  <p className="text-xs text-text-muted">{local.direccion}</p>
+                   <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">{local.direccion}</p>
                 )}
                 {local.telefono && (
-                  <p className="text-xs text-text-muted">{local.telefono}</p>
+                   <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">{local.telefono}</p>
                 )}
               </div>
             </div>
@@ -104,7 +104,7 @@ export default async function DashboardPage({
       </Reveal>
 
       {/* Stats */}
-      <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3">
+       <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3 lg:mb-7 lg:gap-2.5 2xl:mb-8 2xl:gap-3">
         <Reveal y={14} amount={0.25}>
           <MetricCard label="Cupones" value={totalBeneficios} variant="muted" />
         </Reveal>
@@ -118,10 +118,10 @@ export default async function DashboardPage({
 
       {/* Beneficios */}
       <Reveal y={8} amount={0.2} className="mb-4">
-        <div className="flex flex-col gap-3 rounded-2xl border border-surface/80 bg-surface/95 p-4 sm:flex-row sm:items-center sm:justify-between sm:bg-surface/85 sm:p-5">
-          <div>
-            <h2 className="text-xl font-bold text-text-primary">Mis cupones</h2>
-            <p className="text-sm font-medium text-text-muted">
+         <div className="flex flex-col gap-3 rounded-2xl border border-surface/80 bg-surface/95 p-4 sm:flex-row sm:items-center sm:justify-between sm:bg-surface/85 sm:p-5 lg:gap-2.5 lg:p-4 2xl:gap-3 2xl:p-5">
+           <div>
+             <h2 className="text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">Mis cupones</h2>
+             <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
               Gestioná estado, vigencia y acciones de cada cupón.
             </p>
           </div>
@@ -149,7 +149,7 @@ export default async function DashboardPage({
 
       {totalBeneficios === 0 ? (
         <Reveal y={12} amount={0.2}>
-          <Card className="border-surface/70 bg-surface/90 p-10 text-center sm:bg-surface/75 sm:backdrop-blur-md sm:p-12">
+           <Card className="border-surface/70 bg-surface/90 p-10 text-center sm:bg-surface/75 sm:backdrop-blur-md sm:p-12 lg:p-9 2xl:p-12">
             <p className="mb-2 text-base font-medium text-text-primary">
               No tenés cupones aún
             </p>
@@ -166,7 +166,7 @@ export default async function DashboardPage({
           </Card>
         </Reveal>
       ) : (
-        <div className="space-y-3 sm:space-y-4">
+         <div className="space-y-3 sm:space-y-4 lg:space-y-3.5 2xl:space-y-4">
           {beneficios.map((b, index) => {
             const canjeados = b.canjeados;
             const shareUrl = `${appUrl}/beneficio/${b.id}`;
@@ -181,18 +181,18 @@ export default async function DashboardPage({
                 amount={0.15}
               >
                 <Card
-                  className={`border border-surface/80 border-l-4 ${status.dashboardCardToneClassName} ${status.dashboardCardSurfaceClassName} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5`}
+                   className={`border border-surface/80 border-l-4 ${status.dashboardCardToneClassName} ${status.dashboardCardSurfaceClassName} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5 lg:p-4 2xl:p-5`}
                 >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4 lg:gap-3 2xl:gap-4">
                     <div className="min-w-0 flex-1">
-                      <div className="mb-1.5 flex flex-wrap items-center gap-1.5 sm:mb-2 sm:gap-2">
-                        <h3 className="truncate text-base font-semibold text-text-primary sm:text-lg">
+                       <div className="mb-1.5 flex flex-wrap items-center gap-1.5 sm:mb-2 sm:gap-2 lg:mb-1.5 2xl:mb-2">
+                         <h3 className="truncate text-base font-semibold text-text-primary sm:text-lg lg:text-base 2xl:text-lg">
                           {b.descripcion}
                         </h3>
                         <Badge variant={status.badgeVariant}>{status.label}</Badge>
                       </div>
 
-                      <div className="grid gap-1 text-[13px] leading-tight sm:grid-cols-2 sm:gap-1.5 sm:text-sm">
+                       <div className="grid gap-1 text-[13px] leading-tight sm:grid-cols-2 sm:gap-1.5 sm:text-sm lg:text-[13px] 2xl:text-sm">
                         <p className="font-medium text-text-muted">
                           <span className="font-semibold text-text-primary">
                             Vence:
@@ -207,12 +207,12 @@ export default async function DashboardPage({
                             ? `${canjeados}/${b.maxUsos}`
                             : `${canjeados}/∞`}
                         </p>
-                        <p className="sm:col-span-2 text-[13px] font-medium text-text-muted sm:text-sm">
+                         <p className="text-[13px] font-medium text-text-muted sm:col-span-2 sm:text-sm lg:text-[13px] 2xl:text-sm">
                           {formatDiasValidosSentence(b.diasValidos)}
                         </p>
                       </div>
 
-                      <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
+                       <div className="mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2 lg:mt-2.5 2xl:mt-3">
                         <Badge variant="muted">
                           Reclamos: {b.totalReclamos}
                         </Badge>
@@ -220,7 +220,7 @@ export default async function DashboardPage({
                       </div>
                     </div>
 
-                    <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:flex-col sm:items-end sm:justify-start">
+                     <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:flex-col sm:items-end sm:justify-start lg:gap-1.5 2xl:gap-2">
                       <ShareButtons
                         url={shareUrl}
                         descripcion={b.descripcion}
@@ -231,8 +231,8 @@ export default async function DashboardPage({
                         href={`/dashboard/beneficios/${b.id}`}
                         variant="muted"
                         size="sm"
-                        className="min-h-8 w-auto px-2.5 py-1.5 text-xs sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm"
-                      >
+                         className="min-h-8 w-auto px-2.5 py-1.5 text-xs sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm lg:min-h-8 lg:px-2.5 lg:text-xs 2xl:min-h-9 2xl:px-3 2xl:text-sm"
+                       >
                         Ver detalle
                       </LinkButton>
                     </div>
@@ -242,7 +242,7 @@ export default async function DashboardPage({
             );
           })}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-3">
+             <div className="flex items-center justify-between pt-3 lg:pt-2.5 2xl:pt-3">
               <LinkButton
                 href={`/dashboard?page=${page - 1}`}
                 variant="secondary"

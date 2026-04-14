@@ -78,11 +78,11 @@ export default async function AccesoPage({
         Inicio
       </LinkButton>
 
-      <div className="my-auto w-full max-w-md">
+      <div className="my-auto w-full max-w-md lg:max-w-sm 2xl:max-w-md">
         <Reveal y={14} amount={0.3}>
-          <div className="text-center mb-7">
-            <div className="flex justify-center mb-4">
-              <div className="w-24">
+          <div className="mb-7 text-center lg:mb-6 2xl:mb-7">
+            <div className="mb-4 flex justify-center lg:mb-3.5 2xl:mb-4">
+              <div className="w-24 lg:w-22 2xl:w-24">
                 <Image
                   src="/logo.png"
                   alt="Qupón"
@@ -107,7 +107,7 @@ export default async function AccesoPage({
           <Reveal delay={0.03} y={14} amount={0.35} className="mb-4">
             <div
               role="alert"
-              className="rounded-2xl border border-danger-border bg-danger-soft/50 px-4 py-3 text-left text-sm text-danger"
+              className="rounded-2xl border border-danger-border bg-danger-soft/50 px-4 py-3 text-left text-sm text-danger lg:px-3.5 lg:py-2.5 lg:text-[13px] 2xl:px-4 2xl:py-3 2xl:text-sm"
             >
               {errorMessage}
             </div>
@@ -116,18 +116,18 @@ export default async function AccesoPage({
 
         <Reveal delay={0.06} y={16} amount={0.35}>
           {token ? (
-            <Card className="bg-surface/90 sm:bg-surface/80 sm:backdrop-blur-md border-surface/80 shadow-xl shadow-primary-soft/60 p-6 sm:p-8">
-              <div className="space-y-5 text-center">
+            <Card className="border-surface/80 bg-surface/90 p-6 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md sm:p-8 lg:p-6 2xl:p-8">
+              <div className="space-y-5 text-center lg:space-y-4 2xl:space-y-5">
                 <div className="flex justify-center">
                   <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-primary-soft to-primary-soft/70 flex items-center justify-center text-primary shadow-sm">
                     <Mail className="w-8 h-8" aria-hidden="true" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h2 className="text-lg font-semibold text-text-primary">
+                  <h2 className="text-lg font-semibold text-text-primary lg:text-base 2xl:text-lg">
                     ¡Tu Qupón llegó!
                   </h2>
-                  <p className="text-sm text-text-muted">
+                  <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
                     Hacé clic para acceder a tus cupones guardados.
                   </p>
                 </div>

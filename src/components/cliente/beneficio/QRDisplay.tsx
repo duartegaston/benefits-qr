@@ -82,7 +82,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
 
   if (loading && !qrDataURL) {
     return (
-      <div className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-2xl border border-border-default/70 bg-surface/80 px-6 py-10 text-center">
+      <div className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-2xl border border-border-default/70 bg-surface/80 px-6 py-10 text-center lg:px-5 lg:py-9 2xl:px-6 2xl:py-10">
         <div role="status" aria-label="Cargando código QR">
           <div
             aria-hidden="true"
@@ -90,8 +90,8 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
           />
         </div>
         <div className="space-y-1">
-          <p className="text-sm font-medium text-text-primary">Generando tu QR</p>
-          <p className="text-xs text-text-muted">Esto tarda solo unos segundos.</p>
+          <p className="text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm">Generando tu QR</p>
+          <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">Esto tarda solo unos segundos.</p>
         </div>
       </div>
     );
@@ -100,7 +100,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
   if (!qrDataURL) {
     return (
       <div className="space-y-4 text-center">
-        <div className="rounded-2xl border border-border-default/70 bg-surface/80 px-6 py-8">
+        <div className="rounded-2xl border border-border-default/70 bg-surface/80 px-6 py-8 lg:px-5 lg:py-7 2xl:px-6 2xl:py-8">
           <div className="space-y-2">
             <Badge variant="danger">QR no disponible</Badge>
             <p className="text-sm font-medium text-text-primary">No pudimos cargar el código.</p>
@@ -117,13 +117,13 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
   }
 
   return (
-    <div className="space-y-4">
+      <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
       <div className="flex flex-col items-center gap-2 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted lg:text-[11px] 2xl:text-xs">
           Vigencia del QR
         </p>
         <div
-          className={`font-mono text-2xl font-bold tabular-nums ${
+          className={`font-mono text-2xl font-bold tabular-nums lg:text-[1.65rem] 2xl:text-2xl ${
             isUrgent ? "text-danger" : "text-text-primary"
           }`}
         >
@@ -131,25 +131,25 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border-default/70 bg-white p-4 shadow-sm shadow-border-default/50">
+      <div className="rounded-2xl border border-border-default/70 bg-white p-4 shadow-sm shadow-border-default/50 lg:p-3.5 2xl:p-4">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={qrDataURL}
           alt="Código QR para canjear el cupón"
-          className="mx-auto aspect-square w-full max-w-[256px] rounded-xl sm:max-w-[184px]"
+          className="mx-auto aspect-square w-full max-w-[256px] rounded-xl sm:max-w-[184px] lg:max-w-[208px] 2xl:max-w-[184px]"
         />
       </div>
 
       <div className="space-y-2 text-center">
-        <p className="text-sm font-medium text-text-primary">
+        <p className="text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm">
           Mostralo en el local para validar tu beneficio.
         </p>
-        <p className="text-xs text-text-muted">
+        <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
           {isExpired
             ? "El QR venció. Presioná \"Renovar ahora\" para generar uno nuevo."
             : 'Este QR vence en 2 minutos. Si se vence, presioná "Renovar ahora" para generar uno nuevo.'}
         </p>
-        {error ? <p className="text-xs text-text-muted">{error}</p> : null}
+        {error ? <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">{error}</p> : null}
       </div>
 
       <Button

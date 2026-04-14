@@ -18,7 +18,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="mb-1 block text-sm font-medium text-text-primary"
+            className="mb-1 block text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm"
           >
             {label}
             {required ? <span className="ml-1 text-danger">*</span> : null}
@@ -30,14 +30,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           data-slot="input"
           aria-invalid={Boolean(error)}
           className={cn(
-            "w-full min-w-0 rounded-xl border border-border-default bg-surface px-3 py-2.5 text-base text-text-primary shadow-sm outline-none transition-[border-color,box-shadow,background-color,color] duration-200 placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary-soft disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm file:inline-flex file:border-0 file:bg-transparent file:text-foreground",
+            "w-full min-w-0 rounded-xl border border-border-default bg-surface px-3 py-2.5 text-base text-text-primary shadow-sm outline-none transition-[border-color,box-shadow,background-color,color] duration-200 placeholder:text-text-muted focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary-soft disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm lg:px-3.5 lg:py-2 2xl:px-4 2xl:py-2.5 file:inline-flex file:border-0 file:bg-transparent file:text-foreground",
             error && "border-danger-border focus-visible:ring-danger-soft",
             className
           )}
           required={required}
           {...props}
         />
-        {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+        {error && <p className="mt-1 text-xs text-danger lg:text-[11px] 2xl:text-xs">{error}</p>}
       </div>
     );
   }

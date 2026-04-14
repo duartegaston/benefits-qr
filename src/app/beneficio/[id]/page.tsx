@@ -75,11 +75,11 @@ export default async function BeneficioPublicoPage({
         Inicio
       </LinkButton>
 
-      <div className="my-auto w-full max-w-md">
+      <div className="my-auto w-full max-w-md lg:max-w-sm 2xl:max-w-md">
         <Reveal y={14} amount={0.3}>
-          <div className="mb-7 text-center">
-            <div className="mb-4 flex justify-center">
-              <div className="w-24">
+          <div className="mb-7 text-center lg:mb-6 2xl:mb-7">
+            <div className="mb-4 flex justify-center lg:mb-3.5 2xl:mb-4">
+              <div className="w-24 lg:w-22 2xl:w-24">
                 <Image
                   src="/logo.png"
                   alt="Qupón"
@@ -104,12 +104,12 @@ export default async function BeneficioPublicoPage({
           <Card className="overflow-hidden border-surface/80 bg-surface/90 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md">
             <div className="h-1.5 bg-gradient-to-r from-primary to-accent" />
 
-            <div className="space-y-5 p-6 sm:p-8">
-              <div className="space-y-3">
+            <div className="space-y-5 p-6 sm:p-8 lg:space-y-4 lg:p-6 2xl:space-y-5 2xl:p-8">
+              <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 space-y-1">
-                    <h1 className="text-2xl font-bold text-text-primary">{beneficio.descripcion}</h1>
-                    <p className="text-sm text-text-muted">Guardalo ahora y usalo cuando corresponda.</p>
+                    <h1 className="text-2xl font-bold text-text-primary lg:text-xl 2xl:text-2xl">{beneficio.descripcion}</h1>
+                    <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">Guardalo ahora y usalo cuando corresponda.</p>
                   </div>
 
                   <Badge
@@ -121,9 +121,9 @@ export default async function BeneficioPublicoPage({
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-border-default/70 bg-surface-muted/70 p-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
+              <div className="rounded-2xl border border-border-default/70 bg-surface-muted/70 p-4 lg:p-3.5 2xl:p-4">
+                <div className="flex items-start gap-3 lg:gap-2.5 2xl:gap-3">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm lg:h-10 lg:w-10 2xl:h-11 2xl:w-11">
                     {beneficio.local.logoUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -132,23 +132,23 @@ export default async function BeneficioPublicoPage({
                         className="h-full w-full object-cover"
                       />
                     ) : (
-                      <span className="text-sm font-bold">{initials || "LO"}</span>
+                      <span className="text-sm font-bold lg:text-[13px] 2xl:text-sm">{initials || "LO"}</span>
                     )}
                   </div>
 
                   <div className="min-w-0 space-y-1">
-                    <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
+                    <div className="flex items-center gap-2 text-xs font-medium text-text-muted lg:text-[11px] 2xl:text-xs">
                       <Store className="h-3.5 w-3.5" aria-hidden="true" />
                       <span>Local adherido</span>
                     </div>
-                    <p className="text-sm font-semibold text-text-primary">
+                    <p className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">
                       {localName}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="muted" className="gap-1.5 px-3 py-1">
                     <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
@@ -168,7 +168,7 @@ export default async function BeneficioPublicoPage({
               {availability.message && (
                 <div
                   aria-live="polite"
-                  className={`rounded-2xl border px-4 py-3 text-sm ${
+                  className={`rounded-2xl border px-4 py-3 text-sm lg:px-3.5 lg:py-2.5 lg:text-[13px] 2xl:px-4 2xl:py-3 2xl:text-sm ${
                     beneficioState.isExpired
                       ? "border-danger-border bg-danger-soft/60 text-danger"
                       : "border-warning-border bg-warning-soft/60 text-warning"

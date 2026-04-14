@@ -85,16 +85,8 @@ export default function NuevoBeneficioForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <SectionHeader
-        eyebrow="Nuevo cupón"
-        title="Creá un beneficio"
-        description="Completá la información básica y elegí cómo querés manejar la vigencia."
-        align="left"
-        className="!mb-0"
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className="space-y-5 lg:space-y-4 2xl:space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:gap-3.5 2xl:gap-4">
         <div className="sm:col-span-2">
           <Input
             label="Descripción"
@@ -124,17 +116,17 @@ export default function NuevoBeneficioForm() {
         />
       </div>
 
-      <section className="rounded-2xl border border-border-default/80 bg-surface-muted/50 p-4">
-        <div className="mb-3 flex items-start gap-3">
+      <section className="rounded-2xl border border-border-default/80 bg-surface-muted/50 p-4 lg:p-3.5 2xl:p-4">
+        <div className="mb-3 flex items-start gap-3 lg:mb-2.5 lg:gap-2.5 2xl:mb-3 2xl:gap-3">
           <div className="rounded-xl bg-primary-soft p-2 text-primary">
             <CalendarDays className="h-4 w-4" aria-hidden="true" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-text-primary">Días disponibles</h2>
+                <h2 className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">Días disponibles</h2>
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
           <div className="flex flex-wrap gap-2">
             <Button
               type="button"
@@ -164,7 +156,7 @@ export default function NuevoBeneficioForm() {
             })}
           </div>
 
-          <p className="text-sm text-text-muted">
+          <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
             {formatDiasValidosSentence(diasSeleccionados, {
               emptyLabel: "Aplica todos los días.",
               prefix: "Aplica los",
@@ -172,7 +164,7 @@ export default function NuevoBeneficioForm() {
           </p>
 
           {!todosLosDias ? (
-            <p className="text-xs text-text-muted">
+            <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
               Tocá un día para quitarlo. Si desmarcás el último, vuelve a “Todos los días”.
             </p>
           ) : null}
@@ -181,7 +173,7 @@ export default function NuevoBeneficioForm() {
 
       {error ? <p className="text-sm text-danger">{error}</p> : null}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end lg:gap-2.5 2xl:gap-3">
         <Button type="button" variant="secondary" onClick={() => router.push("/dashboard") }>
           Cancelar
         </Button>

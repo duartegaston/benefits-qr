@@ -43,21 +43,21 @@ export default async function BeneficioStatsPage({
   const isDeleted = beneficio.deletedAt !== null;
 
   return (
-    <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8">
+    <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8 lg:max-w-4xl lg:pt-7 2xl:max-w-5xl 2xl:pt-8">
       <SectionHeader
         eyebrow="Detalle del cupón"
         title="Estado y actividad"
         description="Consultá métricas clave y el historial de clientes que reclamaron este cupón."
         align="left"
-        className="mb-5 sm:mb-6"
+        className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6"
       />
 
-      <Card className="relative mb-6 border-surface/80 bg-surface/95 p-4 shadow-sm shadow-accent-soft/25 sm:bg-surface/85 sm:p-6">
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-4">
+      <Card className="relative mb-6 border-surface/80 bg-surface/95 p-4 shadow-sm shadow-accent-soft/25 sm:bg-surface/85 sm:p-6 lg:p-5 2xl:p-6">
+        <div className="flex flex-col gap-5 lg:gap-4 2xl:gap-5">
+          <div className="flex flex-col gap-4 lg:gap-3 2xl:gap-4">
             <div className="min-w-0 flex-1 space-y-2 pr-12 sm:pr-36">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl">
+                <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
                   {beneficio.descripcion}
                 </h1>
                 {isDeleted ? (
@@ -66,11 +66,11 @@ export default async function BeneficioStatsPage({
                   <Badge variant={benefitStatus.badgeVariant}>{benefitStatus.label}</Badge>
                 )}
               </div>
-              <p className="text-sm font-medium text-text-muted">
+              <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
                 Vence: {formatDateAR(beneficio.fechaExpiracion)}
                 {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
               </p>
-              <p className="text-xs font-medium text-text-muted sm:text-sm">
+              <p className="text-xs font-medium text-text-muted sm:text-sm lg:text-[13px] 2xl:text-sm">
                 {formatDiasValidosSentence(beneficio.diasValidos)}
               </p>
             </div>
@@ -83,10 +83,10 @@ export default async function BeneficioStatsPage({
           </div>
 
           <div className="space-y-2">
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-text-muted lg:text-[10px] 2xl:text-[11px]">
               Actividad del cupón
             </p>
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-2.5 2xl:gap-3">
               <MetricCard label="Reclamos" value={stats.total} variant="secondary" />
               <MetricCard label="Canjeados" value={stats.canjeados} variant="light" />
               <MetricCard label="Canjeables hoy" value={stats.canjeablesHoy} variant="warning" />
@@ -95,7 +95,7 @@ export default async function BeneficioStatsPage({
         </div>
       </Card>
 
-      <h2 className="mb-3 text-xl font-bold text-text-primary">
+      <h2 className="mb-3 text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">
         Clientes ({stats.total})
       </h2>
 
@@ -104,27 +104,27 @@ export default async function BeneficioStatsPage({
           <p className="text-text-muted">Nadie reclamó este cupón aún</p>
         </Card>
       ) : (
-        <div className="space-y-2.5">
+        <div className="space-y-2.5 lg:space-y-2 2xl:space-y-2.5">
           {reclamos.map((r) => {
             const status = getReclamoStatusPresentation(r.effectiveStatus);
 
             return (
               <Card
                 key={r.id}
-                className="border-surface/80 bg-surface/95 p-3 sm:bg-surface/85 sm:p-3.5"
+                className="border-surface/80 bg-surface/95 p-3 sm:bg-surface/85 sm:p-3.5 lg:p-3 2xl:p-3.5"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-text-primary sm:text-base">
+                    <p className="truncate text-sm font-semibold text-text-primary sm:text-base lg:text-sm 2xl:text-base">
                       {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
                     </p>
-                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
                       {r.cliente.email && <span className="break-all">{r.cliente.email}</span>}
                       {r.cliente.email && r.cliente.phone ? <span aria-hidden>•</span> : null}
                       {r.cliente.phone && <span>{r.cliente.phone}</span>}
                       {!r.cliente.email && !r.cliente.phone ? <span>Sin contacto cargado</span> : null}
                     </div>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs">
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs lg:text-[11px] 2xl:text-xs">
                       <span>Reclamó: {formatDateTimeAR(r.fechaReclamo)}</span>
                       {r.fechaCanje ? (
                         <span>Canjeó: {formatDateTimeAR(r.fechaCanje)}</span>

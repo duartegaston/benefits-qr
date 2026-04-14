@@ -54,14 +54,6 @@ export default function Home() {
             </div>
           </Reveal>
 
-          {/* Badge */}
-          <Reveal delay={0.06} y={16} amount={0.2}>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border-default/70 bg-surface/85 px-4 py-1.5 text-sm font-medium text-accent shadow-sm lg:gap-1.5 lg:bg-surface/65 lg:px-3 lg:py-1 lg:text-xs lg:backdrop-blur-sm 2xl:gap-2 2xl:px-4 2xl:py-1.5 2xl:text-sm">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse motion-reduce:animate-none shrink-0" />
-              Plataforma de cupones digitales con QR
-            </span>
-          </Reveal>
-
           {/* Headline */}
           <Reveal delay={0.14} y={18} amount={0.2}>
             <h1 className="mt-6 mb-4 text-4xl leading-[1.15] font-bold tracking-tight text-text-primary lg:mt-4 lg:mb-3 lg:text-[2.45rem] lg:leading-[1.08] 2xl:mt-6 2xl:mb-4 2xl:text-5xl">
