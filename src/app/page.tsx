@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   ArrowRight,
   Building2,
@@ -11,6 +10,7 @@ import {
 import HowItWorks from "@/components/landing/HowItWorks";
 import Playbooks from "@/components/landing/Playbooks";
 import Pricing from "@/components/landing/Pricing";
+import BrandLogo from "@/components/ui/BrandLogo";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 
@@ -42,16 +42,7 @@ export default function Home() {
         <div className="relative z-10 my-auto w-full max-w-2xl text-center lg:max-w-xl 2xl:max-w-2xl">
           {/* Logo */}
           <Reveal y={14} amount={0.1} className="mb-7 flex justify-center lg:mb-4 2xl:mb-7">
-            <div className="w-24 lg:w-20 2xl:w-24">
-              <Image
-                src="/logo.png"
-                alt="Qupón"
-                width={500}
-                height={450}
-                priority
-                className="w-full h-auto"
-              />
-            </div>
+            <BrandLogo priority />
           </Reveal>
 
           {/* Headline */}

@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Button from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -50,16 +50,7 @@ export default function ClienteHeader() {
           className="inline-flex items-center"
           aria-label="Ir a mis cupones"
         >
-          <div className="w-20 lg:w-[4.5rem] 2xl:w-20">
-            <Image
-              src="/logo.png"
-              alt="Qupón"
-              width={250}
-              height={180}
-              priority
-              className="h-auto w-full"
-            />
-          </div>
+          <BrandLogo variant="header" priority />
         </Link>
       </div>
     </header>

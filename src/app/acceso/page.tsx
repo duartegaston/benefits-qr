@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { createSession, getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
-import Image from "next/image";
 import { ArrowLeft, Mail } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import LinkButton from "@/components/ui/LinkButton";
@@ -82,16 +82,7 @@ export default async function AccesoPage({
         <Reveal y={14} amount={0.3}>
           <div className="mb-7 text-center lg:mb-6 2xl:mb-7">
             <div className="mb-4 flex justify-center lg:mb-3.5 2xl:mb-4">
-              <div className="w-24 lg:w-22 2xl:w-24">
-                <Image
-                  src="/logo.png"
-                  alt="Qupón"
-                  width={500}
-                  height={450}
-                  priority
-                  className="w-full h-auto"
-                />
-              </div>
+              <BrandLogo priority />
             </div>
 
             <SectionHeader

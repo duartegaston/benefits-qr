@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { ArrowLeft, CalendarDays, CircleAlert, Store } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { EstadoReclamo } from "@/generated/prisma/client";
 export const revalidate = 60;
 import Badge from "@/components/ui/Badge";
+import BrandLogo from "@/components/ui/BrandLogo";
 import Card from "@/components/ui/Card";
 import ReclamarForm from "@/components/cliente/beneficio/ReclamarForm";
 import LinkButton from "@/components/ui/LinkButton";
@@ -79,16 +79,7 @@ export default async function BeneficioPublicoPage({
         <Reveal y={14} amount={0.3}>
           <div className="mb-7 text-center lg:mb-6 2xl:mb-7">
             <div className="mb-4 flex justify-center lg:mb-3.5 2xl:mb-4">
-              <div className="w-24 lg:w-22 2xl:w-24">
-                <Image
-                  src="/logo.png"
-                  alt="Qupón"
-                  width={500}
-                  height={450}
-                  priority
-                  className="h-auto w-full"
-                />
-              </div>
+              <BrandLogo priority />
             </div>
 
             <SectionHeader
