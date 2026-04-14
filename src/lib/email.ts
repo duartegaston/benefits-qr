@@ -155,8 +155,7 @@ export async function sendLocalOnboardingMagicLink(to: string, token: string) {
 
 export async function sendMagicLink(
   to: string,
-  token: string,
-  redirect: string
+  token: string
 ) {
   const magicLink = `${BASE_URL}/acceso?token=${token}`;
 

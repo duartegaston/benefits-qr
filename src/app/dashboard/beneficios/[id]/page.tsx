@@ -38,9 +38,7 @@ export default async function BeneficioStatsPage({
 
   if (!beneficio) redirect("/dashboard");
 
-  const isExpired = beneficio.fechaExpiracion < new Date();
-  const isAgotado = beneficio.maxUsos !== null && stats.canjeados >= beneficio.maxUsos;
-  const benefitStatus = getBeneficioStatusPresentation(isExpired, isAgotado);
+  const benefitStatus = getBeneficioStatusPresentation(beneficio.effectiveStatus);
 
   const isDeleted = beneficio.deletedAt !== null;
 
@@ -91,7 +89,7 @@ export default async function BeneficioStatsPage({
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <MetricCard label="Reclamos" value={stats.total} variant="secondary" />
               <MetricCard label="Canjeados" value={stats.canjeados} variant="light" />
-              <MetricCard label="Pendientes" value={stats.pendientes} variant="warning" />
+              <MetricCard label="Canjeables hoy" value={stats.canjeablesHoy} variant="warning" />
             </div>
           </div>
         </div>
@@ -108,7 +106,7 @@ export default async function BeneficioStatsPage({
       ) : (
         <div className="space-y-2.5">
           {reclamos.map((r) => {
-            const status = getReclamoStatusPresentation(r.estado);
+            const status = getReclamoStatusPresentation(r.effectiveStatus);
 
             return (
               <Card

@@ -1,7 +1,6 @@
 export const EstadoReclamo = {
   PENDIENTE: "PENDIENTE",
   CANJEADO: "CANJEADO",
-  VENCIDO: "VENCIDO",
   CANCELADO: "CANCELADO",
 } as const;
 

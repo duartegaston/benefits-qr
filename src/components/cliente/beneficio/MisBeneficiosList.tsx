@@ -5,37 +5,23 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
 import Button from "@/components/ui/Button";
-import { EstadoReclamo } from "@/lib/enums";
+import {
+  ReclamoEffectiveStatus,
+  type ReclamoEffectiveStatus as ReclamoEffectiveStatusType,
+} from "@/lib/couponStatus";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
 import { getReclamoStatusPresentation } from "@/lib/statusPresentation";
-import { formatDiasValidosSentence, sortDiasValidos } from "@/lib/beneficioSchedule";
-
-function getCurrentDayInArgentina(): number {
-  return Number(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: "America/Argentina/Buenos_Aires",
-      weekday: "short",
-    })
-      .format(new Date())
-      .replace(/Sun/, "0")
-      .replace(/Mon/, "1")
-      .replace(/Tue/, "2")
-      .replace(/Wed/, "3")
-      .replace(/Thu/, "4")
-      .replace(/Fri/, "5")
-      .replace(/Sat/, "6")
-  );
-}
 
 type Reclamo = {
   id: string;
-  estado: EstadoReclamo;
+  effectiveStatus: ReclamoEffectiveStatusType;
+  canShowQr: boolean;
+  blockedMessage: string | null;
   fechaReclamo: Date | string;
   fechaCanje: Date | string | null;
   beneficio: {
     descripcion: string;
     fechaExpiracion: Date | string;
-    diasValidos: number[];
     local: { nombre: string | null; id: string };
   };
 };
@@ -46,7 +32,6 @@ export default function MisBeneficiosList({
   reclamos: Reclamo[];
 }) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const todayIndex = getCurrentDayInArgentina();
 
   if (reclamos.length === 0) {
     return (
@@ -59,7 +44,7 @@ export default function MisBeneficiosList({
   return (
     <div className="space-y-3">
       {reclamos.map((r) => {
-        const status = getReclamoStatusPresentation(r.estado);
+        const status = getReclamoStatusPresentation(r.effectiveStatus);
         const initials = (r.beneficio.local.nombre ?? "")
           .split(" ")
           .map((w) => w[0])
@@ -67,13 +52,6 @@ export default function MisBeneficiosList({
           .join("")
           .toUpperCase();
         const isExpanded = expandedId === r.id;
-
-        const diasValidos = r.beneficio.diasValidos;
-        const isWrongDay =
-          diasValidos.length > 0 && !diasValidos.includes(todayIndex);
-        const isExpiredBeneficio =
-          new Date(r.beneficio.fechaExpiracion) < new Date();
-        const canShowQR = !isWrongDay && !isExpiredBeneficio;
 
         return (
           <Card
@@ -116,7 +94,7 @@ export default function MisBeneficiosList({
                 <Badge variant={status.badgeVariant}>{status.label}</Badge>
               </div>
 
-              {r.estado === EstadoReclamo.PENDIENTE && canShowQR && (
+              {r.canShowQr && (
                 <Button
                   type="button"
                   onClick={() => setExpandedId(isExpanded ? null : r.id)}
@@ -128,37 +106,33 @@ export default function MisBeneficiosList({
                 </Button>
               )}
 
-              {r.estado === EstadoReclamo.PENDIENTE && !canShowQR && (
+              {!r.canShowQr && r.blockedMessage && (
                 <div className="mt-3 flex items-start gap-2 rounded-xl border border-warning-border bg-warning-soft/60 px-3 py-2.5 text-xs text-warning">
                   <CircleAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <p>
-                    {isWrongDay
-                      ? `Este cupón solo se puede canjear ${formatDiasValidosSentence(sortDiasValidos(diasValidos), { emptyLabel: "todos los días", prefix: "los", style: "full" })}.`
-                      : "Este cupón ya no se puede canjear porque venció."}
-                  </p>
+                  <p>{r.blockedMessage}</p>
                 </div>
               )}
 
-              {r.estado === EstadoReclamo.VENCIDO && (
+              {r.effectiveStatus === ReclamoEffectiveStatus.VENCIDO && (
                 <p className="mt-3 text-xs text-danger">
                   Este cupón venció y ya no puede canjearse.
                 </p>
               )}
 
-              {r.estado === EstadoReclamo.CANJEADO && r.fechaCanje && (
+              {r.effectiveStatus === ReclamoEffectiveStatus.CANJEADO && r.fechaCanje && (
                 <p className="mt-3 text-xs text-success">
                   El local registró el canje el {formatDateTimeAR(r.fechaCanje)}.
                 </p>
               )}
 
-              {r.estado === EstadoReclamo.CANCELADO && (
+              {r.effectiveStatus === ReclamoEffectiveStatus.CANCELADO && (
                 <p className="mt-3 text-xs text-text-muted">
                   Este cupón ya no está disponible porque el local lo dio de baja.
                 </p>
               )}
             </div>
 
-            {isExpanded && r.estado === EstadoReclamo.PENDIENTE && (
+            {isExpanded && r.canShowQr && (
               <div className="border-t border-border-default/70 bg-surface-muted/35 p-4 sm:p-5">
                 <QRDisplay reclamoId={r.id} />
               </div>
