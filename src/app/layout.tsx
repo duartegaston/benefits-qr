@@ -23,6 +23,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Qupón",
   description: "Plataforma de cupones y descuentos con QR",
+  icons: {
+    icon: [
+      { url: "/icon.svg", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
