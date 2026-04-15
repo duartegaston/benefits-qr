@@ -4,7 +4,9 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import { findLocalById } from "@/server/repositories/localApiRepository";
+
 import EditPerfilForm from "@/components/local/dashboard/perfil/EditPerfilForm";
+import { logoVersion } from "@/lib/logoVersion";
 
 export default async function EditPerfilPage() {
   const session = await getSessionFromCookies();
@@ -15,6 +17,7 @@ export default async function EditPerfilPage() {
   if (!local) redirect("/login");
 
   return (
+
     <main className="mx-auto max-w-xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8 lg:max-w-lg lg:pt-7 2xl:max-w-xl 2xl:pt-8">
       <Reveal y={10} amount={0.2} className="mb-6 sm:mb-8 lg:mb-6 2xl:mb-8">
         <SectionHeader
@@ -31,7 +34,7 @@ export default async function EditPerfilPage() {
           <EditPerfilForm
             email={local.email}
             nombre={local.nombre ?? ""}
-            logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo` : null}
+            logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo?v=${logoVersion(local.logoUrl)}` : null}
             direccion={local.direccion}
             telefono={local.telefono}
           />

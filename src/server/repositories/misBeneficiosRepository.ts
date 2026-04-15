@@ -14,6 +14,7 @@ export type ReclamoRow = {
   beneficioCanjeados: number;
   localNombre: string | null;
   localId: string;
+  localLogoV: string;
   totalCount: number;
 };
 
@@ -41,6 +42,7 @@ export async function getMisBeneficiosRows(
       )                       AS "beneficioCanjeados",
       l.nombre                AS "localNombre",
       l.id                    AS "localId",
+      LEFT(MD5(COALESCE(l."logoUrl", '')), 8) AS "localLogoV",
       COUNT(*) OVER ()::int   AS "totalCount"
     FROM "Reclamo" r
     JOIN "Beneficio" b ON b.id = r."beneficioId"

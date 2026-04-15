@@ -22,7 +22,7 @@ type Reclamo = {
   beneficio: {
     descripcion: string;
     fechaExpiracion: Date | string;
-    local: { nombre: string | null; id: string };
+    local: { nombre: string | null; id: string; logoV: string };
   };
 };
 
@@ -67,7 +67,7 @@ export default function MisBeneficiosList({
                       <span className="text-xs font-bold">{initials || "LO"}</span>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
-                        src={`/api/locales/${r.beneficio.local.id}/logo`}
+                        src={`/api/locales/${r.beneficio.local.id}/logo?v=${r.beneficio.local.logoV}`}
                         alt={r.beneficio.local.nombre ?? ""}
                         className="absolute inset-0 h-full w-full object-cover"
                         onError={(e) => { e.currentTarget.style.display = "none"; }}
