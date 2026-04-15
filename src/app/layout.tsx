@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   title: "Qupón",
   description: "Creá cupones de descuento, compartí el link y canjeá al instante con QR desde el celular.",
   icons: {
-    icon: "/logo-min.png",
+    icon: "/icon.svg",
     shortcut: "/favicon.ico",
     apple: "/apple-icon.png",
   },
