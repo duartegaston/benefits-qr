@@ -37,7 +37,7 @@ function emailLayout(content: string): string {
           <tr>
             <td style="background-color:${EMAIL_CARD_BG};border-radius:12px;padding:36px 32px;">
               <a href="${BASE_URL}" style="text-decoration:none;display:block;margin-bottom:28px;">
-                <img src="${BASE_URL}/logo.png" alt="Qupón" width="100"
+                <img src="${BASE_URL}/logo-min.png" alt="Qupón" width="100"
                      style="display:block;height:auto;border:0;" />
               </a>
               ${content}
