@@ -18,6 +18,8 @@ export type ReclamoRow = {
   totalCount: number;
 };
 
+export type ReclamoStatusRow = Omit<ReclamoRow, "totalCount">;
+
 export async function getMisBeneficiosRows(
   clienteId: string,
   page: number,
@@ -51,4 +53,39 @@ export async function getMisBeneficiosRows(
     ORDER BY r."fechaReclamo" DESC
     LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
   `;
+}
+
+export async function getMisBeneficioRow(
+  clienteId: string,
+  reclamoId: string
+): Promise<ReclamoStatusRow | null> {
+  const [row] = await prisma.$queryRaw<ReclamoStatusRow[]>`
+    SELECT
+      r.id,
+      r.estado,
+      r."fechaReclamo",
+      r."fechaCanje",
+      b.descripcion           AS "beneficioDescripcion",
+      b."fechaExpiracion"     AS "beneficioFechaExpiracion",
+      b."deletedAt"           AS "beneficioDeletedAt",
+      b."diasValidos"         AS "beneficioDiasValidos",
+      b."maxUsos"             AS "beneficioMaxUsos",
+      (
+        SELECT COUNT(*)::int
+        FROM "Reclamo" rc
+        WHERE rc."beneficioId" = b.id
+          AND rc.estado = 'CANJEADO'
+      )                       AS "beneficioCanjeados",
+      l.nombre                AS "localNombre",
+      l.id                    AS "localId",
+      LEFT(MD5(COALESCE(l."logoUrl", '')), 8) AS "localLogoV"
+    FROM "Reclamo" r
+    JOIN "Beneficio" b ON b.id = r."beneficioId"
+    JOIN "Local"     l ON l.id = b."localId"
+    WHERE r."clienteId" = ${clienteId}
+      AND r.id = ${reclamoId}
+    LIMIT 1
+  `;
+
+  return row ?? null;
 }

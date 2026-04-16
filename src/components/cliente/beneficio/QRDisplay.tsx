@@ -1,23 +1,32 @@
 "use client";
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { RefreshCw } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import { ReclamoEffectiveStatus } from "@/lib/couponStatus";
 
 interface QRDisplayProps {
   reclamoId: string;
 }
 
+const QR_DURATION_SECONDS = 120;
+const STATUS_POLL_INTERVAL_MS = 2500;
+
 export default function QRDisplay({ reclamoId }: QRDisplayProps) {
+  const router = useRouter();
   const [qrDataURL, setQrDataURL] = useState<string | null>(null);
-  const [secondsLeft, setSecondsLeft] = useState(120);
+  const [secondsLeft, setSecondsLeft] = useState(QR_DURATION_SECONDS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pollInFlightRef = useRef(false);
+  const refreshTriggeredRef = useRef(false);
 
   const generateQR = useCallback(async () => {
     setLoading(true);
     setError(null);
+    refreshTriggeredRef.current = false;
 
     try {
       const res = await fetch(`/api/reclamos/${reclamoId}/qr`, {
@@ -38,7 +47,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
       }
 
       setQrDataURL(data.qrDataURL);
-      setSecondsLeft(120);
+      setSecondsLeft(QR_DURATION_SECONDS);
     } catch (err) {
       setQrDataURL(null);
       setError(
@@ -48,6 +57,60 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
       setLoading(false);
     }
   }, [reclamoId]);
+
+  const refreshCoupons = useCallback(() => {
+    if (refreshTriggeredRef.current) {
+      return;
+    }
+
+    refreshTriggeredRef.current = true;
+    router.refresh();
+  }, [router]);
+
+  const pollStatus = useCallback(async () => {
+    if (pollInFlightRef.current || refreshTriggeredRef.current) {
+      return;
+    }
+
+    pollInFlightRef.current = true;
+
+    try {
+      const res = await fetch(`/api/reclamos/${reclamoId}/status`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      if (res.status === 401) {
+        refreshCoupons();
+        return;
+      }
+
+      if (res.status === 404) {
+        refreshCoupons();
+        return;
+      }
+
+      if (!res.ok) {
+        return;
+      }
+
+      const data = (await res.json()) as {
+        effectiveStatus?: string;
+        canShowQr?: boolean;
+      };
+
+      if (
+        data.canShowQr === false ||
+        data.effectiveStatus === ReclamoEffectiveStatus.CANJEADO ||
+        (typeof data.effectiveStatus === "string" &&
+          data.effectiveStatus !== ReclamoEffectiveStatus.PENDIENTE)
+      ) {
+        refreshCoupons();
+      }
+    } finally {
+      pollInFlightRef.current = false;
+    }
+  }, [reclamoId, refreshCoupons]);
 
   useEffect(() => {
     generateQR();
@@ -74,6 +137,21 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [qrDataURL]);
+
+  useEffect(() => {
+    if (!qrDataURL) return;
+
+    void pollStatus();
+
+    const intervalId = setInterval(() => {
+      void pollStatus();
+    }, STATUS_POLL_INTERVAL_MS);
+
+    return () => {
+      clearInterval(intervalId);
+      pollInFlightRef.current = false;
+    };
+  }, [pollStatus, qrDataURL]);
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
@@ -117,7 +195,7 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
   }
 
   return (
-      <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+    <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
       <div className="flex flex-col items-center gap-2 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted lg:text-[11px] 2xl:text-xs">
           Vigencia del QR
