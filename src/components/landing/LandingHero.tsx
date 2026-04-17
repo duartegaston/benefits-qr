@@ -32,12 +32,8 @@ export default function LandingHero() {
             </Reveal>
 
             <Reveal delay={0.14} y={18} amount={0.2}>
-              <h1 className="text-4xl uppercase leading-[1.08] font-bold tracking-tight text-text-primary sm:text-[2.85rem] lg:max-w-xl lg:text-[3.4rem] lg:leading-[1.02] 2xl:max-w-2xl 2xl:text-[4.1rem]">
-                Cupones que{" "}
-                <span className="bg-linear-to-r from-primary via-accent to-border-strong bg-clip-text text-transparent">
-                  conectan negocios
-                </span>{" "}
-                con sus clientes
+              <h1 className="text-[3.2rem] font-bold uppercase leading-[0.96] tracking-[-0.05em] text-black sm:text-[4.25rem] lg:max-w-2xl lg:text-[5rem] lg:leading-[0.93] 2xl:max-w-[14ch] 2xl:text-[6.5rem]">
+                Cupones que conectan <span className="text-primary">negocios</span> con sus <span className="text-primary">clientes</span>
               </h1>
             </Reveal>
 
@@ -84,13 +80,20 @@ export default function LandingHero() {
             amount={0.18}
             className="mx-auto w-full max-w-[20rem] sm:max-w-[22rem] lg:mx-0 lg:max-w-none 2xl:justify-self-end"
           >
-            <IPhoneMockup
-              imageSrc="/Fotos-iphone/dashboard.jpeg"
-              imageAlt="Vista del dashboard de BenefitQR en un iPhone"
-              priority
-              sizes="(min-width: 1536px) 20rem, (min-width: 1024px) 18rem, 85vw"
-              frameClassName="max-w-[24rem] lg:max-w-[17.5rem] 2xl:max-w-[20rem]"
-            />
+            <div className="relative isolate">
+              <div className="pointer-events-none absolute inset-x-[12%] top-[9%] hidden h-[72%] rounded-[2.75rem] bg-[radial-gradient(circle_at_center,rgba(30,64,175,0.14),rgba(30,64,175,0)_68%)] blur-2xl sm:block" />
+              <div className="pointer-events-none absolute top-[10%] left-1/2 hidden h-[78%] w-[78%] -translate-x-1/2 rounded-full border border-primary/12 sm:block" />
+              <div className="pointer-events-none absolute top-[4%] left-[8%] hidden h-[84%] w-[84%] rounded-[3rem] border border-white/45 bg-linear-to-br from-white/50 via-white/10 to-transparent shadow-[0_28px_90px_-45px_rgba(59,130,246,0.5)] sm:block" />
+              <div className="pointer-events-none absolute -right-[8%] bottom-[12%] hidden h-18 w-18 rounded-full border border-accent/20 bg-accent-soft/35 blur-[2px] lg:block" />
+
+              <IPhoneMockup
+                imageSrc="/Fotos-iphone/dashboard.jpeg"
+                imageAlt="Vista del dashboard de BenefitQR en un iPhone"
+                priority
+                sizes="(min-width: 1536px) 20rem, (min-width: 1024px) 18rem, 85vw"
+                frameClassName="relative z-10 max-w-[24rem] lg:max-w-[17.5rem] 2xl:max-w-[20rem]"
+              />
+            </div>
           </Reveal>
         </div>
 
