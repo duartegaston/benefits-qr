@@ -1,17 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Plus_Jakarta_Sans } from "next/font/google";
+import { Sora } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-geist",
-});
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-jakarta",
-  weight: ["600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -38,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${geist.variable} ${jakarta.variable} ${geist.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
+        className={`${sora.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
       >
         {children}
       </body>

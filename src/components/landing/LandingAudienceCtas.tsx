@@ -1,25 +1,33 @@
-import { ArrowRight, Building2, Gift } from "lucide-react";
+import { ArrowRight, Building2, Check, Gift } from "lucide-react";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 const AUDIENCE_CTAS = [
   {
-    title: "Para Negocios",
-    description: "Registrá tu negocio, creá cupones y gestioná los canjes.",
+    eyebrow: "Entrada dedicada",
+    title: "Para locales",
+    description:
+      "Creá campañas, publicá beneficios y escaneá canjes con una operación ordenada desde el dashboard.",
+    bullets: ["Alta rápida", "Control de usos", "Canje inmediato"],
     href: "/login",
-    action: "Ingresar",
+    action: "Ingresar al panel",
     icon: <Building2 className="h-5 w-5" aria-hidden="true" />,
     className:
       "border-surface/80 bg-surface/90 shadow-lg shadow-primary-soft/70 hover:shadow-xl hover:shadow-accent-soft lg:bg-surface/75 sm:backdrop-blur-md",
     iconClassName: "bg-primary-soft text-primary",
     titleClassName: "text-text-primary",
     descriptionClassName: "text-text-muted",
+    eyebrowClassName: "text-primary",
+    bulletClassName: "text-text-muted",
     buttonVariant: "primary" as const,
   },
   {
-    title: "Para Clientes",
-    description: "Accedé a todos tus cupones y descuentos en un solo lugar.",
+    eyebrow: "Entrada dedicada",
+    title: "Para clientes",
+    description:
+      "Accedé a todos tus beneficios desde el mail, guardalos y mostrá el QR cuando llegás al local.",
+    bullets: ["Sin contraseña", "Sin app extra", "Todo en un lugar"],
     href: "/acceso",
     action: "Ver mis cupones",
     icon: <Gift className="h-5 w-5" aria-hidden="true" />,
@@ -28,6 +36,8 @@ const AUDIENCE_CTAS = [
     iconClassName: "bg-surface/20 text-primary-foreground",
     titleClassName: "text-primary-foreground",
     descriptionClassName: "text-primary-foreground/80",
+    eyebrowClassName: "text-primary-foreground/72",
+    bulletClassName: "text-primary-foreground/82",
     buttonVariant: "subtle" as const,
   },
 ];
@@ -56,12 +66,25 @@ export default function LandingAudienceCtas() {
                 <div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-2xl ${cta.iconClassName}`}>
                   {cta.icon}
                 </div>
-                <h2 className={`mb-1.5 text-lg font-semibold ${cta.titleClassName}`}>
+                <p className={`mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] ${cta.eyebrowClassName}`}>
+                  {cta.eyebrow}
+                </p>
+                <h2 className={`mb-2 text-lg font-semibold ${cta.titleClassName}`}>
                   {cta.title}
                 </h2>
                 <p className={`mb-5 max-w-md text-sm leading-relaxed ${cta.descriptionClassName}`}>
                   {cta.description}
                 </p>
+                <ul className={`mb-5 space-y-2 text-sm ${cta.bulletClassName}`}>
+                  {cta.bullets.map((bullet) => (
+                    <li key={bullet} className="flex items-center gap-2.5">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-current/10">
+                        <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                      </span>
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
                 <LinkButton href={cta.href} variant={cta.buttonVariant}>
                   {cta.action}
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

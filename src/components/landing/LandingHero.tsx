@@ -20,7 +20,7 @@ const FEATURES = [
 
 export default function LandingHero() {
   return (
-    <section className="relative px-6 pt-10 pb-6 sm:pt-12 sm:pb-8 lg:px-8 lg:pt-8 lg:pb-6 2xl:pt-10 2xl:pb-8">
+    <section className="relative overflow-x-hidden px-6 pt-10 pb-6 sm:pt-12 sm:pb-8 lg:px-8 lg:pt-8 lg:pb-6 2xl:pt-10 2xl:pb-8">
       <div className="pointer-events-none absolute -top-56 left-0 hidden h-200 w-200 rounded-full bg-primary/20 blur-3xl lg:block" />
       <div className="pointer-events-none absolute right-0 bottom-0 hidden h-175 w-175 rounded-full bg-accent-soft/70 blur-3xl lg:block" />
 
@@ -32,12 +32,8 @@ export default function LandingHero() {
             </Reveal>
 
             <Reveal delay={0.14} y={18} amount={0.2}>
-              <h1 className="text-4xl uppercase leading-[1.08] font-bold tracking-tight text-text-primary sm:text-[2.85rem] lg:max-w-xl lg:text-[3.4rem] lg:leading-[1.02] 2xl:max-w-2xl 2xl:text-[4.1rem]">
-                Cupones que{" "}
-                <span className="bg-linear-to-r from-primary via-accent to-border-strong bg-clip-text text-transparent">
-                  conectan negocios
-                </span>{" "}
-                con sus clientes
+              <h1 className="text-[3.2rem] font-bold uppercase leading-[0.96] tracking-[-0.05em] text-black sm:text-[4.25rem] lg:max-w-2xl lg:text-[5rem] lg:leading-[0.93] 2xl:max-w-[14ch] 2xl:text-[6.5rem]">
+                Cupones que conectan <span className="text-primary">negocios</span> con sus <span className="text-primary">clientes</span>
               </h1>
             </Reveal>
 
@@ -84,13 +80,25 @@ export default function LandingHero() {
             amount={0.18}
             className="mx-auto w-full max-w-[20rem] sm:max-w-[22rem] lg:mx-0 lg:max-w-none 2xl:justify-self-end"
           >
-            <IPhoneMockup
-              imageSrc="/Fotos-iphone/dashboard.jpeg"
-              imageAlt="Vista del dashboard de BenefitQR en un iPhone"
-              priority
-              sizes="(min-width: 1536px) 20rem, (min-width: 1024px) 18rem, 85vw"
-              frameClassName="max-w-[24rem] lg:max-w-[17.5rem] 2xl:max-w-[20rem]"
-            />
+            <div className="relative isolate">
+              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[31rem] w-[31rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),rgba(96,165,250,0.14)_26%,rgba(191,219,254,0.08)_42%,rgba(59,130,246,0)_72%)] blur-3xl sm:block lg:h-[34rem] lg:w-[34rem]" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[27rem] w-[27rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/18 sm:block lg:h-[29rem] lg:w-[29rem]" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[21rem] w-[21rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/12 sm:block lg:h-[23rem] lg:w-[23rem]" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[15rem] w-[15rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/35 sm:block lg:h-[16.5rem] lg:w-[16.5rem]" />
+              <div className="pointer-events-none absolute -left-[6%] top-[10%] hidden h-36 w-36 rounded-full border border-white/60 bg-white/20 shadow-[0_26px_60px_-34px_rgba(255,255,255,0.95)] sm:block lg:h-40 lg:w-40" />
+              <div className="pointer-events-none absolute right-[-2%] top-[12%] hidden h-14 w-14 rounded-full border border-primary/25 bg-primary/15 lg:block" />
+              <div className="pointer-events-none absolute -right-[10%] bottom-[10%] hidden h-28 w-28 rounded-full border border-accent/18 bg-accent-soft/38 shadow-[0_18px_45px_-30px_rgba(59,130,246,0.7)] lg:block" />
+              <div className="pointer-events-none absolute left-[-4%] bottom-[14%] hidden h-24 w-24 rounded-full border border-primary/14 border-dashed lg:block" />
+              <div className="pointer-events-none absolute inset-x-[8%] top-[6%] hidden h-[88%] rounded-[4rem] bg-linear-to-b from-white/16 via-transparent to-transparent sm:block" />
+
+              <IPhoneMockup
+                imageSrc="/Fotos-iphone/dashboard.jpeg"
+                imageAlt="Vista del dashboard de BenefitQR en un iPhone"
+                priority
+                sizes="(min-width: 1536px) 20rem, (min-width: 1024px) 18rem, 85vw"
+                frameClassName="relative z-10 max-w-[24rem] lg:max-w-[17.5rem] 2xl:max-w-[20rem]"
+              />
+            </div>
           </Reveal>
         </div>
 
