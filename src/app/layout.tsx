@@ -6,6 +6,7 @@ const sora = Sora({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 export const viewport: Viewport = {
