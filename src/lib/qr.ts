@@ -1,11 +1,25 @@
 import QRCode from "qrcode";
 
-export async function generateQRDataURL(data: string): Promise<string> {
+type QRDataURLOptions = NonNullable<Parameters<typeof QRCode.toDataURL>[1]>;
+
+const defaultQrOptions: QRDataURLOptions = {
+  errorCorrectionLevel: "M",
+  margin: 2,
+  width: 300,
+  color: { dark: "#1f2937", light: "#ffffff" },
+};
+
+export async function generateQRDataURL(
+  data: string,
+  options: Partial<QRDataURLOptions> = {}
+): Promise<string> {
   return QRCode.toDataURL(data, {
-    errorCorrectionLevel: "M",
-    margin: 2,
-    width: 300,
-    color: { dark: "#1f2937", light: "#ffffff" },
+    ...defaultQrOptions,
+    ...options,
+    color: {
+      ...defaultQrOptions.color,
+      ...options.color,
+    },
   });
 }
 
