@@ -8,6 +8,7 @@ interface ModalProps {
   open: boolean;
   onClose: () => void;
   title?: string;
+  description?: string;
   children: React.ReactNode;
   className?: string;
 }
@@ -16,6 +17,7 @@ export default function Modal({
   open,
   onClose,
   title,
+  description,
   children,
   className,
 }: ModalProps) {
@@ -44,6 +46,11 @@ export default function Modal({
               </Button>
             </DialogPrimitive.Close>
           </div>
+          {description ? (
+            <DialogPrimitive.Description className="mb-4 text-sm text-text-muted">
+              {description}
+            </DialogPrimitive.Description>
+          ) : null}
           {children}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
