@@ -184,7 +184,7 @@ export default async function DashboardPage({
                 <Card
                    className={`border border-surface/80 border-l-4 ${status.dashboardCardToneClassName} ${status.dashboardCardSurfaceClassName} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5 lg:p-4 2xl:p-5`}
                 >
-                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4 lg:gap-3 2xl:gap-4">
+                   <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-between sm:gap-4 lg:gap-3 2xl:gap-4">
                     <div className="min-w-0 flex-1">
                        <div className="mb-1.5 flex flex-wrap items-center gap-1.5 sm:mb-2 sm:gap-2 lg:mb-1.5 2xl:mb-2">
                          <h3 className="truncate text-base font-semibold text-text-primary sm:text-lg lg:text-base 2xl:text-lg">
@@ -221,7 +221,7 @@ export default async function DashboardPage({
                       </div>
                     </div>
 
-                     <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:flex-col sm:items-end sm:justify-start lg:gap-1.5 2xl:gap-2">
+                     <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:self-stretch sm:flex-col sm:items-end sm:justify-between sm:gap-1.5 2xl:gap-2">
                       <ShareButtons
                         url={shareUrl}
                         descripcion={b.descripcion}
@@ -232,7 +232,7 @@ export default async function DashboardPage({
                         href={`/dashboard/beneficios/${b.id}`}
                         variant="muted"
                         size="sm"
-                         className="min-h-8 w-auto px-2.5 py-1.5 text-xs sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm lg:min-h-8 lg:px-2.5 lg:text-xs 2xl:min-h-9 2xl:px-3 2xl:text-sm"
+                         className="min-h-8 w-auto px-2.5 py-1.5 text-xs sm:mt-auto sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm lg:min-h-8 lg:px-2.5 lg:text-xs 2xl:min-h-9 2xl:px-3 2xl:text-sm"
                        >
                         Ver detalle
                       </LinkButton>
