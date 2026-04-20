@@ -82,8 +82,8 @@ export default function LandingHero() {
           >
             <div className="relative isolate">
               <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[31rem] w-[31rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),rgba(96,165,250,0.14)_26%,rgba(191,219,254,0.08)_42%,rgba(59,130,246,0)_72%)] blur-3xl sm:block lg:h-[34rem] lg:w-[34rem]" />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[27rem] w-[27rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/18 sm:block lg:h-[29rem] lg:w-[29rem]" />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[21rem] w-[21rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/12 sm:block lg:h-[23rem] lg:w-[23rem]" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[27rem] w-[27rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/80 sm:block lg:h-[29rem] lg:w-[29rem]" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[21rem] w-[21rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/30 sm:block lg:h-[23rem] lg:w-[23rem]" />
               <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[15rem] w-[15rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/35 sm:block lg:h-[16.5rem] lg:w-[16.5rem]" />
               <div className="pointer-events-none absolute -left-[6%] top-[10%] hidden h-36 w-36 rounded-full border border-white/60 bg-white/20 shadow-[0_26px_60px_-34px_rgba(255,255,255,0.95)] sm:block lg:h-40 lg:w-40" />
               <div className="pointer-events-none absolute right-[-2%] top-[12%] hidden h-14 w-14 rounded-full border border-primary/25 bg-primary/15 lg:block" />

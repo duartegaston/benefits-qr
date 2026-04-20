@@ -11,7 +11,7 @@ const AUDIENCE_CTAS = [
       "Creá campañas, publicá beneficios y escaneá canjes con una operación ordenada desde el dashboard.",
     bullets: ["Alta rápida", "Control de usos", "Canje inmediato"],
     href: "/login",
-    action: "Ingresar al panel",
+    action: "Ingresar como negocio",
     icon: <Building2 className="h-5 w-5" aria-hidden="true" />,
     className:
       "border-surface/80 bg-surface/90 shadow-lg shadow-primary-soft/70 hover:shadow-xl hover:shadow-accent-soft lg:bg-surface/75 sm:backdrop-blur-md",
@@ -29,7 +29,7 @@ const AUDIENCE_CTAS = [
       "Accedé a todos tus beneficios desde el mail, guardalos y mostrá el QR cuando llegás al local.",
     bullets: ["Sin contraseña", "Sin app extra", "Todo en un lugar"],
     href: "/acceso",
-    action: "Ver mis cupones",
+    action: "Ingresar como cliente",
     icon: <Gift className="h-5 w-5" aria-hidden="true" />,
     className:
       "border-primary-foreground/20 bg-primary shadow-lg shadow-primary/30 hover:bg-accent hover:shadow-xl hover:shadow-primary/40",
