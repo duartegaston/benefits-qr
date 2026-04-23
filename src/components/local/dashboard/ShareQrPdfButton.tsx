@@ -65,13 +65,9 @@ export default function ShareQrPdfButton({ url }: ShareQrPdfButtonProps) {
           setOpen(false);
         }}
         title="Descargar QR en PDF"
+        description="Elegí el tamaño del QR para exportar un PDF listo para imprimir o compartir."
       >
         <div className="space-y-5">
-          <div className="space-y-1.5">
-            <p className="text-sm font-medium text-text-primary">Elegí el tamaño del QR para exportar.</p>
-            <p className="text-xs text-text-muted">Se descarga un PDF listo para imprimir o compartir.</p>
-          </div>
-
           <div className="space-y-2">
             <label htmlFor="share-qr-pdf-size" className="block text-sm font-medium text-text-primary">
               Tamaño
