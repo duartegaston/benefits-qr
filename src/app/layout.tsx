@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Sora } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const sora = Sora({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${sora.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
+        className={`${dmSans.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
       >
         {children}
       </body>
