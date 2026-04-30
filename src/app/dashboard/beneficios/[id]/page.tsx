@@ -1,4 +1,5 @@
 import { Download } from "lucide-react";
+import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import Card from "@/components/ui/Card";
