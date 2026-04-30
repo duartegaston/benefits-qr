@@ -1,3 +1,4 @@
+import { Download } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
@@ -95,9 +96,21 @@ export default async function BeneficioStatsPage({
         </div>
       </Card>
 
-      <h2 className="mb-3 text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">
-        Clientes ({stats.total})
-      </h2>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">
+          Clientes ({stats.total})
+        </h2>
+        {stats.total > 0 && (
+          <a
+            href={`/api/beneficios/${id}/clientes-csv`}
+            download
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-border-default bg-surface-muted px-3 py-1.5 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:text-[13px] 2xl:text-sm"
+          >
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+            Descargar CSV
+          </a>
+        )}
+      </div>
 
       {stats.total === 0 ? (
         <Card className="p-8 text-center">
