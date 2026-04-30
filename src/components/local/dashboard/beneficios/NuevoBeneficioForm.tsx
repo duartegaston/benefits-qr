@@ -2,7 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Globe } from "lucide-react";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/DatePicker";
 import Input from "@/components/ui/Input";
@@ -28,6 +28,7 @@ export default function NuevoBeneficioForm() {
   const [fechaExpiracion, setFechaExpiracion] = useState("");
   const [maxUsos, setMaxUsos] = useState("");
   const [diasValidos, setDiasValidos] = useState<number[]>([]);
+  const [esPublico, setEsPublico] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -70,6 +71,7 @@ export default function NuevoBeneficioForm() {
         fechaExpiracion,
         maxUsos: maxUsos ? parseInt(maxUsos, 10) : undefined,
         diasValidos,
+        esPublico,
       }),
     });
 
@@ -176,6 +178,47 @@ export default function NuevoBeneficioForm() {
               Tocá un día para quitarlo. Si desmarcás el último, vuelve a “Todos los días”.
             </p>
           ) : null}
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border-default/80 bg-surface-muted/50 p-4 lg:p-3.5 2xl:p-4">
+        <div className="mb-3 flex items-start gap-3 lg:mb-2.5 lg:gap-2.5 2xl:mb-3 2xl:gap-3">
+          <div className="rounded-xl bg-primary-soft p-2 text-primary">
+            <Globe className="h-4 w-4" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">Visibilidad del cupón</h2>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-0.5">
+            <p className="text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm">
+              {esPublico ? "Público" : "Privado"}
+            </p>
+            <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
+              {esPublico
+                ? "Este cupón aparecerá en el directorio público donde cualquier persona puede verlo y reclamarlo."
+                : "Este cupón no aparecerá en el directorio público. Solo accesible por link directo."}
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={esPublico}
+            onClick={() => setEsPublico((prev) => !prev)}
+            className={cn(
+              "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+              esPublico ? "bg-primary" : "bg-border-default",
+            )}
+          >
+            <span
+              className={cn(
+                "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200",
+                esPublico ? "translate-x-5" : "translate-x-0",
+              )}
+            />
+          </button>
         </div>
       </section>
 
