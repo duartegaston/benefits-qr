@@ -2,7 +2,7 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDays, Globe } from "lucide-react";
+import { CalendarDays, Globe, Users } from "lucide-react";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/DatePicker";
 import Input from "@/components/ui/Input";
@@ -29,6 +29,7 @@ export default function NuevoBeneficioForm() {
   const [maxUsos, setMaxUsos] = useState("");
   const [diasValidos, setDiasValidos] = useState<number[]>([]);
   const [esPublico, setEsPublico] = useState(false);
+  const [requiereDatos, setRequiereDatos] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -61,6 +62,11 @@ export default function NuevoBeneficioForm() {
       return;
     }
 
+    if (!requiereDatos && !maxUsos) {
+      setError("El límite de usos es obligatorio cuando no se solicitan datos al cliente.");
+      return;
+    }
+
     setLoading(true);
 
     const response = await fetch("/api/beneficios", {
@@ -72,6 +78,7 @@ export default function NuevoBeneficioForm() {
         maxUsos: maxUsos ? parseInt(maxUsos, 10) : undefined,
         diasValidos,
         esPublico,
+        requiereDatos,
       }),
     });
 
@@ -108,13 +115,14 @@ export default function NuevoBeneficioForm() {
         />
 
         <Input
-          label="Máximo de usos"
+          label={requiereDatos ? "Máximo de usos" : "Máximo de usos *"}
           type="number"
           value={maxUsos}
           onChange={(event) => setMaxUsos(event.target.value)}
-          placeholder="Sin límite si se deja vacío"
+          placeholder={requiereDatos ? "Sin límite si se deja vacío" : "Requerido"}
           min="1"
           inputMode="numeric"
+          required={!requiereDatos}
         />
       </div>
 
@@ -216,6 +224,47 @@ export default function NuevoBeneficioForm() {
               className={cn(
                 "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200",
                 esPublico ? "translate-x-5" : "translate-x-0",
+              )}
+            />
+          </button>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border-default/80 bg-surface-muted/50 p-4 lg:p-3.5 2xl:p-4">
+        <div className="mb-3 flex items-start gap-3 lg:mb-2.5 lg:gap-2.5 2xl:mb-3 2xl:gap-3">
+          <div className="rounded-xl bg-primary-soft p-2 text-primary">
+            <Users className="h-4 w-4" aria-hidden="true" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">Datos del cliente</h2>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-0.5">
+            <p className="text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm">
+              {requiereDatos ? "Solicitar datos" : "Sin datos"}
+            </p>
+            <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
+              {requiereDatos
+                ? "El cliente deberá ingresar nombre, email y teléfono para reclamar el cupón."
+                : "El cliente verá directamente el QR sin completar ningún dato. Requieré un límite de usos."}
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={requiereDatos}
+            onClick={() => setRequiereDatos((prev) => !prev)}
+            className={cn(
+              "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+              requiereDatos ? "bg-primary" : "bg-border-default",
+            )}
+          >
+            <span
+              className={cn(
+                "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200",
+                requiereDatos ? "translate-x-5" : "translate-x-0",
               )}
             />
           </button>

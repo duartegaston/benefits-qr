@@ -42,9 +42,10 @@ export async function createBeneficioFlow(
     maxUsos?: unknown;
     diasValidos?: unknown;
     esPublico?: unknown;
+    requiereDatos?: unknown;
   }
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
-  const { descripcion, fechaExpiracion, maxUsos, diasValidos, esPublico } = input;
+  const { descripcion, fechaExpiracion, maxUsos, diasValidos, esPublico, requiereDatos } = input;
 
   if (typeof descripcion !== "string" || descripcion.trim().length === 0 || descripcion.length > 500) {
     return {
@@ -95,6 +96,15 @@ export async function createBeneficioFlow(
     }
   }
 
+  if (requiereDatos === false && (!maxUsos || typeof maxUsos !== "number")) {
+    return {
+      ok: false,
+      status: 400,
+      error: "El límite de usos es obligatorio cuando no se solicitan datos al cliente",
+      code: "MAX_USOS_REQUIRED",
+    };
+  }
+
   const dias: number[] = Array.isArray(diasValidos)
     ? diasValidos.filter((d: unknown) => typeof d === "number" && d >= 0 && d <= 6)
     : [];
@@ -105,6 +115,7 @@ export async function createBeneficioFlow(
     maxUsos: (maxUsos as number | null) || null,
     diasValidos: dias,
     esPublico: esPublico === true,
+    requiereDatos: requiereDatos !== false,
     localId,
   });
 
