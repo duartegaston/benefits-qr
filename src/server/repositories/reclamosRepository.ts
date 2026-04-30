@@ -38,3 +38,13 @@ export async function createReclamo(beneficioId: string, clienteId: string) {
     data: { beneficioId, clienteId },
   });
 }
+
+export async function createClienteAnonimo() {
+  return prisma.cliente.create({ data: {} });
+}
+
+export async function findExistingReclamoPendiente(beneficioId: string, clienteId: string) {
+  return prisma.reclamo.findFirst({
+    where: { beneficioId, clienteId, estado: EstadoReclamo.PENDIENTE },
+  });
+}

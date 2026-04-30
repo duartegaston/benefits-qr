@@ -7,6 +7,7 @@ import Badge from "@/components/ui/Badge";
 import BrandLogo from "@/components/ui/BrandLogo";
 import Card from "@/components/ui/Card";
 import ReclamarForm from "@/components/cliente/beneficio/ReclamarForm";
+import ReclamarFormAnonimo from "@/components/cliente/beneficio/ReclamarFormAnonimo";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -85,7 +86,9 @@ export default async function BeneficioPublicoPage({
             <SectionHeader
               eyebrow="Beneficio"
               title="Reclamá tu cupón"
-              description="Completá tus datos para recibir el acceso por email y guardarlo en tu cuenta."
+              description={beneficio.requiereDatos
+                ? "Completá tus datos para recibir el acceso por email y guardarlo en tu cuenta."
+                : "Generá tu QR personal para presentarlo en el local."}
               className="mb-0"
             />
           </div>
@@ -100,7 +103,9 @@ export default async function BeneficioPublicoPage({
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 space-y-1">
                     <h1 className="text-2xl font-bold text-text-primary lg:text-xl 2xl:text-2xl">{beneficio.descripcion}</h1>
-                    <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">Guardalo ahora y usalo cuando corresponda.</p>
+                    {beneficio.requiereDatos && (
+                      <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">Guardalo ahora y usalo cuando corresponda.</p>
+                    )}
                   </div>
 
                   <Badge
@@ -174,7 +179,11 @@ export default async function BeneficioPublicoPage({
 
               {beneficioState.canClaim && (
                 <div className="space-y-4">
-                  <ReclamarForm beneficioId={beneficio.id} />
+                  {beneficio.requiereDatos ? (
+                    <ReclamarForm beneficioId={beneficio.id} />
+                  ) : (
+                    <ReclamarFormAnonimo beneficioId={beneficio.id} />
+                  )}
                 </div>
               )}
             </div>

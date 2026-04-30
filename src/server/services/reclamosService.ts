@@ -1,14 +1,17 @@
-import { createClienteSession } from "@/lib/auth";
+import { createClienteSession, createSession } from "@/lib/auth";
 import { EMAIL_REGEX, PHONE_REGEX, SESSION_DURATION } from "@/lib/constants";
 import { EstadoReclamo } from "@/generated/prisma/client";
 import { evaluateBeneficioState, getCouponBlockError } from "@/lib/couponStatus";
+import { UserType } from "@/lib/enums";
 import {
   createCliente,
+  createClienteAnonimo,
   createReclamo,
   findBeneficioForReclamo,
   findClienteByEmail,
   findClienteByPhone,
   findExistingReclamo,
+  findExistingReclamoPendiente,
   updateCliente,
 } from "@/server/repositories/reclamosRepository";
 
@@ -150,4 +153,74 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
   await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_RECLAMO);
 
   return { ok: true, status: 201, reclamoId: reclamo.id };
+}
+
+type CreateAnonymousReclamoResult =
+  | { ok: true; status: number; reclamoId: string; sessionToken: string | null }
+  | { ok: false; status: number; error: string; code: string };
+
+export async function createAnonymousReclamoFlow(
+  beneficioId: unknown,
+  existingClienteId: string | null
+): Promise<CreateAnonymousReclamoResult> {
+  if (!beneficioId || typeof beneficioId !== "string") {
+    return { ok: false, status: 400, error: "Cupón inválido", code: "INVALID_BENEFICIO_ID" };
+  }
+
+  const beneficio = await findBeneficioForReclamo(beneficioId);
+
+  if (!beneficio) {
+    return { ok: false, status: 404, error: "Cupón no encontrado", code: "BENEFICIO_NOT_FOUND" };
+  }
+
+  if (beneficio.requiereDatos) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Este cupón requiere completar tus datos",
+      code: "REQUIRES_DATOS",
+    };
+  }
+
+  const beneficioState = evaluateBeneficioState({
+    fechaExpiracion: beneficio.fechaExpiracion,
+    deletedAt: null,
+    maxUsos: beneficio.maxUsos,
+    canjeados: beneficio.reclamos.length,
+    diasValidos: beneficio.diasValidos as number[],
+  });
+
+  if (!beneficioState.canClaim) {
+    const error = getCouponBlockError(beneficioState.claimBlockReason, {
+      diasValidos: beneficio.diasValidos as number[],
+      context: "claim",
+    });
+    return { ok: false, status: error!.status, error: error!.error, code: error!.code };
+  }
+
+  if (existingClienteId) {
+    const existingReclamo = await findExistingReclamoPendiente(beneficioId, existingClienteId);
+    if (existingReclamo) {
+      return { ok: true, status: 200, reclamoId: existingReclamo.id, sessionToken: null };
+    }
+
+    const anyReclamo = await findExistingReclamo(beneficioId, existingClienteId);
+    if (anyReclamo?.estado === EstadoReclamo.CANJEADO) {
+      return {
+        ok: false,
+        status: 409,
+        error: "Ya canjeaste este cupón",
+        code: "RECLAMO_ALREADY_REDEEMED",
+      };
+    }
+
+    const reclamo = await createReclamo(beneficioId, existingClienteId);
+    return { ok: true, status: 201, reclamoId: reclamo.id, sessionToken: null };
+  }
+
+  const cliente = await createClienteAnonimo();
+  const session = await createSession(cliente.id, UserType.CLIENTE, SESSION_DURATION.CLIENTE_RECLAMO);
+  const reclamo = await createReclamo(beneficioId, cliente.id);
+
+  return { ok: true, status: 201, reclamoId: reclamo.id, sessionToken: session.token };
 }
