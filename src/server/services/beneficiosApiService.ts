@@ -41,9 +41,10 @@ export async function createBeneficioFlow(
     fechaExpiracion?: unknown;
     maxUsos?: unknown;
     diasValidos?: unknown;
+    esPublico?: unknown;
   }
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
-  const { descripcion, fechaExpiracion, maxUsos, diasValidos } = input;
+  const { descripcion, fechaExpiracion, maxUsos, diasValidos, esPublico } = input;
 
   if (typeof descripcion !== "string" || descripcion.trim().length === 0 || descripcion.length > 500) {
     return {
@@ -103,6 +104,7 @@ export async function createBeneficioFlow(
     fechaExpiracion: expiryDate,
     maxUsos: (maxUsos as number | null) || null,
     diasValidos: dias,
+    esPublico: esPublico === true,
     localId,
   });
 

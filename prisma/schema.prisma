@@ -35,6 +35,7 @@ model Beneficio {
   fechaExpiracion DateTime
   maxUsos         Int?
   diasValidos     Int[]     @default([])
+  esPublico       Boolean   @default(false)
   localId         String
   local           Local     @relation(fields: [localId], references: [id])
   createdAt       DateTime  @default(now())
