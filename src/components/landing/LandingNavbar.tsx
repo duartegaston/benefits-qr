@@ -127,18 +127,18 @@ export default function LandingNavbar() {
         <div className="relative w-full">
           <nav
             aria-label="Secciones de la landing"
-            className="hidden w-full items-center justify-between gap-3 rounded-full border border-primary/14 bg-surface-soft/88 p-1.5 pl-3 shadow-lg shadow-primary/12 sm:bg-surface/20 sm:backdrop-blur-md md:flex"
+            className="relative hidden w-full items-center rounded-full border border-primary/14 bg-surface-soft/88 p-1.5 pl-3 shadow-lg shadow-primary/12 sm:bg-surface/20 sm:backdrop-blur-md md:flex"
           >
             <a
               href="#inicio"
               onClick={(event) => handleAnchorClick(event, "#inicio")}
-              className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="z-10 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               aria-label="Ir al inicio"
             >
               <BrandLogo priority />
             </a>
 
-            <div className="flex items-center justify-center gap-1">
+            <div className="absolute left-1/2 flex -translate-x-1/2 items-center justify-center gap-1">
               {NAV_ITEMS.map((item) => (
                 <a
                   key={item.href}
@@ -156,6 +156,8 @@ export default function LandingNavbar() {
                 </a>
               ))}
             </div>
+
+            <div className="w-24 shrink-0" aria-hidden="true" />
           </nav>
 
           <div className="md:hidden">
