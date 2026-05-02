@@ -127,7 +127,7 @@ export default function LandingNavbar() {
         <div className="relative w-full">
           <nav
             aria-label="Secciones de la landing"
-            className="hidden w-full items-center justify-between gap-3 rounded-full border border-primary/14 bg-surface-soft/88 p-1.5 pl-3 shadow-lg shadow-primary-soft/20 sm:bg-surface/20 sm:backdrop-blur-md md:flex"
+            className="hidden w-full items-center justify-between gap-3 rounded-full border border-primary/14 bg-surface-soft/88 p-1.5 pl-3 shadow-lg shadow-primary/12 sm:bg-surface/20 sm:backdrop-blur-md md:flex"
           >
             <a
               href="#inicio"
@@ -161,10 +161,10 @@ export default function LandingNavbar() {
           <div className="md:hidden">
             <div
               className={cn(
-                "flex w-full items-center justify-between gap-3 rounded-full border px-3 py-2 shadow-lg transition-[background-color,border-color,box-shadow] duration-200 sm:bg-surface/20 sm:backdrop-blur-md",
+                "flex w-full items-center justify-between gap-3 rounded-full border shadow-lg px-3 py-2 transition-[background-color,border-color,box-shadow] duration-200 sm:shadow-xl sm:bg-surface/20 sm:backdrop-blur-md",
                 isScrolled
-                  ? "border-primary/14 bg-surface-soft/92 shadow-primary-soft/24"
-                  : "border-primary/10 bg-surface-soft/58 shadow-primary-soft/14",
+                  ? "border-primary/14 bg-surface-soft/92 shadow-primary/14 sm:shadow-primary/18"
+                  : "border-primary/10 bg-surface-soft/58 shadow-primary/10 sm:shadow-primary/12",
               )}
             >
               <a
@@ -186,8 +186,8 @@ export default function LandingNavbar() {
                 className={cn(
                   "rounded-full text-text-primary sm:bg-surface/35",
                   isScrolled
-                    ? "border-primary/14 bg-surface-soft/92 shadow-lg shadow-primary-soft/24"
-                    : "border-primary/10 bg-surface-soft/70 shadow-md shadow-primary-soft/14",
+                    ? "border-primary/14 bg-surface-soft/92 shadow-md shadow-primary/14 sm:shadow-lg sm:shadow-primary/18"
+                    : "border-primary/10 bg-surface-soft/70 shadow-sm shadow-primary/10 sm:shadow-md sm:shadow-primary/12",
                 )}
                 onClick={() => setIsOpen((open) => !open)}
               >
@@ -199,7 +199,7 @@ export default function LandingNavbar() {
               id={menuId}
               aria-label="Secciones de la landing"
               className={cn(
-                "absolute inset-x-0 mt-3 rounded-3xl border border-primary/22 bg-surface p-3 shadow-xl shadow-primary-soft/35 transition-all duration-200 ease-out sm:bg-surface/28 sm:backdrop-blur-md",
+                "absolute inset-x-0 mt-3 rounded-3xl border border-primary/22 bg-surface p-3 shadow-2xl shadow-primary/20 transition-all duration-200 ease-out sm:bg-surface/28 sm:backdrop-blur-md",
                 isOpen
                   ? "translate-y-0 opacity-100"
                   : "pointer-events-none -translate-y-2 opacity-0",
