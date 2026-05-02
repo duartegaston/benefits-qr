@@ -44,7 +44,11 @@ const AUDIENCE_CTAS = [
 
 export default function LandingAudienceCtas() {
   return (
-    <section className="border-y border-border-default/60 bg-surface-soft px-6 py-12 lg:px-8 lg:py-14 2xl:py-16">
+    <section
+      id="perfil"
+      tabIndex={-1}
+      className="scroll-mt-24 border-y border-border-default/60 bg-surface-soft px-6 py-12 lg:px-8 lg:py-14 2xl:py-16"
+    >
       <div className="mx-auto w-full max-w-6xl 2xl:max-w-7xl">
         <Reveal y={16} amount={0.2}>
           <SectionHeader

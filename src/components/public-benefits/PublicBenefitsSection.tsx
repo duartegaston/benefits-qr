@@ -14,7 +14,11 @@ export default async function PublicBenefitsSection() {
   }
 
   return (
-    <section className="bg-surface-soft px-6 py-16 lg:px-8 lg:py-14 2xl:py-16">
+    <section
+      id="beneficios"
+      tabIndex={-1}
+      className="scroll-mt-24 bg-linear-to-br from-primary-soft via-surface-soft to-accent-soft px-6 py-16 lg:px-8 lg:py-14 2xl:py-16"
+    >
       <div className="mx-auto max-w-6xl 2xl:max-w-7xl">
         <Reveal y={18} amount={0.25}>
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
