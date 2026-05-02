@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Ticket } from "lucide-react";
 import Button from "@/components/ui/Button";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
@@ -9,18 +9,19 @@ const STORAGE_KEY_PREFIX = "reclamo_anonimo_";
 
 export default function ReclamarFormAnonimo({ beneficioId }: { beneficioId: string }) {
   const storageKey = `${STORAGE_KEY_PREFIX}${beneficioId}`;
-  const [reclamoId, setReclamoId] = useState<string | null>(null);
+  const [reclamoId, setReclamoId] = useState<string | null>(() => {
+    if (typeof window === "undefined") {
+      return null;
+    }
+
+    try {
+      return sessionStorage.getItem(storageKey);
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(storageKey);
-      if (stored) setReclamoId(stored);
-    } catch {
-      // sessionStorage no disponible
-    }
-  }, [storageKey]);
 
   async function handleObtenerQR() {
     setError(null);
