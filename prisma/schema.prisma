@@ -7,6 +7,12 @@ datasource db {
   provider = "postgresql"
 }
 
+model Rubro {
+  id      Int     @id @default(autoincrement())
+  nombre  String  @unique
+  locales Local[]
+}
+
 model Local {
   id         String      @id @default(cuid())
   nombre     String?
@@ -16,6 +22,8 @@ model Local {
   logoUrl    String?
   direccion  String?
   telefono   String?
+  rubroId    Int?
+  rubro      Rubro?      @relation(fields: [rubroId], references: [id])
   createdAt  DateTime    @default(now())
   beneficios Beneficio[]
 }
