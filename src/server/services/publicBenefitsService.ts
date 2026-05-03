@@ -1,6 +1,10 @@
 import { evaluateBeneficioState, type BeneficioEffectiveStatus } from "@/lib/couponStatus";
 import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
-import { getPublicBenefitsCatalogRaw } from "@/server/repositories/publicBenefitsRepository";
+import {
+  getAvailableFeaturedPublicBenefitsRaw,
+  getPublicBenefitsCatalogRaw,
+  type PublicBenefitsCatalogRaw,
+} from "@/server/repositories/publicBenefitsRepository";
 
 export type PublicBenefitCardData = {
   id: string;
@@ -19,11 +23,8 @@ export type PublicBenefitCardData = {
   };
 };
 
-export async function getPublicBenefitsPageData(page: number, pageSize: number) {
-  const raw = await getPublicBenefitsCatalogRaw(page, pageSize);
-  const total = Number(raw.total ?? 0);
-
-  const beneficios: PublicBenefitCardData[] = (raw.beneficios ?? []).map((beneficio) => {
+function hydratePublicBenefits(raw: PublicBenefitsCatalogRaw) {
+  return (raw.beneficios ?? []).map((beneficio) => {
     const fechaExpiracion = new Date(beneficio.fechaExpiracion);
     const createdAt = new Date(beneficio.createdAt);
     const benefitState = evaluateBeneficioState({
@@ -43,8 +44,14 @@ export async function getPublicBenefitsPageData(page: number, pageSize: number) 
         isWrongDay: benefitState.isWrongDay,
         diasValidos: beneficio.diasValidos,
       }),
-    };
+    } satisfies PublicBenefitCardData;
   });
+}
+
+export async function getPublicBenefitsPageData(page: number, pageSize: number) {
+  const raw = await getPublicBenefitsCatalogRaw(page, pageSize);
+  const total = Number(raw.total ?? 0);
+  const beneficios = hydratePublicBenefits(raw);
 
   return {
     beneficios,
@@ -54,10 +61,10 @@ export async function getPublicBenefitsPageData(page: number, pageSize: number) 
 }
 
 export async function getFeaturedPublicBenefits(limit: number) {
-  const { beneficios, total } = await getPublicBenefitsPageData(1, limit);
+  const raw = await getAvailableFeaturedPublicBenefitsRaw(limit);
+  const beneficios = hydratePublicBenefits(raw);
 
   return {
     beneficios,
-    total,
   };
 }

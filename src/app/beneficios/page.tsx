@@ -36,7 +36,7 @@ export default async function BeneficiosPage({
         <SectionHeader
           eyebrow="Catálogo público"
           title="Beneficios"
-          description="Todos los cupones públicos, en orden de publicación."
+          description="Todos los cupones públicos, priorizando primero los que todavía están disponibles."
           align="left"
           className="mb-6 max-w-2xl"
         />
