@@ -6,7 +6,6 @@ import { CalendarDays, Globe, Users } from "lucide-react";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/DatePicker";
 import Input from "@/components/ui/Input";
-import SectionHeader from "@/components/ui/SectionHeader";
 import {
   BENEFICIO_WEEKDAYS,
   formatDiasValidosSentence,

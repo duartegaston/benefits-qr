@@ -7,6 +7,7 @@ import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import SectionHeader from "@/components/ui/SectionHeader";
+import RubroSelect from "@/components/local/RubroSelect";
 
 interface OnboardingFormProps {
   localId: string;
@@ -19,6 +20,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
   const [telefono, setTelefono] = useState("+54");
+  const [rubroId, setRubroId] = useState("");
   const [hasLogo, setHasLogo] = useState(!!logoUrl);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,12 +34,17 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
       return;
     }
 
+    if (!rubroId) {
+      setError("Por favor seleccioná un rubro");
+      return;
+    }
+
     setLoading(true);
 
     const res = await fetch("/api/local/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, direccion, telefono }),
+      body: JSON.stringify({ nombre, direccion, telefono, rubroId: Number(rubroId) }),
     });
 
     const data = await res.json();
@@ -106,6 +113,8 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           onChange={setTelefono}
           required
         />
+
+        <RubroSelect value={rubroId} onChange={setRubroId} required />
 
         {error && (
           <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger lg:text-[13px] 2xl:text-sm">

@@ -29,7 +29,11 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section className="bg-surface-muted px-6 py-16 lg:px-8 lg:py-14 2xl:py-16">
+    <section
+      id="como-funciona"
+      tabIndex={-1}
+      className="scroll-mt-24 bg-surface-muted px-6 py-16 lg:px-8 lg:py-14 2xl:py-16"
+    >
       <div className="mx-auto max-w-6xl 2xl:max-w-7xl">
         <Reveal y={20} amount={0.35}>
           <SectionHeader

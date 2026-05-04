@@ -1,6 +1,5 @@
 import { ChevronDown, QrCode, Smartphone, Store } from "lucide-react";
 import IPhoneMockup from "@/components/landing/IPhoneMockup";
-import BrandLogo from "@/components/ui/BrandLogo";
 import Reveal from "@/components/ui/Reveal";
 
 const FEATURES = [
@@ -20,17 +19,17 @@ const FEATURES = [
 
 export default function LandingHero() {
   return (
-    <section className="relative overflow-x-hidden px-6 pt-10 pb-6 sm:pt-12 sm:pb-8 lg:px-8 lg:pt-8 lg:pb-6 2xl:pt-10 2xl:pb-8">
+    <section
+      id="inicio"
+      tabIndex={-1}
+      className="relative scroll-mt-24 overflow-x-hidden px-6 pt-24 pb-6 sm:pt-32 sm:pb-8 lg:px-8 lg:pt-24 lg:pb-6 2xl:pt-24 2xl:pb-8"
+    >
       <div className="pointer-events-none absolute -top-56 left-0 hidden h-200 w-200 rounded-full bg-primary/20 blur-3xl lg:block" />
       <div className="pointer-events-none absolute right-0 bottom-0 hidden h-175 w-175 rounded-full bg-accent-soft/70 blur-3xl lg:block" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-8 lg:min-h-[calc(100vh-5rem)] lg:justify-center lg:gap-10 2xl:max-w-7xl 2xl:grid 2xl:grid-cols-[minmax(0,1fr)_24rem] 2xl:items-center 2xl:gap-14">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] lg:gap-10 2xl:contents">
           <div className="max-w-xl text-left lg:max-w-2xl 2xl:max-w-3xl">
-            <Reveal y={14} amount={0.1} className="mb-6 flex justify-start lg:mb-5 2xl:mb-6">
-              <BrandLogo priority />
-            </Reveal>
-
             <Reveal delay={0.14} y={18} amount={0.2}>
               <h1 className="text-[3.2rem] font-bold uppercase leading-[0.96] tracking-[-0.05em] text-black sm:text-[4.25rem] lg:max-w-2xl lg:text-[5rem] lg:leading-[0.93] 2xl:max-w-[14ch] 2xl:text-[6.5rem]">
                 Cupones que conectan <span className="text-primary">negocios</span> con sus <span className="text-primary">clientes</span>
