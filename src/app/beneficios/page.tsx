@@ -1,24 +1,50 @@
+import { Suspense } from "react";
+import { unstable_cache } from "next/cache";
 import { ArrowLeft } from "lucide-react";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
-import PublicBenefitsList from "@/components/public-benefits/PublicBenefitsList";
-import { getPublicBenefitsPageData } from "@/server/services/publicBenefitsService";
+import PublicBenefitsFilters from "@/components/public-benefits/PublicBenefitsFilters";
+import BenefitsGrid, { BenefitsGridSkeleton } from "@/components/public-benefits/BenefitsGrid";
+import { prisma } from "@/lib/prisma";
 
-const PAGE_SIZE = 9;
+// Rubros almost never change — cache for 1 hour
+const getRubros = unstable_cache(
+  () => prisma.rubro.findMany({ orderBy: { nombre: "asc" } }),
+  ["rubros"],
+  { revalidate: 3600 }
+);
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function BeneficiosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    q?: string;
+    rubro?: string;
+    soloHoy?: string;
+    soloDisponibles?: string;
+  }>;
 }) {
-  const { page: pageParam } = await searchParams;
-  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+  const { page: pageParam, q, rubro, soloHoy, soloDisponibles } = await searchParams;
 
-  const { beneficios, totalPages, total } = await getPublicBenefitsPageData(page, PAGE_SIZE);
-  const hasPrevious = page > 1;
-  const hasNext = page < totalPages;
+  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
+  const filters = {
+    q: q?.trim() || undefined,
+    rubroId: rubro || undefined,
+    soloHoy: soloHoy === "1",
+    soloDisponibles: soloDisponibles === "1",
+  };
+
+  const filterParams = new URLSearchParams();
+  if (filters.q) filterParams.set("q", filters.q);
+  if (filters.rubroId) filterParams.set("rubro", filters.rubroId);
+  if (filters.soloHoy) filterParams.set("soloHoy", "1");
+  if (filters.soloDisponibles) filterParams.set("soloDisponibles", "1");
+
+  // Rubros come from cache — no DB hit on repeat requests
+  const rubros = await getRubros();
 
   return (
     <main className="relative px-4 pt-20 pb-14 sm:px-6 sm:pt-24 lg:px-8 lg:pb-16">
@@ -41,38 +67,15 @@ export default async function BeneficiosPage({
           className="mb-6 max-w-2xl"
         />
 
-        <PublicBenefitsList
-          benefits={beneficios}
-          emptyMessage="Todavía no hay beneficios públicos."
-        />
+        {/* Filters render immediately (rubros are cached) */}
+        <Suspense fallback={null}>
+          <PublicBenefitsFilters rubros={rubros} />
+        </Suspense>
 
-        {totalPages > 1 ? (
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <LinkButton
-              href={hasPrevious ? `/beneficios?page=${page - 1}` : "/beneficios?page=1"}
-              variant="secondary"
-              size="sm"
-              className={hasPrevious ? "w-full sm:w-auto" : "pointer-events-none w-full opacity-50 sm:w-auto"}
-              aria-disabled={!hasPrevious}
-            >
-              ← Anterior
-            </LinkButton>
-
-            <p className="text-center text-sm text-text-muted">
-              Página {Math.min(page, Math.max(totalPages, 1))} de {totalPages} · {total}
-            </p>
-
-            <LinkButton
-              href={hasNext ? `/beneficios?page=${page + 1}` : `/beneficios?page=${page}`}
-              variant="secondary"
-              size="sm"
-              className={hasNext ? "w-full sm:w-auto" : "pointer-events-none w-full opacity-50 sm:w-auto"}
-              aria-disabled={!hasNext}
-            >
-              Siguiente →
-            </LinkButton>
-          </div>
-        ) : null}
+        {/* Benefits grid streams in — user sees filters without waiting for the DB query */}
+        <Suspense fallback={<BenefitsGridSkeleton />}>
+          <BenefitsGrid page={page} filters={filters} filterParams={filterParams} />
+        </Suspense>
       </div>
     </main>
   );

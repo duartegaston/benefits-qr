@@ -4,7 +4,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import PublicBenefitsList from "@/components/public-benefits/PublicBenefitsList";
 import { getFeaturedPublicBenefits } from "@/server/services/publicBenefitsService";
 
-const FEATURED_LIMIT = 4;
+const FEATURED_LIMIT = 3;
 
 export default async function PublicBenefitsSection() {
   const { beneficios } = await getFeaturedPublicBenefits(FEATURED_LIMIT);

@@ -4,7 +4,10 @@ import {
   getAvailableFeaturedPublicBenefitsRaw,
   getPublicBenefitsCatalogRaw,
   type PublicBenefitsCatalogRaw,
+  type PublicBenefitsFiltersInput,
 } from "@/server/repositories/publicBenefitsRepository";
+
+export type { PublicBenefitsFiltersInput };
 
 export type PublicBenefitCardData = {
   id: string;
@@ -49,8 +52,8 @@ function hydratePublicBenefits(raw: PublicBenefitsCatalogRaw) {
   });
 }
 
-export async function getPublicBenefitsPageData(page: number, pageSize: number) {
-  const raw = await getPublicBenefitsCatalogRaw(page, pageSize);
+export async function getPublicBenefitsPageData(page: number, pageSize: number, filters: PublicBenefitsFiltersInput = {}) {
+  const raw = await getPublicBenefitsCatalogRaw(page, pageSize, filters);
   const total = Number(raw.total ?? 0);
   const beneficios = hydratePublicBenefits(raw);
 

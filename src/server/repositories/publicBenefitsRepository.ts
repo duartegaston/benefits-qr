@@ -1,5 +1,13 @@
+import { unstable_cache } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+
+export type PublicBenefitsFiltersInput = {
+  q?: string;
+  rubroId?: string;
+  soloHoy?: boolean;
+  soloDisponibles?: boolean;
+};
 
 export type PublicBenefitsCatalogRaw = {
   beneficios: Array<{
@@ -25,11 +33,33 @@ const AVAILABLE_CONDITION = Prisma.sql`
   AND (b."maxUsos" IS NULL OR COALESCE(bs.canjeados, 0) < b."maxUsos")
 `;
 
-export async function getPublicBenefitsCatalogRaw(
+async function _getPublicBenefitsCatalogRaw(
   page: number,
-  pageSize: number
+  pageSize: number,
+  filters: PublicBenefitsFiltersInput = {}
 ): Promise<PublicBenefitsCatalogRaw> {
   const offset = Math.max(0, (page - 1) * pageSize);
+
+  const nombreFilter = filters.q
+    ? Prisma.sql`AND l.nombre ILIKE ${"% " + filters.q + "%"}`
+    : Prisma.empty;
+
+  // rubroId from the URL is a string; cast to int to match the column type
+  const rubroFilter = filters.rubroId
+    ? Prisma.sql`AND l."rubroId" = ${parseInt(filters.rubroId, 10)}`
+    : Prisma.empty;
+
+  const soloHoyFilter = filters.soloHoy
+    ? Prisma.sql`AND (
+        array_length(b."diasValidos", 1) IS NULL
+        OR array_length(b."diasValidos", 1) = 0
+        OR EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos")
+      )`
+    : Prisma.empty;
+
+  const soloDisponiblesFilter = filters.soloDisponibles
+    ? Prisma.sql`AND (${AVAILABLE_CONDITION})`
+    : Prisma.empty;
 
   const [raw] = await prisma.$queryRaw<[PublicBenefitsCatalogRaw]>`
     WITH beneficio_stats_cte AS (
@@ -62,6 +92,10 @@ export async function getPublicBenefitsCatalogRaw(
       LEFT JOIN beneficio_stats_cte bs ON bs."beneficioId" = b.id
       WHERE b."esPublico" = true
         AND b."deletedAt" IS NULL
+        ${nombreFilter}
+        ${rubroFilter}
+        ${soloHoyFilter}
+        ${soloDisponiblesFilter}
     ),
     paged_beneficios_cte AS (
       SELECT *
@@ -99,6 +133,15 @@ export async function getPublicBenefitsCatalogRaw(
 
   return raw;
 }
+
+// Cached version: 60s TTL, keyed by (page, pageSize, filters).
+// The raw response is fully JSON-serializable (DB returns dates as ISO strings).
+// Hydration (string → Date) happens in the service layer after cache hit.
+export const getPublicBenefitsCatalogRaw = unstable_cache(
+  _getPublicBenefitsCatalogRaw,
+  ["public-benefits-catalog-raw"],
+  { revalidate: 60 }
+);
 
 export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Promise<PublicBenefitsCatalogRaw> {
   const [raw] = await prisma.$queryRaw<[PublicBenefitsCatalogRaw]>`
