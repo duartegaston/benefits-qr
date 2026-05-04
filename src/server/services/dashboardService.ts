@@ -24,6 +24,10 @@ export async function getDashboardPageData(
   const reclamoStats = raw.reclamoStats ?? { total: 0, canjeados: 0 };
   const totalReclamos = Number(reclamoStats.total);
   const totalCanjeados = Number(reclamoStats.canjeados);
+  const clientesUnicos = Number(raw.clientesUnicos ?? 0);
+  const cuponesActivos = Number(raw.cuponesActivos ?? 0);
+  const proximosAVencer = Number(raw.proximosAVencer ?? 0);
+  const tasaCanje = totalReclamos > 0 ? Math.round((totalCanjeados / totalReclamos) * 100) : 0;
 
   const beneficios: BeneficioRow[] = (raw.beneficios ?? []).map((b) => {
     const fechaExpiracion = new Date(b.fechaExpiracion);
@@ -48,6 +52,10 @@ export async function getDashboardPageData(
     totalBeneficios,
     totalReclamos,
     totalCanjeados,
+    clientesUnicos,
+    cuponesActivos,
+    proximosAVencer,
+    tasaCanje,
     totalPages: Math.ceil(totalBeneficios / pageSize),
   };
 }

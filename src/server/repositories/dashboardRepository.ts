@@ -24,6 +24,9 @@ export type DashboardRaw = {
     total: number;
     canjeados: number;
   } | null;
+  clientesUnicos: number;
+  cuponesActivos: number;
+  proximosAVencer: number;
 };
 
 export async function getDashboardRaw(
@@ -75,6 +78,27 @@ export async function getDashboardRaw(
         FROM "Reclamo" r
         JOIN "Beneficio" b ON r."beneficioId" = b.id
         WHERE b."localId" = ${localId}
+      ),
+      clientes_unicos_cte AS (
+        SELECT COUNT(DISTINCT r."clienteId")::int AS count
+        FROM "Reclamo" r
+        JOIN "Beneficio" b ON r."beneficioId" = b.id
+        WHERE b."localId" = ${localId}
+      ),
+      cupones_activos_cte AS (
+        SELECT COUNT(*)::int AS count
+        FROM "Beneficio"
+        WHERE "localId" = ${localId}
+          AND "deletedAt" IS NULL
+          AND "fechaExpiracion" > NOW()
+      ),
+      proximos_vencer_cte AS (
+        SELECT COUNT(*)::int AS count
+        FROM "Beneficio"
+        WHERE "localId" = ${localId}
+          AND "deletedAt" IS NULL
+          AND "fechaExpiracion" > NOW()
+          AND "fechaExpiracion" <= NOW() + INTERVAL '7 days'
       )
     SELECT
       (SELECT row_to_json(l) FROM local_cte l)                                              AS local,
@@ -101,7 +125,10 @@ export async function getDashboardRaw(
       COALESCE(
         (SELECT row_to_json(rs) FROM reclamo_stats_cte rs),
         '{"total":0,"canjeados":0}'::json
-      )                                                                                     AS "reclamoStats"
+      )                                                                                     AS "reclamoStats",
+      (SELECT count FROM clientes_unicos_cte)                                               AS "clientesUnicos",
+      (SELECT count FROM cupones_activos_cte)                                               AS "cuponesActivos",
+      (SELECT count FROM proximos_vencer_cte)                                               AS "proximosAVencer"
   `;
 
   return raw;

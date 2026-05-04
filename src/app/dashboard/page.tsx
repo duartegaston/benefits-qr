@@ -36,6 +36,10 @@ export default async function DashboardPage({
     totalBeneficios,
     totalReclamos,
     totalCanjeados,
+    clientesUnicos,
+    cuponesActivos,
+    proximosAVencer,
+    tasaCanje,
     totalPages,
   } = await getDashboardPageData(session.userId, page, PAGE_SIZE);
 
@@ -111,8 +115,8 @@ export default async function DashboardPage({
         </div>
       </Reveal>
 
-      {/* Stats */}
-       <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:gap-3 lg:mb-7 lg:gap-2.5 2xl:mb-8 2xl:gap-3">
+      {/* Stats — fila 1 */}
+       <div className="mb-3 grid grid-cols-3 gap-2 sm:mb-4 sm:gap-3 lg:mb-3 lg:gap-2.5 2xl:mb-4 2xl:gap-3">
         <Reveal y={14} amount={0.25}>
           <MetricCard label="Cupones" value={totalBeneficios} variant="muted" />
         </Reveal>
@@ -121,6 +125,22 @@ export default async function DashboardPage({
         </Reveal>
         <Reveal delay={0.12} y={14} amount={0.25}>
           <MetricCard label="Canjeados" value={totalCanjeados} variant="primary" />
+        </Reveal>
+      </div>
+
+      {/* Stats — fila 2 */}
+       <div className="mb-6 grid grid-cols-2 gap-2 sm:mb-8 sm:grid-cols-4 sm:gap-3 lg:mb-7 lg:gap-2.5 2xl:mb-8 2xl:gap-3">
+        <Reveal delay={0.18} y={14} amount={0.25}>
+          <MetricCard label="Tasa canje (%)" value={tasaCanje} variant="primary" />
+        </Reveal>
+        <Reveal delay={0.24} y={14} amount={0.25}>
+          <MetricCard label="Clientes únicos" value={clientesUnicos} variant="light" />
+        </Reveal>
+        <Reveal delay={0.30} y={14} amount={0.25}>
+          <MetricCard label="Cupones activos" value={cuponesActivos} variant="secondary" />
+        </Reveal>
+        <Reveal delay={0.36} y={14} amount={0.25}>
+          <MetricCard label="Vencen en 7 días" value={proximosAVencer} variant="warning" />
         </Reveal>
       </div>
 
