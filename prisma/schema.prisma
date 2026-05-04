@@ -53,6 +53,7 @@ model Beneficio {
 
   @@index([localId])
   @@index([deletedAt])
+  @@index([esPublico, deletedAt])
 }
 
 model Cliente {
