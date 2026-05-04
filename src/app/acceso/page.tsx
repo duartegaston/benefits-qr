@@ -116,7 +116,7 @@ export default async function AccesoPage({
                 </div>
                 <div className="space-y-2">
                   <h2 className="text-lg font-semibold text-text-primary lg:text-base 2xl:text-lg">
-                    ¡Tu Qupón llegó!
+                    ¡Tu Qupon llegó!
                   </h2>
                   <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
                     Hacé clic para acceder a tus cupones guardados.

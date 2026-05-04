@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Qupón",
+  title: "Qupon",
   description: "Creá cupones de descuento, compartí el link y canjeá al instante con QR desde el celular.",
   icons: {
     icon: "/favicon.png",

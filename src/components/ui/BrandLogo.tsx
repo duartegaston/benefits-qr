@@ -23,7 +23,7 @@ export default function BrandLogo({
     <div className={cn(logoSizeByVariant[variant], className)}>
       <Image
         src="/logo.png"
-        alt="Qupón"
+        alt="Qupon"
         width={500}
         height={450}
         priority={priority}

@@ -190,7 +190,7 @@ export default async function BeneficioPublicoPage({
           </Card>
         </Reveal>
 
-        <p className="mt-3 text-center text-xs text-text-muted/80">Powered by Qupón</p>
+        <p className="mt-3 text-center text-xs text-text-muted/80">Powered by Qupon</p>
       </div>
     </main>
   );
