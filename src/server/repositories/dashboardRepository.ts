@@ -8,6 +8,7 @@ export type DashboardRaw = {
     logoUrl: string | null;
     direccion: string | null;
     telefono: string | null;
+    rubroNombre: string | null;
   } | null;
   beneficios: Array<{
     id: string;
@@ -33,9 +34,10 @@ export async function getDashboardRaw(
   const [raw] = await prisma.$queryRaw<[DashboardRaw]>`
     WITH
       local_cte AS (
-        SELECT id, nombre, email, "logoUrl", direccion, telefono
-        FROM "Local"
-        WHERE id = ${localId}
+        SELECT l.id, l.nombre, l.email, l."logoUrl", l.direccion, l.telefono, ru.nombre AS "rubroNombre"
+        FROM "Local" l
+        LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
+        WHERE l.id = ${localId}
       ),
       paged_beneficios_cte AS (
         SELECT

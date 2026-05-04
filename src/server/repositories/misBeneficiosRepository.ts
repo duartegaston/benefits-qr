@@ -15,6 +15,7 @@ export type ReclamoRow = {
   localNombre: string | null;
   localId: string;
   localLogoV: string;
+  localRubroNombre: string | null;
   totalCount: number;
 };
 
@@ -45,10 +46,12 @@ export async function getMisBeneficiosRows(
       l.nombre                AS "localNombre",
       l.id                    AS "localId",
       LEFT(MD5(COALESCE(l."logoUrl", '')), 8) AS "localLogoV",
+      ru.nombre               AS "localRubroNombre",
       COUNT(*) OVER ()::int   AS "totalCount"
     FROM "Reclamo" r
     JOIN "Beneficio" b ON b.id = r."beneficioId"
     JOIN "Local"     l ON l.id = b."localId"
+    LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
     WHERE r."clienteId" = ${clienteId}
     ORDER BY r."fechaReclamo" DESC
     LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
@@ -78,10 +81,12 @@ export async function getMisBeneficioRow(
       )                       AS "beneficioCanjeados",
       l.nombre                AS "localNombre",
       l.id                    AS "localId",
-      LEFT(MD5(COALESCE(l."logoUrl", '')), 8) AS "localLogoV"
+      LEFT(MD5(COALESCE(l."logoUrl", '')), 8) AS "localLogoV",
+      ru.nombre               AS "localRubroNombre"
     FROM "Reclamo" r
     JOIN "Beneficio" b ON b.id = r."beneficioId"
     JOIN "Local"     l ON l.id = b."localId"
+    LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
     WHERE r."clienteId" = ${clienteId}
       AND r.id = ${reclamoId}
     LIMIT 1

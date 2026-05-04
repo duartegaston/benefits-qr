@@ -22,7 +22,7 @@ type Reclamo = {
   beneficio: {
     descripcion: string;
     fechaExpiracion: Date | string;
-    local: { nombre: string | null; id: string; logoV: string };
+    local: { nombre: string | null; id: string; logoV: string; rubroNombre: string | null };
   };
 };
 
@@ -74,9 +74,16 @@ export default function MisBeneficiosList({
                       />
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-primary lg:text-[13px] 2xl:text-sm">
-                        {r.beneficio.local.nombre ?? "Local adherido"}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <p className="truncate text-sm font-semibold text-primary lg:text-[13px] 2xl:text-sm">
+                          {r.beneficio.local.nombre ?? "Local adherido"}
+                        </p>
+                        {r.beneficio.local.rubroNombre && (
+                          <Badge variant="muted" className="shrink-0 px-2 py-0 text-[10px]">
+                            {r.beneficio.local.rubroNombre}
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
                         Reclamo: {formatDateAR(r.fechaReclamo)}
                       </p>

@@ -78,6 +78,13 @@ export default async function DashboardPage({
                  <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
                   {local.nombre}
                 </h1>
+                {local.rubroNombre && (
+                  <div className="pt-0.5">
+                    <Badge variant="muted" className="px-2 py-0 text-[11px]">
+                      {local.rubroNombre}
+                    </Badge>
+                  </div>
+                )}
                  <p className="break-all text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
                   {local.email}
                 </p>
