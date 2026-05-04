@@ -37,6 +37,7 @@ export default async function EditPerfilPage() {
             logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo?v=${logoVersion(local.logoUrl)}` : null}
             direccion={local.direccion}
             telefono={local.telefono}
+            rubroId={local.rubro?.id ?? null}
           />
         </div>
       </Reveal>

@@ -3,13 +3,21 @@ import { prisma } from "@/lib/prisma";
 export async function findLocalById(localId: string) {
   return prisma.local.findUnique({
     where: { id: localId },
-    select: { id: true, nombre: true, email: true, logoUrl: true, direccion: true, telefono: true },
+    select: {
+      id: true,
+      nombre: true,
+      email: true,
+      logoUrl: true,
+      direccion: true,
+      telefono: true,
+      rubro: { select: { id: true, nombre: true } },
+    },
   });
 }
 
 export async function updateLocalProfile(
   localId: string,
-  data: { nombre: string; direccion: string | null; telefono: string | null }
+  data: { nombre: string; direccion: string | null; telefono: string | null; rubroId: number }
 ) {
   return prisma.local.update({
     where: { id: localId },

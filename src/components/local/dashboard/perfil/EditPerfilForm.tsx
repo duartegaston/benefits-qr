@@ -6,6 +6,7 @@ import Input from "@/components/ui/Input";
 import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
+import RubroSelect from "@/components/local/RubroSelect";
 
 interface EditPerfilFormProps {
   email: string;
@@ -13,6 +14,7 @@ interface EditPerfilFormProps {
   logoUrl?: string | null;
   direccion?: string | null;
   telefono?: string | null;
+  rubroId?: number | null;
 }
 
 export default function EditPerfilForm({
@@ -21,11 +23,13 @@ export default function EditPerfilForm({
   logoUrl: initialLogoUrl,
   direccion: initialDireccion,
   telefono: initialTelefono,
+  rubroId: initialRubroId,
 }: EditPerfilFormProps) {
   const router = useRouter();
   const [nombre, setNombre] = useState(initialNombre ?? "");
   const [direccion, setDireccion] = useState(initialDireccion ?? "");
   const [telefono, setTelefono] = useState(initialTelefono ?? "+54");
+  const [rubroId, setRubroId] = useState(initialRubroId ? String(initialRubroId) : "");
   const [logoUrl, setLogoUrl] = useState(initialLogoUrl);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,7 +42,7 @@ export default function EditPerfilForm({
     const res = await fetch("/api/local/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, direccion, telefono }),
+      body: JSON.stringify({ nombre, direccion, telefono, rubroId: Number(rubroId) }),
     });
 
     const data = await res.json();
@@ -107,6 +111,8 @@ export default function EditPerfilForm({
           onChange={setTelefono}
           required
         />
+
+        <RubroSelect value={rubroId} onChange={setRubroId} required />
 
         {error && (
           <p className="rounded-lg border border-danger-border bg-danger-soft px-3 py-2 text-sm font-medium text-danger lg:text-[13px] 2xl:text-sm" aria-live="polite">

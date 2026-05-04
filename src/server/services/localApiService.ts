@@ -65,9 +65,9 @@ export async function getLocalMeFlow(localId: string) {
 
 export async function updateLocalMeFlow(
   localId: string,
-  input: { nombre?: unknown; direccion?: unknown; telefono?: unknown }
+  input: { nombre?: unknown; direccion?: unknown; telefono?: unknown; rubroId?: unknown }
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
-  const { nombre, direccion, telefono } = input;
+  const { nombre, direccion, telefono, rubroId } = input;
 
   if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
     return { ok: false, status: 400, error: "El nombre es requerido", code: "NOMBRE_REQUIRED" };
@@ -77,10 +77,15 @@ export async function updateLocalMeFlow(
     return { ok: false, status: 400, error: "El teléfono es requerido", code: "TELEFONO_REQUIRED" };
   }
 
+  if (!rubroId || typeof rubroId !== "number" || !Number.isInteger(rubroId) || rubroId <= 0) {
+    return { ok: false, status: 400, error: "El rubro es requerido", code: "RUBRO_REQUIRED" };
+  }
+
   const local = await updateLocalProfile(localId, {
     nombre: nombre.trim(),
     direccion: typeof direccion === "string" ? direccion.trim() || null : null,
     telefono: telefono.trim() || null,
+    rubroId,
   });
 
   return { ok: true, status: 200, data: { ok: true, local } };
