@@ -57,7 +57,14 @@ export default function PublicBenefitCard({ benefit }: { benefit: PublicBenefitC
             </div>
 
             <div className="min-w-0 space-y-1">
-              <p className="text-sm font-semibold text-text-primary">{localName}</p>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <p className="text-sm font-semibold text-text-primary">{localName}</p>
+                {benefit.local.rubroNombre && (
+                  <Badge variant="muted" className="shrink-0 px-2 py-0 text-[10px]">
+                    {benefit.local.rubroNombre}
+                  </Badge>
+                )}
+              </div>
               <p className="text-xs text-text-muted">{formatDiasValidosSentence(benefit.diasValidos)}</p>
             </div>
           </div>

@@ -14,6 +14,7 @@ export type PublicBenefitsCatalogRaw = {
     local: {
       nombre: string | null;
       logoUrl: string | null;
+      rubroNombre: string | null;
     };
   }> | null;
   total: number;
@@ -53,9 +54,11 @@ export async function getPublicBenefitsCatalogRaw(
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
         l."logoUrl" AS "localLogoUrl",
+        ru.nombre AS "localRubroNombre",
         (${AVAILABLE_CONDITION}) AS "isAvailable"
       FROM "Beneficio" b
       JOIN "Local" l ON l.id = b."localId"
+      LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
       LEFT JOIN beneficio_stats_cte bs ON bs."beneficioId" = b.id
       WHERE b."esPublico" = true
         AND b."deletedAt" IS NULL
@@ -81,7 +84,8 @@ export async function getPublicBenefitsCatalogRaw(
               'canjeados', b.canjeados,
               'local', json_build_object(
                 'nombre', b."localNombre",
-                'logoUrl', b."localLogoUrl"
+                'logoUrl', b."localLogoUrl",
+                'rubroNombre', b."localRubroNombre"
               )
             )
             ORDER BY b."isAvailable" DESC, b."createdAt" DESC
@@ -119,9 +123,11 @@ export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Prom
         b."createdAt",
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
-        l."logoUrl" AS "localLogoUrl"
+        l."logoUrl" AS "localLogoUrl",
+        ru.nombre AS "localRubroNombre"
       FROM "Beneficio" b
       JOIN "Local" l ON l.id = b."localId"
+      LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
       LEFT JOIN beneficio_stats_cte bs ON bs."beneficioId" = b.id
       WHERE b."esPublico" = true
         AND b."deletedAt" IS NULL
@@ -144,7 +150,8 @@ export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Prom
               'canjeados', b.canjeados,
               'local', json_build_object(
                 'nombre', b."localNombre",
-                'logoUrl', b."localLogoUrl"
+                'logoUrl', b."localLogoUrl",
+                'rubroNombre', b."localRubroNombre"
               )
             )
             ORDER BY b."createdAt" DESC
