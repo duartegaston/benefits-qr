@@ -37,7 +37,7 @@ function emailLayout(content: string): string {
           <tr>
             <td style="background-color:${EMAIL_CARD_BG};border-radius:12px;padding:36px 32px;">
               <a href="${BASE_URL}" style="text-decoration:none;display:block;margin-bottom:28px;">
-                <img src="${BASE_URL}/logo-min.png" alt="Qupón" width="100"
+                <img src="${BASE_URL}/logo-min.png" alt="Qupon" width="100"
                      style="display:block;height:auto;border:0;" />
               </a>
               ${content}
@@ -48,7 +48,7 @@ function emailLayout(content: string): string {
           <tr>
             <td align="center" style="padding-top:24px;">
               <p style="margin:0;color:${EMAIL_TEXT_SOFT};font-size:12px;">
-                © ${new Date().getFullYear()} Qupón ·
+                © ${new Date().getFullYear()} Qupon ·
                 <a href="${BASE_URL}" style="color:${EMAIL_TEXT_SOFT};">qupon.com.ar</a>
               </p>
             </td>
@@ -104,7 +104,7 @@ export async function sendOtpEmail(to: string, code: string) {
   await resendFetch({
     from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to,
-    subject: `${code} — Tu código de acceso Qupón`,
+    subject: `${code} — Tu código de acceso Qupon`,
     html: emailLayout(content),
   });
 }
@@ -151,14 +151,14 @@ export async function sendLocalOnboardingMagicLink(to: string, token: string) {
     </p>
     ${primaryButton(magicLink, "Completar mi registro")}
     <p style="margin:24px 0 0;color:${EMAIL_TEXT_SOFT};font-size:12px;">
-      Si no solicitaste acceso a Qupón, podés ignorar este email.
+      Si no solicitaste acceso a Qupon, podés ignorar este email.
     </p>
   `;
 
   await resendFetch({
     from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to,
-    subject: "Completá tu registro en Qupón",
+    subject: "Completá tu registro en Qupon",
     html: emailLayout(content),
   });
 }
@@ -190,7 +190,7 @@ export async function sendMagicLink(
   await resendFetch({
     from: process.env.RESEND_FROM || "noreply@godevs.com.ar",
     to,
-    subject: "Tu enlace mágico — Qupón",
+    subject: "Tu enlace mágico — Qupon",
     html: emailLayout(content),
   });
 }
