@@ -41,7 +41,7 @@ async function _getPublicBenefitsCatalogRaw(
   const offset = Math.max(0, (page - 1) * pageSize);
 
   const nombreFilter = filters.q
-    ? Prisma.sql`AND l.nombre ILIKE ${"% " + filters.q + "%"}`
+    ? Prisma.sql`AND l.nombre ILIKE ${"%" + filters.q + "%"}`
     : Prisma.empty;
 
   // rubroId from the URL is a string; cast to int to match the column type
@@ -54,7 +54,8 @@ async function _getPublicBenefitsCatalogRaw(
         array_length(b."diasValidos", 1) IS NULL
         OR array_length(b."diasValidos", 1) = 0
         OR EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos")
-      )`
+      )
+      AND (${AVAILABLE_CONDITION})`
     : Prisma.empty;
 
   const soloDisponiblesFilter = filters.soloDisponibles
