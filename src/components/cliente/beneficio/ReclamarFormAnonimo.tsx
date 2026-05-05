@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Ticket } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Ticket, CheckCircle2 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
 
@@ -22,6 +22,16 @@ export default function ReclamarFormAnonimo({ beneficioId }: { beneficioId: stri
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [canjeado, setCanjeado] = useState(false);
+
+  const handleRedeemed = useCallback(() => {
+    try {
+      sessionStorage.removeItem(storageKey);
+    } catch {
+      // sessionStorage no disponible
+    }
+    setCanjeado(true);
+  }, [storageKey]);
 
   async function handleObtenerQR() {
     setError(null);
@@ -50,8 +60,24 @@ export default function ReclamarFormAnonimo({ beneficioId }: { beneficioId: stri
     setReclamoId(data.reclamoId);
   }
 
+  if (canjeado) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-border-default/70 bg-surface/80 px-6 py-10 text-center lg:px-5 lg:py-9 2xl:px-6 2xl:py-10">
+        <CheckCircle2 className="h-10 w-10 text-success" aria-hidden="true" />
+        <div className="space-y-1">
+          <p className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">
+            ¡Beneficio canjeado!
+          </p>
+          <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
+            El local registró el canje exitosamente.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (reclamoId) {
-    return <QRDisplay reclamoId={reclamoId} />;
+    return <QRDisplay reclamoId={reclamoId} onRedeemed={handleRedeemed} />;
   }
 
   return (

@@ -8,12 +8,13 @@ import { ReclamoEffectiveStatus } from "@/lib/couponStatus";
 
 interface QRDisplayProps {
   reclamoId: string;
+  onRedeemed?: () => void;
 }
 
 const QR_DURATION_SECONDS = 120;
 const STATUS_POLL_INTERVAL_MS = 2500;
 
-export default function QRDisplay({ reclamoId }: QRDisplayProps) {
+export default function QRDisplay({ reclamoId, onRedeemed }: QRDisplayProps) {
   const router = useRouter();
   const [qrDataURL, setQrDataURL] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(QR_DURATION_SECONDS);
@@ -64,8 +65,12 @@ export default function QRDisplay({ reclamoId }: QRDisplayProps) {
     }
 
     refreshTriggeredRef.current = true;
-    router.refresh();
-  }, [router]);
+    if (onRedeemed) {
+      onRedeemed();
+    } else {
+      router.refresh();
+    }
+  }, [router, onRedeemed]);
 
   const pollStatus = useCallback(async () => {
     if (pollInFlightRef.current || refreshTriggeredRef.current) {
