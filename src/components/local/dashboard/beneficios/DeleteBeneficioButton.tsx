@@ -24,8 +24,8 @@ export default function DeleteBeneficioButton({ id }: { id: string }) {
   async function handleDelete() {
     setLoading(true);
     await fetch(`/api/beneficios/${id}`, { method: "DELETE" });
-    router.push("/dashboard");
     router.refresh();
+    router.push("/dashboard");
   }
 
   return (

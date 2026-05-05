@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import { requireLocalAuth } from "@/lib/auth";
 import { apiError, apiSuccess } from "@/lib/apiResponse";
 import {
@@ -25,5 +26,10 @@ export async function POST(req: NextRequest) {
     return apiError(result.error, result.status, result.code);
   }
 
+  revalidatePath("/dashboard");
+  if ((result.data as { esPublico?: boolean }).esPublico) {
+    revalidatePath("/beneficios");
+    revalidatePath("/");
+  }
   return apiSuccess(result.data as Record<string, unknown>, result.status);
 }

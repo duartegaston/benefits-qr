@@ -27,7 +27,7 @@ export default async function BeneficioPublicoPage({
   const { id } = await params;
 
   const beneficio = await prisma.beneficio.findUnique({
-    where: { id, deletedAt: null },
+    where: { id },
     include: {
       local: { select: { nombre: true, logoUrl: true } },
       reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
@@ -35,6 +35,27 @@ export default async function BeneficioPublicoPage({
   });
 
   if (!beneficio) notFound();
+
+  if (beneficio.deletedAt !== null) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center px-6 py-14">
+        <div className="w-full max-w-md text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-soft">
+              <CircleAlert className="h-8 w-8 text-text-muted" aria-hidden="true" />
+            </div>
+          </div>
+          <h1 className="mb-2 text-xl font-bold text-text-primary">Cupón no disponible</h1>
+          <p className="mb-6 text-sm text-text-muted">
+            Este cupón fue eliminado o ya no se encuentra disponible.
+          </p>
+          <LinkButton href="/beneficios" variant="primary" size="sm">
+            Ver otros beneficios
+          </LinkButton>
+        </div>
+      </main>
+    );
+  }
 
   const diasValidos: number[] = beneficio.diasValidos as number[];
   const beneficioState = evaluateBeneficioState({
@@ -67,13 +88,13 @@ export default async function BeneficioPublicoPage({
       <div className="pointer-events-none absolute -bottom-40 -right-40 hidden h-[500px] w-[500px] rounded-full bg-primary-soft/80 blur-3xl sm:block" />
 
       <LinkButton
-        href="/"
+        href="/beneficios"
         variant="subtle"
         size="sm"
         className="absolute top-5 left-5 z-40 sm:top-6 sm:left-6"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Inicio
+        Beneficios
       </LinkButton>
 
       <div className="my-auto w-full max-w-md lg:max-w-sm 2xl:max-w-md">

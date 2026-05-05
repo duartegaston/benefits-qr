@@ -60,8 +60,8 @@ export default async function AccesoPage({
 
   const pageTitle = token ? "Tu acceso está listo" : "Mis cupones";
   const pageDescription = token
-    ? "Entrá para ver los beneficios que ya guardaste."
-    : "Ingresá con tu email para recuperar tus beneficios guardados.";
+    ? "Entrá para ver los cupónes que ya guardaste."
+    : "Ingresá con tu email para recuperar tus cupónes guardados.";
 
   return (
     <main className="relative min-h-screen overflow-x-hidden sm:overflow-hidden flex flex-col items-center px-4 py-14">

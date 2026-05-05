@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import { requireLocalAuth } from "@/lib/auth";
 import { apiError, apiSuccess } from "@/lib/apiResponse";
 import {
@@ -34,5 +35,8 @@ export async function DELETE(
     return apiError(result.error, result.status, result.code);
   }
 
+  revalidatePath("/dashboard");
+  revalidatePath("/beneficios");
+  revalidatePath("/");
   return apiSuccess({ success: true }, result.status);
 }

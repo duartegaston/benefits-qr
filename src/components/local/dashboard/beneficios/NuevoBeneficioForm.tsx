@@ -90,6 +90,7 @@ export default function NuevoBeneficioForm() {
     }
 
     router.push("/dashboard");
+    router.refresh();
   }
 
   return (
