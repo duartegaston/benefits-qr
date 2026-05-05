@@ -67,7 +67,8 @@ export default function LoginForm() {
       return;
     }
 
-    router.push(data.redirect ?? "/dashboard");
+    router.refresh();
+    router.replace(data.redirect ?? "/dashboard");
   }
 
   return (

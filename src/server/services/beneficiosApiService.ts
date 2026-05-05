@@ -6,7 +6,7 @@ import {
   findBeneficioPublicById,
   findBeneficioStatsByLocal,
   findBeneficiosByLocal,
-  softDeleteBeneficioAndCancelPending,
+  softDeleteBeneficioAndDeleteReclamos,
 } from "@/server/repositories/beneficiosApiRepository";
 
 type ServiceError = {
@@ -144,7 +144,7 @@ export async function deleteBeneficioFlow(
     return { ok: false, status: 404, error: "Cupón no encontrado", code: "BENEFICIO_NOT_FOUND" };
   }
 
-  await softDeleteBeneficioAndCancelPending(id);
+  await softDeleteBeneficioAndDeleteReclamos(id);
 
   return { ok: true, status: 200 };
 }

@@ -37,15 +37,14 @@ export async function findBeneficioOwnedByLocal(id: string, localId: string) {
   });
 }
 
-export async function softDeleteBeneficioAndCancelPending(id: string) {
+export async function softDeleteBeneficioAndDeleteReclamos(id: string) {
   await prisma.$transaction([
+    prisma.reclamo.deleteMany({
+      where: { beneficioId: id },
+    }),
     prisma.beneficio.update({
       where: { id },
       data: { deletedAt: new Date() },
-    }),
-    prisma.reclamo.updateMany({
-      where: { beneficioId: id, estado: EstadoReclamo.PENDIENTE },
-      data: { estado: EstadoReclamo.CANCELADO, qrToken: null, qrTokenExpira: null },
     }),
   ]);
 }
