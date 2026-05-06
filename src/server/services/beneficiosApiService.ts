@@ -128,7 +128,7 @@ export async function getBeneficioById(
   const beneficio = await findBeneficioPublicById(id);
 
   if (!beneficio) {
-    return { ok: false, status: 404, error: "Beneficio no encontrado", code: "BENEFICIO_NOT_FOUND" };
+    return { ok: false, status: 404, error: "Cupón no encontrado", code: "BENEFICIO_NOT_FOUND" };
   }
 
   return { ok: true, status: 200, data: beneficio };
@@ -156,7 +156,7 @@ export async function getBeneficioStats(
   const beneficio = await findBeneficioStatsByLocal(id, localId);
 
   if (!beneficio) {
-    return { ok: false, status: 404, error: "Beneficio no encontrado", code: "BENEFICIO_NOT_FOUND" };
+    return { ok: false, status: 404, error: "Cupón no encontrado", code: "BENEFICIO_NOT_FOUND" };
   }
 
   return {

@@ -24,7 +24,7 @@ export default async function PublicBenefitsSection() {
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
               eyebrow="Catálogo público"
-              title="Beneficios publicados"
+              title="Cupones publicados"
               description="Una selección abierta para explorar ahora."
               align="left"
               className="mb-0 max-w-2xl"

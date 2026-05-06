@@ -7,7 +7,7 @@ export default function NuevoBeneficioPage() {
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8 lg:max-w-4xl lg:pt-7 2xl:max-w-5xl 2xl:pt-8">
       <SectionHeader
         eyebrow="Nuevo cupón"
-        title="Creá un beneficio"
+        title="Creá un qupon"
         description="Definí la vigencia y las condiciones del cupón para publicarlo en tu dashboard."
         align="left"
         className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6"

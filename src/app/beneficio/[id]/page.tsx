@@ -50,7 +50,7 @@ export default async function BeneficioPublicoPage({
             Este cupón fue eliminado o ya no se encuentra disponible.
           </p>
           <LinkButton href="/beneficios" variant="primary" size="sm">
-            Ver otros beneficios
+            Ver otros cupones
           </LinkButton>
         </div>
       </main>
@@ -94,7 +94,7 @@ export default async function BeneficioPublicoPage({
         className="absolute top-5 left-5 z-40 sm:top-6 sm:left-6"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Beneficios
+        Cupones
       </LinkButton>
 
       <div className="my-auto w-full max-w-md lg:max-w-sm 2xl:max-w-md">

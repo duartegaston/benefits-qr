@@ -61,7 +61,7 @@ export default async function BeneficiosPage({
       <div className="mx-auto max-w-6xl 2xl:max-w-7xl">
         <SectionHeader
           eyebrow="Catálogo público"
-          title="Beneficios"
+          title="Cupones disponibles"
           description="Todos los cupones públicos, priorizando primero los que todavía están disponibles."
           align="left"
           className="mb-6 max-w-2xl"

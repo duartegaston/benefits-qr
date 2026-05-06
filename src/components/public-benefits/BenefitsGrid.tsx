@@ -28,7 +28,7 @@ export default async function BenefitsGrid({
     <>
       <PublicBenefitsList
         benefits={beneficios}
-        emptyMessage="No hay beneficios que coincidan con los filtros."
+        emptyMessage="No hay cupones que coincidan con los filtros."
       />
 
       {totalPages > 1 ? (

@@ -9,7 +9,7 @@ const PLAYBOOKS = [
   },
   {
     title: "Clientes fieles",
-    description: "Un beneficio simple para dar motivo de vuelta.",
+    description: "Un cupón simple para dar motivo de vuelta.",
     chip: "30 días",
   },
   {

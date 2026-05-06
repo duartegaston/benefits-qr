@@ -65,7 +65,7 @@ async function ReclamosList({
   return (
     <>
       <div className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6">
-        <MetricCard label="Beneficios guardados" value={total} variant="primary" />
+        <MetricCard label="Cupones guardados" value={total} variant="primary" />
       </div>
 
       <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
@@ -120,7 +120,7 @@ export default async function MisBeneficiosPage({
       <SectionHeader
         eyebrow="Cliente"
         title="Mis cupones"
-        description="Consultá tus beneficios guardados y mostrales el QR al local cuando quieras canjearlos."
+        description="Consultá tus cupones guardados y mostrales el QR al local cuando quieras canjearlos."
         align="left"
         className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6"
       />

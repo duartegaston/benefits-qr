@@ -66,7 +66,7 @@ export default function ReclamarFormAnonimo({ beneficioId }: { beneficioId: stri
         <CheckCircle2 className="h-10 w-10 text-success" aria-hidden="true" />
         <div className="space-y-1">
           <p className="text-sm font-semibold text-text-primary lg:text-[13px] 2xl:text-sm">
-            ¡Beneficio canjeado!
+            ¡Cupón canjeado!
           </p>
           <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
             El local registró el canje exitosamente.
@@ -83,7 +83,7 @@ export default function ReclamarFormAnonimo({ beneficioId }: { beneficioId: stri
   return (
     <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
       <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
-        Generá tu QR personal para presentarlo en el local y canjear tu beneficio.
+        Generá tu QR personal para presentarlo en el local y canjear tu cupón.
       </p>
 
       {error ? <p className="text-sm text-danger">{error}</p> : null}

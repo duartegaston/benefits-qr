@@ -8,7 +8,7 @@ const AUDIENCE_CTAS = [
     eyebrow: "Entrada dedicada",
     title: "Para locales",
     description:
-      "Creá campañas, publicá beneficios y escaneá canjes con una operación ordenada desde el dashboard.",
+      "Creá campañas, publicá cupones y escaneá canjes con una operación ordenada desde el dashboard.",
     bullets: ["Alta rápida", "Control de usos", "Canje inmediato"],
     href: "/login",
     action: "Ingresar como negocio",
@@ -26,7 +26,7 @@ const AUDIENCE_CTAS = [
     eyebrow: "Entrada dedicada",
     title: "Para clientes",
     description:
-      "Accedé a todos tus beneficios desde el mail, guardalos y mostrá el QR cuando llegás al local.",
+      "Accedé a todos tus cupones desde el mail, guardalos y mostrá el QR cuando llegás al local.",
     bullets: ["Sin contraseña", "Sin app extra", "Todo en un lugar"],
     href: "/acceso",
     action: "Ingresar como cliente",
@@ -54,7 +54,7 @@ export default function LandingAudienceCtas() {
           <SectionHeader
             eyebrow="Empezá según tu perfil"
             title="Una entrada clara para cada lado de la experiencia"
-            description="Negocios gestionan beneficios y clientes acceden a sus cupones sin vueltas."
+            description="Negocios gestionan cupones y clientes acceden a sus cupones sin vueltas."
             align="left"
             className="max-w-2xl lg:mb-8 [&>h2]:text-2xl [&>p]:max-w-xl"
           />

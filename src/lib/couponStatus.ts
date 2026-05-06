@@ -85,7 +85,7 @@ export function getCouponBlockMessage(
   } = {}
 ) {
   if (reason === CouponBlockReason.BENEFICIO_UNAVAILABLE) {
-    return "Este beneficio ya no está disponible";
+    return "Este cupón ya no está disponible";
   }
 
   if (reason === CouponBlockReason.BENEFICIO_EXPIRED) {

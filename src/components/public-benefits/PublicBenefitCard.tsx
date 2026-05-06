@@ -23,7 +23,7 @@ export default function PublicBenefitCard({ benefit }: { benefit: PublicBenefitC
   return (
     <Link
       href={`/beneficio/${benefit.id}`}
-      aria-label={`Ver beneficio ${benefit.descripcion}`}
+      aria-label={`Ver cupón ${benefit.descripcion}`}
       className="group block h-full"
     >
       <Card className="h-full overflow-hidden border-surface/80 bg-surface/95 shadow-sm shadow-primary-soft/25 transition-[transform,box-shadow,border-color] duration-200 group-hover:-translate-y-0.5 group-hover:border-primary/25 group-hover:shadow-md sm:bg-surface/85 sm:backdrop-blur-md">
@@ -96,7 +96,7 @@ export default function PublicBenefitCard({ benefit }: { benefit: PublicBenefitC
           ) : null}
 
           <div className="mt-auto flex items-center justify-between pt-1 text-sm font-semibold text-primary transition-colors group-hover:text-accent">
-            <span>{benefit.requiereDatos ? "Ver beneficio" : "Abrir beneficio"}</span>
+            <span>{benefit.requiereDatos ? "Ver cupón" : "Abrir cupón"}</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
           </div>
         </div>

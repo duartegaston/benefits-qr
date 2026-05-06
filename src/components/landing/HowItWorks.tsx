@@ -14,7 +14,7 @@ const STEPS = [
   {
     number: "02",
     title: "El cliente genera su QR",
-    description: "Abre el beneficio, completa sus datos y genera el QR para mostrarlo en el local.",
+    description: "Abre el cupón, completa sus datos y genera el QR para mostrarlo en el local.",
     imageSrc: "/Fotos-iphone/cuponCliente.jpeg",
     imageAlt: "Cliente generando su QR para mostrar en el negocio",
   },

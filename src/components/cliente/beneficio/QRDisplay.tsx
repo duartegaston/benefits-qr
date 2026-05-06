@@ -225,7 +225,7 @@ export default function QRDisplay({ reclamoId, onRedeemed }: QRDisplayProps) {
 
       <div className="space-y-2 text-center">
         <p className="text-sm font-medium text-text-primary lg:text-[13px] 2xl:text-sm">
-          Mostralo en el local para validar tu beneficio.
+          Mostralo en el local para validar tu cupón.
         </p>
         <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
           {isExpired
