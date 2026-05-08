@@ -1,15 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LogOut } from "lucide-react";
 import BrandLogo from "@/components/ui/BrandLogo";
-import Button from "@/components/ui/Button";
+import LogoutButton from "@/components/auth/LogoutButton";
 import { cn } from "@/lib/utils";
 
 export default function ClienteHeader() {
-  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -22,12 +19,6 @@ export default function ClienteHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  async function handleLogout() {
-    await fetch("/api/auth/cliente/logout", { method: "POST" });
-    router.push("/");
-    router.refresh();
-  }
-
   return (
     <header
       className={cn(
@@ -39,16 +30,13 @@ export default function ClienteHeader() {
     >
       <div className="mx-auto flex h-20 max-w-5xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:h-20 lg:max-w-2xl lg:px-5 2xl:h-24 2xl:max-w-3xl 2xl:px-6">
         <div>
-          <Button onClick={handleLogout} variant="logout" size="sm">
-            <LogOut aria-hidden="true" className="h-4 w-4" />
-            Salir
-          </Button>
+          <LogoutButton logoutEndpoint="/api/auth/cliente/logout" />
         </div>
 
         <Link
-          href="/mis-beneficios"
+          href="/"
           className="inline-flex items-center"
-          aria-label="Ir a mis cupones"
+          aria-label="Ir al inicio"
         >
           <BrandLogo variant="header" priority />
         </Link>

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
+import LogoutButton from "@/components/auth/LogoutButton";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import { findLocalById } from "@/server/repositories/localApiRepository";
@@ -19,12 +20,18 @@ export default async function EditPerfilPage() {
   return (
 
     <main className="mx-auto max-w-xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8 lg:max-w-lg lg:pt-7 2xl:max-w-xl 2xl:pt-8">
+      <Reveal y={8} amount={0.2} className="mb-4 sm:mb-5 lg:mb-4 2xl:mb-5">
+        <div className="flex justify-start">
+          <LogoutButton logoutEndpoint="/api/auth/logout" />
+        </div>
+      </Reveal>
+
       <Reveal y={10} amount={0.2} className="mb-6 sm:mb-8 lg:mb-6 2xl:mb-8">
         <SectionHeader
           eyebrow="Negocio"
           title="Datos del negocio"
           description="Actualizá los datos públicos de tu negocio"
-          align="center"
+          align="left"
           className="!mb-0"
         />
       </Reveal>

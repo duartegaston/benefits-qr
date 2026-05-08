@@ -45,6 +45,12 @@ export default async function BeneficioStatsPage({
 
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8 lg:max-w-4xl lg:pt-7 2xl:max-w-5xl 2xl:pt-8">
+      <div className="mb-4 flex justify-start sm:mb-5 lg:mb-4 2xl:mb-5">
+        <LinkButton href="/dashboard" variant="subtle" size="sm">
+          ← Volver
+        </LinkButton>
+      </div>
+
       <SectionHeader
         eyebrow="Detalle del cupón"
         title="Estado y actividad"
