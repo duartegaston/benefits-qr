@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { PencilLine, QrCode } from "lucide-react";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import Card from "@/components/ui/Card";
@@ -7,13 +6,11 @@ import Badge from "@/components/ui/Badge";
 import ShareButtons from "@/components/local/dashboard/ShareButtons";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
-import MetricCard from "@/components/ui/MetricCard";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
 import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
 import { getDashboardPageData } from "@/server/services/dashboardService";
-import { logoVersion } from "@/lib/logoVersion";
 
 const PAGE_SIZE = 10;
 
@@ -34,12 +31,6 @@ export default async function DashboardPage({
     local,
     beneficios,
     totalBeneficios,
-    totalReclamos,
-    totalCanjeados,
-    clientesUnicos,
-    cuponesActivos,
-    proximosAVencer,
-    tasaCanje,
     totalPages,
   } = await getDashboardPageData(session.userId, page, PAGE_SIZE);
 
@@ -60,7 +51,7 @@ export default async function DashboardPage({
         />
 
         <div className="rounded-2xl border border-surface/80 bg-surface/95 p-3 shadow-sm shadow-primary-soft/40 sm:bg-surface/85 sm:p-4 lg:p-3.5 2xl:p-4">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between lg:gap-3 2xl:gap-4">
+          <div className="flex items-start justify-between gap-4 lg:gap-3 2xl:gap-4">
             <div className="flex min-w-0 items-start gap-4">
               <div className="shrink-0">
                 {local.logoUrl ? (
@@ -78,20 +69,13 @@ export default async function DashboardPage({
                   </div>
                 )}
               </div>
-               <div className="min-w-0 space-y-0.5 lg:space-y-0">
-                 <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
-                  {local.nombre}
-                </h1>
-                {local.rubroNombre && (
-                  <div className="pt-0.5">
-                    <Badge variant="muted" className="px-2 py-0 text-[11px]">
-                      {local.rubroNombre}
-                    </Badge>
-                  </div>
-                )}
-                 <p className="break-all text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
-                  {local.email}
-                </p>
+                <div className="min-w-0 space-y-0.5 lg:space-y-0">
+                  <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
+                   {local.nombre}
+                 </h1>
+                  <p className="break-all text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
+                   {local.email}
+                 </p>
                 {local.direccion && (
                    <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">{local.direccion}</p>
                 )}
@@ -100,80 +84,30 @@ export default async function DashboardPage({
                 )}
               </div>
             </div>
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-              <LinkButton
-                href={`/dashboard/perfil?nombre=${encodeURIComponent(local.nombre ?? "")}&email=${encodeURIComponent(local.email)}&direccion=${encodeURIComponent(local.direccion ?? "")}&telefono=${encodeURIComponent(local.telefono ?? "")}&localId=${encodeURIComponent(local.id)}&logoV=${logoVersion(local.logoUrl)}`}
-                variant="outline"
-                size="sm"
-                className="w-full sm:w-auto"
-              >
-                <PencilLine className="h-4 w-4" aria-hidden="true" />
-                Editar perfil
-              </LinkButton>
-            </div>
+            {local.rubroNombre && (
+              <div className="shrink-0 pt-0.5">
+                <Badge variant="muted" className="px-2 py-0 text-[11px]">
+                  {local.rubroNombre}
+                </Badge>
+              </div>
+            )}
           </div>
         </div>
       </Reveal>
 
-      {/* Stats — fila 1 */}
-       <div className="mb-3 grid grid-cols-3 gap-2 sm:mb-4 sm:gap-3 lg:mb-3 lg:gap-2.5 2xl:mb-4 2xl:gap-3">
-        <Reveal y={14} amount={0.25}>
-          <MetricCard label="Cupones" value={totalBeneficios} variant="muted" />
-        </Reveal>
-        <Reveal delay={0.06} y={14} amount={0.25}>
-          <MetricCard label="Reclamos" value={totalReclamos} variant="muted" />
-        </Reveal>
-        <Reveal delay={0.12} y={14} amount={0.25}>
-          <MetricCard label="Canjeados" value={totalCanjeados} variant="primary" />
-        </Reveal>
-      </div>
-
-      {/* Stats — fila 2 */}
-       <div className="mb-6 grid grid-cols-2 gap-2 sm:mb-8 sm:grid-cols-4 sm:gap-3 lg:mb-7 lg:gap-2.5 2xl:mb-8 2xl:gap-3">
-        <Reveal delay={0.18} y={14} amount={0.25}>
-          <MetricCard label="Tasa canje (%)" value={tasaCanje} variant="primary" />
-        </Reveal>
-        <Reveal delay={0.24} y={14} amount={0.25}>
-          <MetricCard label="Clientes únicos" value={clientesUnicos} variant="light" />
-        </Reveal>
-        <Reveal delay={0.30} y={14} amount={0.25}>
-          <MetricCard label="Cupones activos" value={cuponesActivos} variant="secondary" />
-        </Reveal>
-        <Reveal delay={0.36} y={14} amount={0.25}>
-          <MetricCard label="Vencen en 7 días" value={proximosAVencer} variant="warning" />
-        </Reveal>
-      </div>
-
       {/* Beneficios */}
-      <Reveal y={8} amount={0.2} className="mb-4">
-         <div className="flex flex-col gap-3 rounded-2xl border border-surface/80 bg-surface/95 p-4 sm:flex-row sm:items-center sm:justify-between sm:bg-surface/85 sm:p-5 lg:gap-2.5 lg:p-4 2xl:gap-3 2xl:p-5">
+      <div id="mis-cupones" className="scroll-mt-24">
+        <Reveal y={8} amount={0.2} className="mb-4">
+          <div className="flex flex-col gap-3 rounded-2xl border border-surface/80 bg-surface/95 p-4 sm:bg-surface/85 sm:p-5 lg:gap-2.5 lg:p-4 2xl:gap-3 2xl:p-5">
            <div>
              <h2 className="text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">Mis cupones</h2>
              <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
               Gestioná estado, vigencia y acciones de cada cupón.
             </p>
           </div>
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-            <LinkButton
-              href="/dashboard/escanear"
-              variant="light"
-              size="md"
-              className="w-full justify-center sm:w-auto"
-            >
-              <QrCode className="h-4 w-4" aria-hidden="true" />
-              Escanear QR
-            </LinkButton>
-            <LinkButton
-              href="/dashboard/beneficios/nuevo"
-              variant="primary"
-              size="md"
-              className="w-full justify-center sm:w-auto"
-            >
-              + Nuevo cupón
-            </LinkButton>
           </div>
-        </div>
-      </Reveal>
+        </Reveal>
+      </div>
 
       {totalBeneficios === 0 ? (
         <Reveal y={12} amount={0.2}>

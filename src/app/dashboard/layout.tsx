@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
-import DashboardHeader from "@/components/local/dashboard/DashboardHeader";
+import MobileBottomNav from "@/components/local/dashboard/MobileBottomNav";
 
 export default async function DashboardLayout({
   children,
@@ -15,8 +15,8 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen">
-      <DashboardHeader />
-      <div className="px-0 lg:px-0">{children}</div>
+      <div className="px-0 pb-24 lg:px-0">{children}</div>
+      <MobileBottomNav />
     </div>
   );
 }
