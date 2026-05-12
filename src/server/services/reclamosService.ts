@@ -8,12 +8,32 @@ import {
   createClienteAnonimo,
   createReclamo,
   findBeneficioForReclamo,
+  findClienteById,
   findClienteByEmail,
   findClienteByPhone,
   findExistingReclamo,
   findExistingReclamoPendiente,
   updateCliente,
 } from "@/server/repositories/reclamosRepository";
+
+function normalizeNombreCompleto(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+
+  const normalized = value.trim().replace(/\s+/g, " ");
+  if (normalized.length === 0 || normalized.length > 100) return null;
+
+  const words = normalized.split(" ").filter(Boolean);
+  if (words.length < 2) return null;
+
+  return normalized;
+}
+
+function hasNombreCompleto(value: unknown): boolean {
+  if (typeof value !== "string") return false;
+
+  const words = value.trim().split(/\s+/).filter(Boolean);
+  return words.length >= 2;
+}
 
 type CreateReclamoInput = {
   beneficioId: unknown;
@@ -159,10 +179,47 @@ type CreateAnonymousReclamoResult =
   | { ok: true; status: number; reclamoId: string; sessionToken: string | null }
   | { ok: false; status: number; error: string; code: string };
 
-export async function createAnonymousReclamoFlow(
+type AnonymousNombreRequirementResult =
+  | { ok: true; requiresNombre: boolean }
+  | { ok: false; status: number; error: string; code: string };
+
+export async function getAnonymousNombreRequirement(
   beneficioId: unknown,
   existingClienteId: string | null
+): Promise<AnonymousNombreRequirementResult> {
+  if (!beneficioId || typeof beneficioId !== "string") {
+    return { ok: false, status: 400, error: "Cupón inválido", code: "INVALID_BENEFICIO_ID" };
+  }
+
+  const beneficio = await findBeneficioForReclamo(beneficioId);
+  if (!beneficio) {
+    return { ok: false, status: 404, error: "Cupón no encontrado", code: "BENEFICIO_NOT_FOUND" };
+  }
+
+  if (beneficio.requiereDatos) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Este cupón requiere completar tus datos",
+      code: "REQUIRES_DATOS",
+    };
+  }
+
+  if (!existingClienteId) {
+    return { ok: true, requiresNombre: true };
+  }
+
+  const cliente = await findClienteById(existingClienteId);
+  return { ok: true, requiresNombre: !hasNombreCompleto(cliente?.nombre) };
+}
+
+export async function createAnonymousReclamoFlow(
+  beneficioId: unknown,
+  existingClienteId: string | null,
+  nombre: unknown
 ): Promise<CreateAnonymousReclamoResult> {
+  const normalizedNombre = normalizeNombreCompleto(nombre);
+
   if (!beneficioId || typeof beneficioId !== "string") {
     return { ok: false, status: 400, error: "Cupón inválido", code: "INVALID_BENEFICIO_ID" };
   }
@@ -199,6 +256,25 @@ export async function createAnonymousReclamoFlow(
   }
 
   if (existingClienteId) {
+    const cliente = await findClienteById(existingClienteId);
+    if (!cliente) {
+      return { ok: false, status: 401, error: "Sesión inválida", code: "INVALID_SESSION" };
+    }
+
+    const needsNombre = !hasNombreCompleto(cliente.nombre);
+    if (needsNombre && !normalizedNombre) {
+      return {
+        ok: false,
+        status: 400,
+        error: "Ingresá nombre y apellido para generar el QR",
+        code: "NOMBRE_REQUIRED",
+      };
+    }
+
+    if (needsNombre && normalizedNombre) {
+      await updateCliente(existingClienteId, { nombre: normalizedNombre });
+    }
+
     const existingReclamo = await findExistingReclamoPendiente(beneficioId, existingClienteId);
     if (existingReclamo) {
       return { ok: true, status: 200, reclamoId: existingReclamo.id, sessionToken: null };
@@ -218,7 +294,16 @@ export async function createAnonymousReclamoFlow(
     return { ok: true, status: 201, reclamoId: reclamo.id, sessionToken: null };
   }
 
-  const cliente = await createClienteAnonimo();
+  if (!normalizedNombre) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Ingresá nombre y apellido para generar el QR",
+      code: "NOMBRE_REQUIRED",
+    };
+  }
+
+  const cliente = await createClienteAnonimo({ nombre: normalizedNombre });
   const session = await createSession(cliente.id, UserType.CLIENTE, SESSION_DURATION.CLIENTE_RECLAMO);
   const reclamo = await createReclamo(beneficioId, cliente.id);
 

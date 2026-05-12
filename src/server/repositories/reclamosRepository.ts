@@ -16,6 +16,10 @@ export async function findClienteByPhone(phone: string) {
   return prisma.cliente.findUnique({ where: { phone } });
 }
 
+export async function findClienteById(clienteId: string) {
+  return prisma.cliente.findUnique({ where: { id: clienteId } });
+}
+
 export async function createCliente(data: { nombre: string; email: string; phone: string }) {
   return prisma.cliente.create({ data });
 }
@@ -39,8 +43,8 @@ export async function createReclamo(beneficioId: string, clienteId: string) {
   });
 }
 
-export async function createClienteAnonimo() {
-  return prisma.cliente.create({ data: {} });
+export async function createClienteAnonimo(data?: { nombre?: string }) {
+  return prisma.cliente.create({ data: data ?? {} });
 }
 
 export async function findExistingReclamoPendiente(beneficioId: string, clienteId: string) {
