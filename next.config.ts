@@ -11,16 +11,16 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   // Restrict browser features
   { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=()" },
-  // Prevent injection of external scripts
+  // Prevent injection of external scripts (Google Maps APIs allowed)
   {
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https:",
-      "font-src 'self'",
-      "connect-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://*.googleapis.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https: http://127.0.0.1:3000",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://maps.googleapis.com https://*.googleapis.com",
       "frame-ancestors 'none'",
     ].join("; "),
   },

@@ -8,6 +8,8 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import SectionHeader from "@/components/ui/SectionHeader";
 import RubroSelect from "@/components/local/RubroSelect";
+import MapsProvider from "@/components/maps/MapsProvider";
+import AddressAutocomplete, { type SelectedAddress } from "@/components/maps/AddressAutocomplete";
 
 interface OnboardingFormProps {
   localId: string;
@@ -18,7 +20,7 @@ interface OnboardingFormProps {
 export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) {
   const router = useRouter();
   const [nombre, setNombre] = useState("");
-  const [direccion, setDireccion] = useState("");
+  const [address, setAddress] = useState<SelectedAddress | null>(null);
   const [telefono, setTelefono] = useState("+54");
   const [rubroId, setRubroId] = useState("");
   const [hasLogo, setHasLogo] = useState(!!logoUrl);
@@ -34,6 +36,11 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
       return;
     }
 
+    if (!address) {
+      setError("Seleccioná una dirección de la lista de sugerencias");
+      return;
+    }
+
     if (!rubroId) {
       setError("Por favor seleccioná un rubro");
       return;
@@ -44,7 +51,15 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
     const res = await fetch("/api/local/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, direccion, telefono, rubroId: Number(rubroId) }),
+      body: JSON.stringify({
+        nombre,
+        direccion: address.direccion,
+        lat: address.lat,
+        lng: address.lng,
+        placeId: address.placeId,
+        telefono,
+        rubroId: Number(rubroId),
+      }),
     });
 
     const data = await res.json();
@@ -59,6 +74,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
   }
 
   return (
+    <MapsProvider>
     <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7 lg:max-w-sm lg:p-6 2xl:max-w-md 2xl:p-7">
       <SectionHeader
         eyebrow="Onboarding del negocio"
@@ -98,13 +114,11 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           required
         />
 
-        <Input
+        <AddressAutocomplete
           label="Dirección"
-          type="text"
-          value={direccion}
-          onChange={(e) => setDireccion(e.target.value)}
-          placeholder="Ej: Av. Corrientes 1234, Buenos Aires"
           required
+          onChange={setAddress}
+          helperText="Empezá a escribir y elegí una opción de la lista."
         />
 
         <PhoneInput
@@ -131,5 +145,6 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
         </p>
       </form>
     </Card>
+    </MapsProvider>
   );
 }

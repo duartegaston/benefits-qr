@@ -4,10 +4,10 @@ import { ArrowLeft } from "lucide-react";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import PublicBenefitsFilters from "@/components/public-benefits/PublicBenefitsFilters";
-import BenefitsGrid, { BenefitsGridSkeleton } from "@/components/public-benefits/BenefitsGrid";
+import BeneficiosSection from "@/components/public-benefits/BeneficiosSection";
+import { BenefitsGridSkeleton } from "@/components/public-benefits/BenefitsGrid";
 import { prisma } from "@/lib/prisma";
 
-// Rubros almost never change — cache for 1 hour
 const getRubros = unstable_cache(
   () => prisma.rubro.findMany({ orderBy: { nombre: "asc" } }),
   ["rubros"],
@@ -25,9 +25,10 @@ export default async function BeneficiosPage({
     rubro?: string;
     soloHoy?: string;
     soloDisponibles?: string;
+    local?: string;
   }>;
 }) {
-  const { page: pageParam, q, rubro, soloHoy, soloDisponibles } = await searchParams;
+  const { page: pageParam, q, rubro, soloHoy, soloDisponibles, local } = await searchParams;
 
   const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   const filters = {
@@ -35,6 +36,7 @@ export default async function BeneficiosPage({
     rubroId: rubro || undefined,
     soloHoy: soloHoy === "1",
     soloDisponibles: soloDisponibles === "1",
+    localId: local || undefined,
   };
 
   const filterParams = new URLSearchParams();
@@ -42,8 +44,8 @@ export default async function BeneficiosPage({
   if (filters.rubroId) filterParams.set("rubro", filters.rubroId);
   if (filters.soloHoy) filterParams.set("soloHoy", "1");
   if (filters.soloDisponibles) filterParams.set("soloDisponibles", "1");
+  if (filters.localId) filterParams.set("local", filters.localId);
 
-  // Rubros come from cache — no DB hit on repeat requests
   const rubros = await getRubros();
 
   return (
@@ -67,14 +69,16 @@ export default async function BeneficiosPage({
           className="mb-6 max-w-2xl"
         />
 
-        {/* Filters render immediately (rubros are cached) */}
         <Suspense fallback={null}>
           <PublicBenefitsFilters rubros={rubros} />
         </Suspense>
 
-        {/* Benefits grid streams in — user sees filters without waiting for the DB query */}
         <Suspense fallback={<BenefitsGridSkeleton />}>
-          <BenefitsGrid page={page} filters={filters} filterParams={filterParams} />
+          <BeneficiosSection
+            page={page}
+            filters={filters}
+            filterParamsString={filterParams.toString()}
+          />
         </Suspense>
       </div>
     </main>

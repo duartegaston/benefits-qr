@@ -65,12 +65,42 @@ export async function getLocalMeFlow(localId: string) {
 
 export async function updateLocalMeFlow(
   localId: string,
-  input: { nombre?: unknown; direccion?: unknown; telefono?: unknown; rubroId?: unknown }
+  input: {
+    nombre?: unknown;
+    direccion?: unknown;
+    lat?: unknown;
+    lng?: unknown;
+    placeId?: unknown;
+    telefono?: unknown;
+    rubroId?: unknown;
+  }
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
-  const { nombre, direccion, telefono, rubroId } = input;
+  const { nombre, direccion, lat, lng, placeId, telefono, rubroId } = input;
 
   if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
     return { ok: false, status: 400, error: "El nombre es requerido", code: "NOMBRE_REQUIRED" };
+  }
+
+  if (!direccion || typeof direccion !== "string" || direccion.trim() === "") {
+    return { ok: false, status: 400, error: "La dirección es requerida", code: "DIRECCION_REQUIRED" };
+  }
+
+  if (
+    typeof lat !== "number" ||
+    !Number.isFinite(lat) ||
+    lat < -90 ||
+    lat > 90 ||
+    typeof lng !== "number" ||
+    !Number.isFinite(lng) ||
+    lng < -180 ||
+    lng > 180
+  ) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Seleccioná una dirección de las sugerencias",
+      code: "DIRECCION_INVALIDA",
+    };
   }
 
   if (!telefono || typeof telefono !== "string" || telefono.trim() === "") {
@@ -83,7 +113,10 @@ export async function updateLocalMeFlow(
 
   const local = await updateLocalProfile(localId, {
     nombre: nombre.trim(),
-    direccion: typeof direccion === "string" ? direccion.trim() || null : null,
+    direccion: direccion.trim(),
+    lat,
+    lng,
+    placeId: typeof placeId === "string" && placeId.trim() !== "" ? placeId.trim() : null,
     telefono: telefono.trim() || null,
     rubroId,
   });

@@ -23,6 +23,7 @@ export default function PublicBenefitsFilters({ rubros }: { rubros: Rubro[] }) {
   const currentRubro = searchParams.get("rubro") ?? "";
   const currentSoloHoy = searchParams.get("soloHoy") === "1";
   const currentSoloDisponibles = searchParams.get("soloDisponibles") === "1";
+  const currentLocal = searchParams.get("local") ?? "";
 
   const [inputValue, setInputValue] = useState(currentQ);
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +46,8 @@ export default function PublicBenefitsFilters({ rubros }: { rubros: Rubro[] }) {
     (currentQ ? 1 : 0) +
     (currentRubro ? 1 : 0) +
     (currentSoloHoy ? 1 : 0) +
-    (currentSoloDisponibles ? 1 : 0);
+    (currentSoloDisponibles ? 1 : 0) +
+    (currentLocal ? 1 : 0);
 
   const buildUrl = useCallback(
     (overrides: Record<string, string | undefined>) => {
@@ -55,6 +57,7 @@ export default function PublicBenefitsFilters({ rubros }: { rubros: Rubro[] }) {
         rubro: currentRubro || undefined,
         soloHoy: currentSoloHoy ? "1" : undefined,
         soloDisponibles: currentSoloDisponibles ? "1" : undefined,
+        local: currentLocal || undefined,
         ...overrides,
       };
       for (const [key, value] of Object.entries(merged)) {
@@ -63,7 +66,7 @@ export default function PublicBenefitsFilters({ rubros }: { rubros: Rubro[] }) {
       const qs = params.toString();
       return qs ? `/beneficios?${qs}` : "/beneficios";
     },
-    [currentQ, currentRubro, currentSoloHoy, currentSoloDisponibles]
+    [currentQ, currentRubro, currentSoloHoy, currentSoloDisponibles, currentLocal]
   );
 
   function handleQChange(value: string) {
@@ -142,6 +145,17 @@ export default function PublicBenefitsFilters({ rubros }: { rubros: Rubro[] }) {
       <button type="button" onClick={handleToggleSoloDisponibles} className={toggle(currentSoloDisponibles)}>
         Solo activos
       </button>
+
+      {currentLocal && (
+        <button
+          type="button"
+          onClick={() => router.push(buildUrl({ local: undefined }))}
+          className="flex h-10 shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-primary/40 bg-primary-soft/10 px-4 text-sm font-medium text-primary hover:border-danger hover:bg-danger/10 hover:text-danger transition-colors"
+        >
+          <span>Local seleccionado</span>
+          <X className="h-3.5 w-3.5" />
+        </button>
+      )}
 
       {activeCount > 0 && (
         <button
