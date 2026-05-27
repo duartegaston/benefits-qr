@@ -21,6 +21,9 @@ model Local {
   googleId   String?     @unique
   logoUrl    String?
   direccion  String?
+  lat        Float?
+  lng        Float?
+  placeId    String?
   telefono   String?
   rubroId    Int?
   rubro      Rubro?      @relation(fields: [rubroId], references: [id])

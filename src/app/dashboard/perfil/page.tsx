@@ -45,6 +45,9 @@ export default async function EditPerfilPage() {
             direccion={local.direccion}
             telefono={local.telefono}
             rubroId={local.rubro?.id ?? null}
+            lat={local.lat ?? null}
+            lng={local.lng ?? null}
+            placeId={local.placeId ?? null}
           />
         </div>
       </Reveal>

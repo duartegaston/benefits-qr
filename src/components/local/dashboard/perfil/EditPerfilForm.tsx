@@ -7,6 +7,8 @@ import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import RubroSelect from "@/components/local/RubroSelect";
+import MapsProvider from "@/components/maps/MapsProvider";
+import AddressAutocomplete, { type SelectedAddress } from "@/components/maps/AddressAutocomplete";
 
 interface EditPerfilFormProps {
   email: string;
@@ -15,6 +17,9 @@ interface EditPerfilFormProps {
   direccion?: string | null;
   telefono?: string | null;
   rubroId?: number | null;
+  lat?: number | null;
+  lng?: number | null;
+  placeId?: string | null;
 }
 
 export default function EditPerfilForm({
@@ -24,10 +29,22 @@ export default function EditPerfilForm({
   direccion: initialDireccion,
   telefono: initialTelefono,
   rubroId: initialRubroId,
+  lat: initialLat,
+  lng: initialLng,
+  placeId: initialPlaceId,
 }: EditPerfilFormProps) {
   const router = useRouter();
   const [nombre, setNombre] = useState(initialNombre ?? "");
-  const [direccion, setDireccion] = useState(initialDireccion ?? "");
+  const [address, setAddress] = useState<SelectedAddress | null>(
+    initialDireccion && initialLat != null && initialLng != null
+      ? {
+          direccion: initialDireccion,
+          lat: initialLat,
+          lng: initialLng,
+          placeId: initialPlaceId ?? null,
+        }
+      : null
+  );
   const [telefono, setTelefono] = useState(initialTelefono ?? "+54");
   const [rubroId, setRubroId] = useState(initialRubroId ? String(initialRubroId) : "");
   const [logoUrl, setLogoUrl] = useState(initialLogoUrl);
@@ -37,12 +54,26 @@ export default function EditPerfilForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    if (!address) {
+      setError("Seleccioná una dirección de la lista de sugerencias");
+      return;
+    }
+
     setLoading(true);
 
     const res = await fetch("/api/local/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, direccion, telefono, rubroId: Number(rubroId) }),
+      body: JSON.stringify({
+        nombre,
+        direccion: address.direccion,
+        lat: address.lat,
+        lng: address.lng,
+        placeId: address.placeId,
+        telefono,
+        rubroId: Number(rubroId),
+      }),
     });
 
     const data = await res.json();
@@ -58,6 +89,7 @@ export default function EditPerfilForm({
   }
 
   return (
+    <MapsProvider>
     <Card className="w-full max-w-md border-surface/80 bg-surface/95 p-6 shadow-xl shadow-border-default/60 sm:bg-surface/85 sm:backdrop-blur-md sm:p-7 lg:max-w-sm lg:p-6 2xl:max-w-md 2xl:p-7">
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 lg:space-y-4 2xl:space-y-5">
         <div className="mb-1.5 flex flex-col items-center gap-1 lg:mb-1 2xl:mb-1.5">
@@ -93,14 +125,12 @@ export default function EditPerfilForm({
           required
         />
 
-        <Input
+        <AddressAutocomplete
           label="Dirección"
-          type="text"
-          name="direccion"
-          autoComplete="street-address"
-          value={direccion}
-          onChange={(e) => setDireccion(e.target.value)}
-          placeholder="Ej: Av. Corrientes 1234, Buenos Aires"
+          required
+          initialValue={initialDireccion ?? ""}
+          onChange={setAddress}
+          helperText="Empezá a escribir y elegí una opción de la lista."
         />
 
         <PhoneInput
@@ -125,5 +155,6 @@ export default function EditPerfilForm({
         </Button>
       </form>
     </Card>
+    </MapsProvider>
   );
 }

@@ -9,6 +9,9 @@ export async function findLocalById(localId: string) {
       email: true,
       logoUrl: true,
       direccion: true,
+      lat: true,
+      lng: true,
+      placeId: true,
       telefono: true,
       rubro: { select: { id: true, nombre: true } },
     },
@@ -17,7 +20,15 @@ export async function findLocalById(localId: string) {
 
 export async function updateLocalProfile(
   localId: string,
-  data: { nombre: string; direccion: string | null; telefono: string | null; rubroId: number }
+  data: {
+    nombre: string;
+    direccion: string | null;
+    lat: number | null;
+    lng: number | null;
+    placeId: string | null;
+    telefono: string | null;
+    rubroId: number;
+  }
 ) {
   return prisma.local.update({
     where: { id: localId },

@@ -7,6 +7,7 @@ export type PublicBenefitsFiltersInput = {
   rubroId?: string;
   soloHoy?: boolean;
   soloDisponibles?: boolean;
+  localId?: string;
 };
 
 export type PublicBenefitsCatalogRaw = {
@@ -62,6 +63,10 @@ async function _getPublicBenefitsCatalogRaw(
     ? Prisma.sql`AND (${AVAILABLE_CONDITION})`
     : Prisma.empty;
 
+  const localFilter = filters.localId
+    ? Prisma.sql`AND b."localId" = ${filters.localId}`
+    : Prisma.empty;
+
   const [raw] = await prisma.$queryRaw<[PublicBenefitsCatalogRaw]>`
     WITH beneficio_stats_cte AS (
       SELECT
@@ -97,6 +102,7 @@ async function _getPublicBenefitsCatalogRaw(
         ${rubroFilter}
         ${soloHoyFilter}
         ${soloDisponiblesFilter}
+        ${localFilter}
     ),
     paged_beneficios_cte AS (
       SELECT *
