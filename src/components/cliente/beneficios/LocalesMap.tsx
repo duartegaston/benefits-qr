@@ -7,7 +7,7 @@ import type { LocalConBeneficiosRaw } from "@/server/repositories/localesMapRepo
 import type { LatLng } from "@/lib/geo/distance";
 import { formatDistance, haversineKm } from "@/lib/geo/distance";
 
-const DEFAULT_CENTER: LatLng = { lat: -34.6037, lng: -58.3816 }; // CABA
+const DEFAULT_CENTER: LatLng = { lat: -27.36693, lng: -55.89363 };
 const DEFAULT_ZOOM = 12;
 
 function getInitials(name: string) {
