@@ -39,10 +39,19 @@ export default function AddressAutocomplete({
   const inputId = useId();
   const places = useMapsLibrary("places");
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const sessionTokenRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [selectionMade, setSelectionMade] = useState(initialValue.trim() !== "");
   const [resolving, setResolving] = useState(false);
+
+  const getSessionToken = () => {
+    if (!places) return undefined;
+    if (!sessionTokenRef.current) {
+      sessionTokenRef.current = new places.AutocompleteSessionToken();
+    }
+    return sessionTokenRef.current;
+  };
 
   const {
     ready,
@@ -57,7 +66,10 @@ export default function AddressAutocomplete({
     requestOptions: {
       componentRestrictions: { country: COUNTRY_RESTRICTIONS },
       types: ["address"],
-    },
+      get sessionToken() {
+        return getSessionToken();
+      },
+    } as google.maps.places.AutocompletionRequest,
     initOnMount: false,
     defaultValue: initialValue,
   });
@@ -88,7 +100,10 @@ export default function AddressAutocomplete({
       const details = (await getDetails({
         placeId: prediction.place_id,
         fields: ["geometry", "formatted_address", "place_id"],
-      })) as google.maps.places.PlaceResult;
+        sessionToken: getSessionToken(),
+      } as google.maps.places.PlaceDetailsRequest)) as google.maps.places.PlaceResult;
+      // La sesión termina con getDetails: rotar token para la próxima búsqueda
+      sessionTokenRef.current = null;
 
       const lat = details.geometry?.location?.lat();
       const lng = details.geometry?.location?.lng();

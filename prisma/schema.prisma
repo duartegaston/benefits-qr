@@ -49,7 +49,7 @@ model Beneficio {
   esPublico       Boolean   @default(false)
   requiereDatos   Boolean   @default(true)
   localId         String
-  local           Local     @relation(fields: [localId], references: [id])
+  local           Local     @relation(fields: [localId], references: [id], onDelete: Cascade)
   createdAt       DateTime  @default(now())
   deletedAt       DateTime?
   reclamos        Reclamo[]
@@ -86,7 +86,7 @@ enum EstadoReclamo {
 model Reclamo {
   id            String        @id @default(cuid())
   beneficioId   String
-  beneficio     Beneficio     @relation(fields: [beneficioId], references: [id])
+  beneficio     Beneficio     @relation(fields: [beneficioId], references: [id], onDelete: Cascade)
   clienteId     String
   cliente       Cliente       @relation(fields: [clienteId], references: [id])
   fechaReclamo  DateTime      @default(now())
