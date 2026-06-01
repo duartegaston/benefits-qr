@@ -13,9 +13,12 @@ import {
   deleteLocalOtpByEmail,
   findClienteByEmail,
   findLocalByEmail,
+  findLocalByGoogleId,
   findLocalOtpByEmail,
+  updateLocalGoogleId,
   upsertLocalOtp,
 } from "@/server/repositories/authApiRepository";
+import type { GoogleProfile } from "@/lib/googleOAuth";
 
 function getOwnerEmail(): string {
   const email = process.env.OWNER_EMAIL;
@@ -100,15 +103,8 @@ export async function requestLocalOtpFlow(
     return { ok: true, status: 200, data: { ok: true } };
   }
 
-  const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000);
-  await upsertLocalOtp(normalized, code, expiresAt, true);
-
-  const token = generateApprovalToken(normalized, expiresAt);
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const approveUrl = `${baseUrl}/api/auth/local/approve?token=${encodeURIComponent(token)}`;
-
   try {
-    await sendApprovalRequestEmail(getOwnerEmail(), normalized, approveUrl);
+    await requestNewLocalApproval(normalized);
   } catch (err) {
     console.error("[request-otp] Error enviando email de aprobación:", err instanceof Error ? err.message : String(err));
     return {
@@ -120,6 +116,59 @@ export async function requestLocalOtpFlow(
   }
 
   return { ok: true, status: 200, data: { ok: true, requiresApproval: true } };
+}
+
+async function requestNewLocalApproval(normalizedEmail: string): Promise<void> {
+  const code = randomInt(100000, 1000000).toString();
+  const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000);
+  await upsertLocalOtp(normalizedEmail, code, expiresAt, true);
+
+  const token = generateApprovalToken(normalizedEmail, expiresAt);
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const approveUrl = `${baseUrl}/api/auth/local/approve?token=${encodeURIComponent(token)}`;
+
+  await sendApprovalRequestEmail(getOwnerEmail(), normalizedEmail, approveUrl);
+}
+
+type LoginLocalWithGoogleResult =
+  | { ok: true; localId: string; redirect: string }
+  | { ok: false; reason: "pending_approval" | "unverified" | "error" };
+
+export async function loginLocalWithGoogle(
+  profile: GoogleProfile
+): Promise<LoginLocalWithGoogleResult> {
+  if (!profile.emailVerified) {
+    return { ok: false, reason: "unverified" };
+  }
+
+  const byGoogleId = await findLocalByGoogleId(profile.googleId);
+  if (byGoogleId) {
+    return {
+      ok: true,
+      localId: byGoogleId.id,
+      redirect: byGoogleId.nombre ? "/dashboard" : "/onboarding",
+    };
+  }
+
+  const byEmail = await findLocalByEmail(profile.email);
+  if (byEmail) {
+    await updateLocalGoogleId(byEmail.id, profile.googleId);
+    return {
+      ok: true,
+      localId: byEmail.id,
+      redirect: byEmail.nombre ? "/dashboard" : "/onboarding",
+    };
+  }
+
+  // Sin cuenta: no se permite el ingreso. Se solicita aprobación al administrador.
+  try {
+    await requestNewLocalApproval(profile.email);
+  } catch (err) {
+    console.error("[loginLocalWithGoogle] Error enviando email de aprobación:", err instanceof Error ? err.message : String(err));
+    return { ok: false, reason: "error" };
+  }
+
+  return { ok: false, reason: "pending_approval" };
 }
 
 export async function verifyLocalOtpFlow(

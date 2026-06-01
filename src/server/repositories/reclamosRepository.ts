@@ -12,21 +12,29 @@ export async function findClienteByEmail(email: string) {
   return prisma.cliente.findUnique({ where: { email } });
 }
 
-export async function findClienteByPhone(phone: string) {
-  return prisma.cliente.findUnique({ where: { phone } });
+export async function findClienteByGoogleId(googleId: string) {
+  return prisma.cliente.findUnique({ where: { googleId } });
 }
 
 export async function findClienteById(clienteId: string) {
   return prisma.cliente.findUnique({ where: { id: clienteId } });
 }
 
-export async function createCliente(data: { nombre: string; email: string; phone: string }) {
+export async function createCliente(data: { nombre: string; email: string }) {
+  return prisma.cliente.create({ data });
+}
+
+export async function createClienteWithGoogle(data: {
+  email: string;
+  googleId: string;
+  nombre: string | null;
+}) {
   return prisma.cliente.create({ data });
 }
 
 export async function updateCliente(
   id: string,
-  data: Partial<{ nombre: string; email: string; phone: string }>
+  data: Partial<{ nombre: string; email: string; googleId: string }>
 ) {
   return prisma.cliente.update({ where: { id }, data });
 }

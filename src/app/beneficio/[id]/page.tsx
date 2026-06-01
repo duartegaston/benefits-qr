@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, CalendarDays, CircleAlert, Store } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { EstadoReclamo } from "@/generated/prisma/client";
@@ -21,9 +21,17 @@ import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
 
 export default async function BeneficioPublicoPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ token?: string }>;
 }) {
+  const { token } = await searchParams;
+
+  if (token) {
+    redirect(`/api/auth/cliente/verify?token=${encodeURIComponent(token)}`);
+  }
+
   const { id } = await params;
 
   const beneficio = await prisma.beneficio.findUnique({

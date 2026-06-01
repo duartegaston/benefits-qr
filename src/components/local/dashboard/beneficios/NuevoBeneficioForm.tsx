@@ -247,7 +247,7 @@ export default function NuevoBeneficioForm() {
             </p>
             <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
               {requiereDatos
-                ? "El cliente deberá ingresar nombre, email y teléfono para reclamar el cupón."
+                ? "El cliente deberá ingresar nombre y email (o entrar con Google) para reclamar el cupón."
                 : "El cliente verá directamente el QR sin completar ningún dato. Requieré un límite de usos."}
             </p>
           </div>

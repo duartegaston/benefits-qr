@@ -12,6 +12,14 @@ export async function findLocalByEmail(email: string) {
   return prisma.local.findUnique({ where: { email } });
 }
 
+export async function findLocalByGoogleId(googleId: string) {
+  return prisma.local.findUnique({ where: { googleId } });
+}
+
+export async function updateLocalGoogleId(id: string, googleId: string) {
+  return prisma.local.update({ where: { id }, data: { googleId } });
+}
+
 export async function createLocalByEmail(email: string) {
   return prisma.local.create({ data: { email } });
 }

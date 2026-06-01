@@ -10,15 +10,21 @@ import Card from "@/components/ui/Card";
 import Reveal from "@/components/ui/Reveal";
 import Badge from "@/components/ui/Badge";
 import SectionHeader from "@/components/ui/SectionHeader";
+import GoogleButton from "@/components/ui/GoogleButton";
 
-export default function LoginForm() {
+interface LoginFormProps {
+  initialPending?: boolean;
+  initialError?: string;
+}
+
+export default function LoginForm({ initialPending = false, initialError = "" }: LoginFormProps) {
   const router = useRouter();
   const [step, setStep] = useState<"email" | "pending-approval" | "otp">(
-    "email",
+    initialPending ? "pending-approval" : "email",
   );
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(false);
 
   async function handleRequestOtp(e: React.FormEvent) {
@@ -127,10 +133,12 @@ export default function LoginForm() {
                   cuando sea aprobada y ahí vas a recibir un link directo para
                   completar tu registro.
                 </div>
-                <div className="flex items-center justify-center gap-2 text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
-                  <Mail className="w-4 h-4" aria-hidden="true" />
-                  <span>{email}</span>
-                </div>
+                {email ? (
+                  <div className="flex items-center justify-center gap-2 text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
+                    <Mail className="w-4 h-4" aria-hidden="true" />
+                    <span>{email}</span>
+                  </div>
+                ) : null}
                 <Button
                   type="button"
                   variant="muted"
@@ -146,7 +154,16 @@ export default function LoginForm() {
                 </Button>
               </div>
             ) : step === "email" ? (
-              <form onSubmit={handleRequestOtp} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+              <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+                <GoogleButton href="/api/auth/local/google" />
+
+                <div className="flex items-center gap-3">
+                  <span className="h-px flex-1 bg-border-default" />
+                  <span className="text-xs text-text-muted">o con tu email</span>
+                  <span className="h-px flex-1 bg-border-default" />
+                </div>
+
+                <form onSubmit={handleRequestOtp} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
                 <Input
                   label="Email"
                   type="email"
@@ -172,7 +189,8 @@ export default function LoginForm() {
                 >
                   Acceder
                 </Button>
-              </form>
+                </form>
+              </div>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
                 <div className="mb-2 rounded-2xl bg-primary-soft/80 px-4 py-3 text-center lg:px-3.5 lg:py-2.5 2xl:px-4 2xl:py-3">

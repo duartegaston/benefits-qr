@@ -135,13 +135,14 @@ export default async function BeneficioStatsPage({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-text-primary sm:text-base lg:text-sm 2xl:text-base">
-                      {r.cliente.nombre ?? r.cliente.email ?? r.cliente.phone}
+                      {r.cliente.nombre ?? r.cliente.email ?? "Cliente"}
                     </p>
                     <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
-                      {r.cliente.email && <span className="break-all">{r.cliente.email}</span>}
-                      {r.cliente.email && r.cliente.phone ? <span aria-hidden>•</span> : null}
-                      {r.cliente.phone && <span>{r.cliente.phone}</span>}
-                      {!r.cliente.email && !r.cliente.phone ? <span>Sin contacto cargado</span> : null}
+                      {r.cliente.email ? (
+                        <span className="break-all">{r.cliente.email}</span>
+                      ) : (
+                        <span>Sin contacto cargado</span>
+                      )}
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs lg:text-[11px] 2xl:text-xs">
                       <span>Reclamó: {formatDateTimeAR(r.fechaReclamo)}</span>

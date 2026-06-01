@@ -1,5 +1,5 @@
 import { createClienteSession, createSession } from "@/lib/auth";
-import { EMAIL_REGEX, PHONE_REGEX, SESSION_DURATION } from "@/lib/constants";
+import { EMAIL_REGEX, SESSION_DURATION } from "@/lib/constants";
 import { EstadoReclamo } from "@/generated/prisma/client";
 import { evaluateBeneficioState, getCouponBlockError } from "@/lib/couponStatus";
 import { UserType } from "@/lib/enums";
@@ -10,7 +10,6 @@ import {
   findBeneficioForReclamo,
   findClienteById,
   findClienteByEmail,
-  findClienteByPhone,
   findExistingReclamo,
   findExistingReclamoPendiente,
   updateCliente,
@@ -39,7 +38,6 @@ type CreateReclamoInput = {
   beneficioId: unknown;
   nombre: unknown;
   email: unknown;
-  phone: unknown;
 };
 
 type CreateReclamoResult =
@@ -47,13 +45,13 @@ type CreateReclamoResult =
   | { ok: false; status: number; error: string; code: string };
 
 export async function createReclamoFlow(input: CreateReclamoInput): Promise<CreateReclamoResult> {
-  const { beneficioId, nombre, email, phone } = input;
+  const { beneficioId, nombre, email } = input;
 
-  if (!beneficioId || !nombre || !email || !phone) {
+  if (!beneficioId || !nombre || !email) {
     return {
       ok: false,
       status: 400,
-      error: "Nombre, email y teléfono son requeridos",
+      error: "Nombre y email son requeridos",
       code: "INVALID_INPUT",
     };
   }
@@ -73,15 +71,6 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
 
   if (typeof email !== "string" || !EMAIL_REGEX.test(email) || email.length > 254) {
     return { ok: false, status: 400, error: "Email inválido", code: "INVALID_EMAIL" };
-  }
-
-  if (typeof phone !== "string" || !PHONE_REGEX.test(phone)) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Número de teléfono inválido",
-      code: "INVALID_PHONE",
-    };
   }
 
   const beneficio = await findBeneficioForReclamo(beneficioId);
@@ -112,49 +101,11 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
     };
   }
 
-  const [clienteByEmail, clienteByPhone] = await Promise.all([
-    findClienteByEmail(email),
-    findClienteByPhone(phone),
-  ]);
-
-  if (clienteByEmail && clienteByEmail.phone && clienteByEmail.phone !== phone) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Este email ya está registrado con otro número de teléfono",
-      code: "EMAIL_PHONE_CONFLICT",
-    };
-  }
-
-  if (clienteByPhone && clienteByPhone.email && clienteByPhone.email !== email) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Este número de teléfono ya está registrado con otro email",
-      code: "PHONE_EMAIL_CONFLICT",
-    };
-  }
-
-  if (clienteByEmail && clienteByPhone && clienteByEmail.id !== clienteByPhone.id) {
-    return {
-      ok: false,
-      status: 400,
-      error: "El email y el teléfono ya están registrados en cuentas separadas. Contactate con el negocio.",
-      code: "SPLIT_IDENTITY_CONFLICT",
-    };
-  }
-
-  let cliente = clienteByEmail ?? clienteByPhone;
+  let cliente = await findClienteByEmail(email);
   if (!cliente) {
-    cliente = await createCliente({ nombre, email, phone });
-  } else {
-    const updates: Partial<{ nombre: string; email: string; phone: string }> = {};
-    if (!cliente.nombre) updates.nombre = nombre;
-    if (!cliente.email) updates.email = email;
-    if (!cliente.phone) updates.phone = phone;
-    if (Object.keys(updates).length > 0) {
-      cliente = await updateCliente(cliente.id, updates);
-    }
+    cliente = await createCliente({ nombre, email });
+  } else if (!cliente.nombre) {
+    cliente = await updateCliente(cliente.id, { nombre });
   }
 
   const existingReclamo = await findExistingReclamo(beneficioId, cliente.id);
@@ -173,6 +124,29 @@ export async function createReclamoFlow(input: CreateReclamoInput): Promise<Crea
   await createClienteSession(cliente.id, email, SESSION_DURATION.CLIENTE_RECLAMO);
 
   return { ok: true, status: 201, reclamoId: reclamo.id };
+}
+
+export async function ensureReclamoForCliente(
+  beneficioId: string,
+  clienteId: string
+): Promise<void> {
+  const beneficio = await findBeneficioForReclamo(beneficioId);
+  if (!beneficio) return;
+
+  const beneficioState = evaluateBeneficioState({
+    fechaExpiracion: beneficio.fechaExpiracion,
+    deletedAt: null,
+    maxUsos: beneficio.maxUsos,
+    canjeados: beneficio.reclamos.length,
+    diasValidos: beneficio.diasValidos as number[],
+  });
+
+  if (!beneficioState.canClaim) return;
+
+  const existingReclamo = await findExistingReclamo(beneficioId, clienteId);
+  if (existingReclamo) return;
+
+  await createReclamo(beneficioId, clienteId);
 }
 
 type CreateAnonymousReclamoResult =
