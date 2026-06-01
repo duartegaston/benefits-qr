@@ -12,6 +12,7 @@ import { ensureReclamoForCliente } from "@/server/services/reclamosService";
 
 type OAuthState = {
   nonce: string;
+  pkceVerifier: string;
   beneficioId: string | null;
   redirect: string;
 };
@@ -20,9 +21,13 @@ function parseState(raw: string | undefined): OAuthState | null {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw) as Partial<OAuthState>;
-    if (typeof parsed.nonce !== "string") return null;
+    if (typeof parsed.nonce !== "string" || typeof parsed.pkceVerifier !== "string") {
+      return null;
+    }
+
     return {
       nonce: parsed.nonce,
+      pkceVerifier: parsed.pkceVerifier,
       beneficioId: typeof parsed.beneficioId === "string" ? parsed.beneficioId : null,
       redirect:
         typeof parsed.redirect === "string" && parsed.redirect.startsWith("/")
@@ -50,7 +55,11 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const profile = await exchangeGoogleCode(code, getGoogleRedirectUri(CLIENTE_GOOGLE_CALLBACK_PATH));
+    const profile = await exchangeGoogleCode(
+      code,
+      getGoogleRedirectUri(CLIENTE_GOOGLE_CALLBACK_PATH),
+      cookieState.pkceVerifier
+    );
     const result = await loginClienteWithGoogle(profile);
 
     if (!result.ok) {

@@ -1,6 +1,10 @@
+import { createHash, randomBytes } from "crypto";
+
 const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
+
+const FALLBACK_APP_URL = "http://localhost:3000";
 
 export const GOOGLE_OAUTH_STATE_COOKIE = "google_oauth_state";
 export const LOCAL_GOOGLE_OAUTH_STATE_COOKIE = "google_oauth_state_local";
@@ -16,7 +20,13 @@ export type GoogleProfile = {
 };
 
 function getBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const raw = process.env.NEXT_PUBLIC_APP_URL || FALLBACK_APP_URL;
+
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return FALLBACK_APP_URL;
+  }
 }
 
 export function getGoogleRedirectUri(callbackPath: string): string {
@@ -27,7 +37,19 @@ export function isGoogleOAuthConfigured(): boolean {
   return Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 }
 
-export function buildGoogleAuthUrl(state: string, redirectUri: string): string {
+export function generatePkceVerifier(): string {
+  return randomBytes(32).toString("base64url");
+}
+
+export function buildPkceChallenge(verifier: string): string {
+  return createHash("sha256").update(verifier).digest("base64url");
+}
+
+export function buildGoogleAuthUrl(
+  state: string,
+  redirectUri: string,
+  codeChallenge: string
+): string {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   if (!clientId) {
     throw new Error("GOOGLE_CLIENT_ID env var is not set");
@@ -39,6 +61,8 @@ export function buildGoogleAuthUrl(state: string, redirectUri: string): string {
     response_type: "code",
     scope: "openid email profile",
     state,
+    code_challenge: codeChallenge,
+    code_challenge_method: "S256",
     access_type: "online",
     prompt: "select_account",
   });
@@ -46,7 +70,11 @@ export function buildGoogleAuthUrl(state: string, redirectUri: string): string {
   return `${GOOGLE_AUTH_URL}?${params.toString()}`;
 }
 
-export async function exchangeGoogleCode(code: string, redirectUri: string): Promise<GoogleProfile> {
+export async function exchangeGoogleCode(
+  code: string,
+  redirectUri: string,
+  codeVerifier: string
+): Promise<GoogleProfile> {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 
@@ -62,6 +90,7 @@ export async function exchangeGoogleCode(code: string, redirectUri: string): Pro
       client_id: clientId,
       client_secret: clientSecret,
       redirect_uri: redirectUri,
+      code_verifier: codeVerifier,
       grant_type: "authorization_code",
     }),
   });

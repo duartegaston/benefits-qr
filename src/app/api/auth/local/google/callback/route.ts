@@ -9,10 +9,34 @@ import {
 } from "@/lib/googleOAuth";
 import { loginLocalWithGoogle } from "@/server/services/authApiService";
 
+type OAuthState = {
+  nonce: string;
+  pkceVerifier: string;
+};
+
+function parseState(raw: string | undefined): OAuthState | null {
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw) as Partial<OAuthState>;
+
+    if (typeof parsed.nonce !== "string" || typeof parsed.pkceVerifier !== "string") {
+      return null;
+    }
+
+    return {
+      nonce: parsed.nonce,
+      pkceVerifier: parsed.pkceVerifier,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
   const state = req.nextUrl.searchParams.get("state");
-  const cookieNonce = req.cookies.get(LOCAL_GOOGLE_OAUTH_STATE_COOKIE)?.value;
+  const cookieState = parseState(req.cookies.get(LOCAL_GOOGLE_OAUTH_STATE_COOKIE)?.value);
 
   const redirectTo = (path: string) => {
     const res = NextResponse.redirect(new URL(path, req.url));
@@ -20,12 +44,16 @@ export async function GET(req: NextRequest) {
     return res;
   };
 
-  if (!code || !state || !cookieNonce || state !== cookieNonce) {
+  if (!code || !state || !cookieState || state !== cookieState.nonce) {
     return redirectTo("/login?error=invalid");
   }
 
   try {
-    const profile = await exchangeGoogleCode(code, getGoogleRedirectUri(LOCAL_GOOGLE_CALLBACK_PATH));
+    const profile = await exchangeGoogleCode(
+      code,
+      getGoogleRedirectUri(LOCAL_GOOGLE_CALLBACK_PATH),
+      cookieState.pkceVerifier
+    );
     const result = await loginLocalWithGoogle(profile);
 
     if (!result.ok) {
