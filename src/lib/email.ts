@@ -179,7 +179,7 @@ export async function sendMagicLink(
   to: string,
   token: string
 ) {
-  const magicLink = `${BASE_URL}/api/auth/cliente/verify?token=${encodeURIComponent(token)}`;
+  const magicLink = `${BASE_URL}/acceso?token=${encodeURIComponent(token)}`;
 
   const content = `
     <h2 style="margin:0 0 8px;font-size:20px;color:${EMAIL_TEXT_PRIMARY};">
