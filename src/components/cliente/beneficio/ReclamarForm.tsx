@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Ticket } from "lucide-react";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
-import PhoneInput from "@/components/ui/PhoneInput";
+import GoogleButton from "@/components/cliente/shared/GoogleButton";
 import ClienteMagicLinkSentState from "@/components/cliente/shared/ClienteMagicLinkSentState";
 
 type Step = "form" | "sent";
@@ -12,7 +12,6 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   const [step, setStep] = useState<Step>("form");
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("+54");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +30,6 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         beneficioId,
         nombre: normalizedNombre,
         email: normalizedEmail,
-        phone,
       }),
     });
 
@@ -62,7 +60,16 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+    <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+      <GoogleButton beneficioId={beneficioId} redirect="/mis-beneficios" />
+
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-border-default" />
+        <span className="text-xs text-text-muted">o con tu email</span>
+        <span className="h-px flex-1 bg-border-default" />
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
       <fieldset disabled={loading} className="space-y-4 disabled:opacity-100 lg:space-y-3.5 2xl:space-y-4">
         <Input
           label="Tu nombre"
@@ -90,16 +97,6 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
           autoCorrect="off"
           spellCheck={false}
           inputMode="email"
-          enterKeyHint="next"
-          required
-        />
-
-        <PhoneInput
-          label="Tu teléfono"
-          name="telefono"
-          value={phone}
-          onChange={setPhone}
-          autoComplete="tel-national"
           enterKeyHint="send"
           required
         />
@@ -119,6 +116,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         <Ticket className="h-4 w-4" aria-hidden="true" />
         Recibir link de acceso
       </Button>
-    </form>
+      </form>
+    </div>
   );
 }

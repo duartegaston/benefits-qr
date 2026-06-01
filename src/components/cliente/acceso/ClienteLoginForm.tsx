@@ -3,6 +3,7 @@ import { useState } from "react";
 import Card, { CardContent } from "@/components/ui/Card";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import GoogleButton from "@/components/cliente/shared/GoogleButton";
 import ClienteMagicLinkSentState from "@/components/cliente/shared/ClienteMagicLinkSentState";
 
 export default function ClienteLoginForm() {
@@ -57,6 +58,14 @@ export default function ClienteLoginForm() {
   return (
     <Card className="w-full max-w-md border-surface/80 bg-surface/90 shadow-xl shadow-primary-soft/60 sm:bg-surface/80 sm:backdrop-blur-md lg:max-w-sm 2xl:max-w-md">
       <CardContent className="p-6 sm:p-8 lg:p-6 2xl:p-8">
+        <GoogleButton redirect="/mis-beneficios" />
+
+        <div className="my-4 flex items-center gap-3 lg:my-3.5 2xl:my-4">
+          <span className="h-px flex-1 bg-border-default" />
+          <span className="text-xs text-text-muted">o con tu email</span>
+          <span className="h-px flex-1 bg-border-default" />
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
           <Input
             label="Email"

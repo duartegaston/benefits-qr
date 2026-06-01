@@ -24,7 +24,6 @@ export type BeneficioDetailRaw = {
     cliente: {
       nombre: string | null;
       email: string | null;
-      phone: string | null;
     };
   }> | null;
 };
@@ -59,8 +58,7 @@ export async function getBeneficioDetailRaw(
           r."fechaCanje",
           json_build_object(
             'nombre', c.nombre,
-            'email',  c.email,
-            'phone',  c.phone
+            'email',  c.email
           ) AS cliente
         FROM "Reclamo" r
         JOIN "Cliente" c ON c.id = r."clienteId"

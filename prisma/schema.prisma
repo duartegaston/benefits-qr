@@ -62,7 +62,7 @@ model Beneficio {
 model Cliente {
   id        String    @id @default(cuid())
   email     String?   @unique
-  phone     String?   @unique
+  googleId  String?   @unique
   nombre    String?
   createdAt DateTime  @default(now())
   reclamos  Reclamo[]
@@ -71,7 +71,6 @@ model Cliente {
 model ClienteOtp {
   id        String   @id @default(cuid())
   email     String?  @unique
-  phone     String?  @unique
   code      String
   expiresAt DateTime
   createdAt DateTime @default(now())

@@ -29,16 +29,15 @@ export async function GET(
 
   const reclamos = await prisma.reclamo.findMany({
     where: { beneficioId: id },
-    select: { cliente: { select: { nombre: true, email: true, phone: true } } },
+    select: { cliente: { select: { nombre: true, email: true } } },
     orderBy: { fechaReclamo: "desc" },
   });
 
-  const header = "Nombre,Email,Teléfono";
+  const header = "Nombre,Email";
   const rows = reclamos.map(({ cliente }) =>
     [
       escapeCsvField(cliente.nombre ?? ""),
       escapeCsvField(cliente.email ?? ""),
-      escapeCsvField(cliente.phone ?? ""),
     ].join(",")
   );
 

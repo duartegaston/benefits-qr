@@ -1,4 +1,16 @@
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL;
+const FALLBACK_APP_URL = "http://localhost:3000";
+
+function getAppOrigin(): string {
+  const raw = process.env.NEXT_PUBLIC_APP_URL || FALLBACK_APP_URL;
+
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return FALLBACK_APP_URL;
+  }
+}
+
+const BASE_URL = getAppOrigin();
 const EMAIL_PRIMARY_BG = "#5f3add";
 const EMAIL_PRIMARY_TEXT = "#ffffff";
 const EMAIL_PAGE_BG = "#f3f4f6";
@@ -167,7 +179,7 @@ export async function sendMagicLink(
   to: string,
   token: string
 ) {
-  const magicLink = `${BASE_URL}/acceso?token=${token}`;
+  const magicLink = `${BASE_URL}/api/auth/cliente/verify?token=${encodeURIComponent(token)}`;
 
   const content = `
     <h2 style="margin:0 0 8px;font-size:20px;color:${EMAIL_TEXT_PRIMARY};">

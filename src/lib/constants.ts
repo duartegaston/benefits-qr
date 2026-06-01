@@ -1,5 +1,4 @@
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const PHONE_REGEX = /^\+?[0-9]{7,15}$/;
 export const TIMEZONE_AR = "America/Argentina/Buenos_Aires";
 
 export const SESSION_DURATION = {
