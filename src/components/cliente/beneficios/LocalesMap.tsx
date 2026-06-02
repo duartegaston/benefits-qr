@@ -61,6 +61,7 @@ function LocalMarker({
 }) {
   const name = local.nombre ?? "Local adherido";
   const initials = getInitials(name) || "LO";
+  const hasActiveBenefits = local.beneficiosCount > 0;
   return (
     <AdvancedMarker
       position={{ lat: local.lat, lng: local.lng }}
@@ -68,10 +69,14 @@ function LocalMarker({
       title={name}
     >
       <div
-        className={`flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 bg-surface text-primary shadow-lg transition-all duration-200 ${
-          isSelected
-            ? "scale-115 border-primary ring-4 ring-primary-soft/30 z-50"
-            : "border-primary/50 hover:border-primary hover:scale-105"
+        className={`flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 shadow-lg transition-all duration-200 ${
+          hasActiveBenefits
+            ? isSelected
+              ? "bg-surface text-primary scale-115 border-primary ring-4 ring-primary-soft/30 z-50"
+              : "bg-surface text-primary border-primary/50 hover:border-primary hover:scale-105"
+            : isSelected
+              ? "bg-surface-muted text-text-muted opacity-70 grayscale scale-115 border-border-default ring-4 ring-border-default/30 z-50"
+              : "bg-surface-muted text-text-muted opacity-60 grayscale border-border-default hover:opacity-80 hover:scale-105"
         }`}
       >
         {local.logoUrl ? (
@@ -171,7 +176,7 @@ export default function LocalesMap({
   if (locales.length === 0) {
     return (
       <div className="flex h-[60vh] items-center justify-center rounded-2xl border border-border-default bg-surface-muted p-6 text-center text-sm text-text-muted">
-        Todavía no hay locales con beneficios vigentes ubicados en el mapa.
+        Todavía no hay locales ubicados en el mapa.
       </div>
     );
   }
@@ -210,17 +215,26 @@ export default function LocalesMap({
                   {selected.nombre ?? "Local adherido"}
                 </p>
               </div>
-              <p className="text-xs text-text-muted">
-                {selected.beneficiosCount}{" "}
-                {selected.beneficiosCount === 1 ? "beneficio vigente" : "beneficios vigentes"}
-                {distanceLabel ? ` · a ${distanceLabel}` : ""}
-              </p>
-              <Link
-                href={`/beneficios?local=${encodeURIComponent(selected.id)}`}
-                className="inline-block text-xs font-semibold text-primary hover:text-accent"
-              >
-                Ver beneficios →
-              </Link>
+              {selected.beneficiosCount > 0 ? (
+                <p className="text-xs text-text-muted">
+                  {selected.beneficiosCount}{" "}
+                  {selected.beneficiosCount === 1 ? "beneficio vigente" : "beneficios vigentes"}
+                  {distanceLabel ? ` · a ${distanceLabel}` : ""}
+                </p>
+              ) : (
+                <p className="text-xs text-text-muted">
+                  Sin beneficios vigentes
+                  {distanceLabel ? ` · a ${distanceLabel}` : ""}
+                </p>
+              )}
+              {selected.beneficiosCount > 0 && (
+                <Link
+                  href={`/beneficios?local=${encodeURIComponent(selected.id)}`}
+                  className="inline-block text-xs font-semibold text-primary hover:text-accent"
+                >
+                  Ver beneficios →
+                </Link>
+              )}
             </div>
           </InfoWindow>
         ) : null}

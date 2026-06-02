@@ -1,6 +1,6 @@
 import type { PublicBenefitsFiltersInput } from "@/server/services/publicBenefitsService";
 import { getPublicBenefitsPageData } from "@/server/services/publicBenefitsService";
-import { getLocalesConBeneficiosVigentesRaw } from "@/server/repositories/localesMapRepository";
+import { getTodosLocalesRaw } from "@/server/repositories/localesMapRepository";
 import BeneficiosViewToggle from "@/components/cliente/beneficios/BeneficiosViewToggle";
 
 const PAGE_SIZE = 9;
@@ -16,7 +16,7 @@ export default async function BeneficiosSection({
 }) {
   const [{ beneficios, totalPages, total }, locales] = await Promise.all([
     getPublicBenefitsPageData(page, PAGE_SIZE, filters),
-    getLocalesConBeneficiosVigentesRaw(),
+    getTodosLocalesRaw(),
   ]);
 
   return (
