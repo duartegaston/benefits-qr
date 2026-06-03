@@ -9,6 +9,7 @@ import { getDashboardPageData } from "@/server/services/dashboardService";
 import { getDashboardStats } from "@/server/services/dashboardStatsService";
 import TrendSparkline from "@/components/local/dashboard/stats/TrendSparkline";
 import TopCupones from "@/components/local/dashboard/stats/TopCupones";
+import TopClientes from "@/components/local/dashboard/stats/TopClientes";
 import StatusDistribution from "@/components/local/dashboard/stats/StatusDistribution";
 
 const PAGE_SIZE = 10;
@@ -111,6 +112,15 @@ export default async function DashboardStatsPage() {
             Top cupones por rendimiento
           </p>
           <TopCupones cupones={stats.topCupones} />
+        </Card>
+      </Reveal>
+
+      <Reveal y={12} delay={0.18} amount={0.15} className="mb-4 sm:mb-5 lg:mb-4 2xl:mb-5">
+        <Card className="h-full border-surface/80 bg-surface/95 p-4 sm:bg-surface/85 sm:p-5 lg:p-4 2xl:p-5">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-wide text-text-muted sm:text-xs lg:text-[11px] 2xl:text-xs">
+            Top clientes
+          </p>
+          <TopClientes clientes={stats.topClientes} />
         </Card>
       </Reveal>
 

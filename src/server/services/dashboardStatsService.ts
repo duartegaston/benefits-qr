@@ -19,12 +19,20 @@ export type TopCupon = {
   statusVariant: NonNullable<BadgeVariant>;
 };
 
+export type TopCliente = {
+  id: string;
+  nombre: string | null;
+  email: string | null;
+  canjeados: number;
+};
+
 export type DashboardStatsData = {
   trend: TrendDay[];
   recurrence: {
     porcentajeRecurrencia: number;
   };
   topCupones: TopCupon[];
+  topClientes: TopCliente[];
   avgRedeemTimeFormatted: string;
   statusDistribution: {
     activos: number;
@@ -88,6 +96,7 @@ export async function getDashboardStats(localId: string): Promise<DashboardStats
       porcentajeRecurrencia,
     },
     topCupones: (raw.topCupones ?? []).map(mapTopCupon),
+    topClientes: raw.topClientes ?? [],
     avgRedeemTimeFormatted: formatAvgRedeemTime(raw.avgRedeemTimeSeconds),
     statusDistribution: raw.statusDistribution ?? {
       activos: 0,

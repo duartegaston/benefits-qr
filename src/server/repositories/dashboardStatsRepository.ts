@@ -18,6 +18,13 @@ export type TopCuponRaw = {
   tasa: number;
 };
 
+export type TopClienteRaw = {
+  id: string;
+  nombre: string | null;
+  email: string | null;
+  canjeados: number;
+};
+
 export type DashboardStatsRaw = {
   trend: TrendDay[] | null;
   recurrence: {
@@ -25,6 +32,7 @@ export type DashboardStatsRaw = {
     recurrentes: number;
   } | null;
   topCupones: TopCuponRaw[] | null;
+  topClientes: TopClienteRaw[] | null;
   avgRedeemTimeSeconds: number | null;
   statusDistribution: {
     activos: number;
@@ -111,6 +119,19 @@ export async function getDashboardStatsRaw(localId: string): Promise<DashboardSt
         ORDER BY tasa DESC, br.canjeados DESC
         LIMIT 3
       ),
+      top_clientes_cte AS (
+        SELECT
+          c.id,
+          c.nombre,
+          c.email,
+          COUNT(r.id)::int AS canjeados
+        FROM local_reclamos r
+        JOIN "Cliente" c ON c.id = r."clienteId"
+        WHERE r.estado = 'CANJEADO'
+        GROUP BY c.id, c.nombre, c.email
+        ORDER BY canjeados DESC
+        LIMIT 3
+      ),
       avg_redeem_cte AS (
         SELECT AVG(EXTRACT(EPOCH FROM ("fechaCanje" - "fechaReclamo")))::double precision AS avg_seconds
         FROM local_reclamos
@@ -179,6 +200,21 @@ export async function getDashboardStatsRaw(localId: string): Promise<DashboardSt
         ),
         '[]'::json
       ) AS "topCupones",
+      COALESCE(
+        (
+          SELECT json_agg(
+            json_build_object(
+              'id', tcl.id,
+              'nombre', tcl.nombre,
+              'email', tcl.email,
+              'canjeados', tcl.canjeados
+            )
+            ORDER BY tcl.canjeados DESC
+          )
+          FROM top_clientes_cte tcl
+        ),
+        '[]'::json
+      ) AS "topClientes",
       (SELECT avg_seconds FROM avg_redeem_cte) AS "avgRedeemTimeSeconds",
       COALESCE(
         (
