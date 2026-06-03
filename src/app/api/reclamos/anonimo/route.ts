@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getClienteSession, setSessionCookie } from "@/lib/auth";
 import { apiError } from "@/lib/apiResponse";
 import { UserType } from "@/lib/enums";
+import { DIRECT_QR_FLOW } from "@/lib/flows";
 import {
   createAnonymousReclamoFlow,
   getAnonymousNombreRequirement,
+  redeemAnonymousDirectFlow,
 } from "@/server/services/reclamosService";
 
 export async function GET(req: NextRequest) {
@@ -32,16 +34,25 @@ export async function POST(req: NextRequest) {
     const existingClienteId = existingSession?.userId ?? null;
 
     const body = await req.json();
-    const result = await createAnonymousReclamoFlow(body.beneficioId, existingClienteId, body.nombre);
+    const isDirectFlow = body?.flow === DIRECT_QR_FLOW;
+    const result = isDirectFlow
+      ? await redeemAnonymousDirectFlow(body.beneficioId, existingClienteId, body.nombre)
+      : await createAnonymousReclamoFlow(body.beneficioId, existingClienteId, body.nombre);
 
     if (!result.ok) {
       return apiError(result.error, result.status, result.code);
     }
 
-    const response = NextResponse.json(
-      { reclamoId: result.reclamoId },
-      { status: result.status }
-    );
+    const responseBody = isDirectFlow
+      ? {
+          success: true,
+          reclamoId: result.reclamoId,
+          orderNumber: result.orderNumber,
+          alreadyRedeemed: result.alreadyRedeemed,
+        }
+      : { reclamoId: result.reclamoId };
+
+    const response = NextResponse.json(responseBody, { status: result.status });
 
     if (result.sessionToken) {
       setSessionCookie(response, result.sessionToken, UserType.CLIENTE);

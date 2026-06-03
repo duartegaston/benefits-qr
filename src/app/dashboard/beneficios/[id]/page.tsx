@@ -5,11 +5,13 @@ import { UserType } from "@/lib/enums";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import DeleteBeneficioButton from "@/components/local/dashboard/beneficios/DeleteBeneficioButton";
+import BeneficioDetailAutoRefresh from "@/components/local/dashboard/beneficios/BeneficioDetailAutoRefresh";
 import LinkButton from "@/components/ui/LinkButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import MetricCard from "@/components/ui/MetricCard";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR, formatDateTimeAR } from "@/lib/dates";
+import { buildOrderNumberFromReclamoId } from "@/lib/orderNumber";
 import {
   getBeneficioStatusPresentation,
   getReclamoStatusPresentation,
@@ -45,6 +47,7 @@ export default async function BeneficioStatsPage({
 
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-8 sm:px-6 sm:pt-8 lg:max-w-4xl lg:pt-7 2xl:max-w-5xl 2xl:pt-8">
+      <BeneficioDetailAutoRefresh />
       <div className="mb-4 flex justify-start sm:mb-5 lg:mb-4 2xl:mb-5">
         <LinkButton href="/dashboard" variant="subtle" size="sm">
           ← Volver
@@ -145,6 +148,11 @@ export default async function BeneficioStatsPage({
                       )}
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-muted sm:text-xs lg:text-[11px] 2xl:text-xs">
+                      {r.fechaCanje ? (
+                        <span className="font-semibold text-text-primary">
+                          Orden: {buildOrderNumberFromReclamoId(r.id)}
+                        </span>
+                      ) : null}
                       <span>Reclamó: {formatDateTimeAR(r.fechaReclamo)}</span>
                       {r.fechaCanje ? (
                         <span>Canjeó: {formatDateTimeAR(r.fechaCanje)}</span>

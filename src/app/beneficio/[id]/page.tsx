@@ -16,6 +16,7 @@ import {
   sortDiasValidos,
 } from "@/lib/beneficioSchedule";
 import { evaluateBeneficioState } from "@/lib/couponStatus";
+import { DIRECT_QR_FLOW } from "@/lib/flows";
 import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
 
 export default async function BeneficioPublicoPage({
@@ -23,9 +24,9 @@ export default async function BeneficioPublicoPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ token?: string }>;
+  searchParams: Promise<{ token?: string; flow?: string; redeemed?: string; order?: string; error?: string }>;
 }) {
-  const { token } = await searchParams;
+  const { token, flow, redeemed, order, error } = await searchParams;
 
   if (token) {
     redirect(`/api/auth/cliente/verify?token=${encodeURIComponent(token)}`);
@@ -88,6 +89,10 @@ export default async function BeneficioPublicoPage({
     .slice(0, 2)
     .join("")
     .toUpperCase();
+  const isDirectFlow = flow === DIRECT_QR_FLOW;
+  const directRedeemed = isDirectFlow && redeemed === "1";
+  const directOrderNumber = typeof order === "string" && order.trim() ? order.trim() : null;
+  const directErrorCode = typeof error === "string" && error.trim() ? error.trim() : null;
 
   return (
     <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden px-4 py-14 sm:overflow-hidden">
@@ -113,8 +118,12 @@ export default async function BeneficioPublicoPage({
 
             <SectionHeader
               eyebrow="Beneficio"
-              title="Reclamá tu cupón"
-              description="Entrá con Google para guardarlo en tu cuenta o seguí como invitado con tu nombre."
+              title={isDirectFlow ? "Canjeá tu cupón" : "Reclamá tu cupón"}
+              description={
+                isDirectFlow
+                  ? "Entrá con Google o seguí como invitado para canjearlo ahora mismo."
+                  : "Entrá con Google para guardarlo en tu cuenta o seguí como invitado con tu nombre."
+              }
               className="mb-0"
             />
           </div>
@@ -129,7 +138,11 @@ export default async function BeneficioPublicoPage({
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 space-y-1">
                     <h1 className="text-2xl font-bold text-text-primary lg:text-xl 2xl:text-2xl">{beneficio.descripcion}</h1>
-                    <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">Guardalo ahora y usalo cuando corresponda.</p>
+                    <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
+                      {isDirectFlow
+                        ? "Canje inmediato para mostrar en caja sin pasos extra."
+                        : "Guardalo ahora y usalo cuando corresponda."}
+                    </p>
                   </div>
 
                   <Badge
@@ -203,7 +216,13 @@ export default async function BeneficioPublicoPage({
 
               {beneficioState.canClaim && (
                 <div className="space-y-4">
-                  <ReclamarForm beneficioId={beneficio.id} />
+                  <ReclamarForm
+                    beneficioId={beneficio.id}
+                    directFlow={isDirectFlow}
+                    initialDirectRedeemed={directRedeemed}
+                    initialOrderNumber={directOrderNumber}
+                    initialDirectErrorCode={directErrorCode}
+                  />
                 </div>
               )}
             </div>

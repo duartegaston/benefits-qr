@@ -4,6 +4,7 @@ import { Check, Copy, Mail, MessageCircle } from "lucide-react";
 import Button from "@/components/ui/Button";
 import ShareQrPdfButton from "@/components/local/dashboard/ShareQrPdfButton";
 import { formatDateAR } from "@/lib/dates";
+import { DIRECT_QR_FLOW } from "@/lib/flows";
 
 interface ShareButtonsProps {
   url: string;
@@ -16,6 +17,7 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
   const [copied, setCopied] = useState(false);
   const fechaStr = formatDateAR(fechaExpiracion);
   const texto = `Tenés este cupón para canjear en ${nombreLocal}: ${descripcion}\nVence el ${fechaStr}\n${url}`;
+  const directQrUrl = `${url}${url.includes("?") ? "&" : "?"}flow=${DIRECT_QR_FLOW}`;
 
   async function handleCopy() {
     await navigator.clipboard.writeText(url);
@@ -61,7 +63,7 @@ export default function ShareButtons({ url, descripcion, nombreLocal, fechaExpir
           )}
       </Button>
 
-      <ShareQrPdfButton url={url} />
+      <ShareQrPdfButton url={directQrUrl} />
     </div>
   );
 }

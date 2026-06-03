@@ -6,12 +6,40 @@ import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import GoogleButton from "@/components/cliente/shared/GoogleButton";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
+import { DIRECT_QR_FLOW } from "@/lib/flows";
 
 const STORAGE_KEY_PREFIX = "reclamo_anonimo_";
 
-export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
+type ReclamarFormProps = {
+  beneficioId: string;
+  directFlow?: boolean;
+  initialDirectRedeemed?: boolean;
+  initialOrderNumber?: string | null;
+  initialDirectErrorCode?: string | null;
+};
+
+function getDirectFlowErrorMessage(code: string): string {
+  if (code === "BENEFICIO_EXPIRED") return "Este cupón ya expiró.";
+  if (code === "BENEFICIO_MAX_USOS_REACHED") return "Este cupón ya alcanzó el máximo de usos.";
+  if (code === "BENEFICIO_INVALID_DAY") return "Este cupón no se puede canjear hoy.";
+  if (code === "BENEFICIO_NOT_FOUND") return "Cupón no encontrado.";
+  if (code === "RECLAMO_CANCELLED") return "Este cupón ya no está disponible.";
+  return "No se pudo completar el canje en este momento.";
+}
+
+export default function ReclamarForm({
+  beneficioId,
+  directFlow = false,
+  initialDirectRedeemed = false,
+  initialOrderNumber = null,
+  initialDirectErrorCode = null,
+}: ReclamarFormProps) {
   const storageKey = `${STORAGE_KEY_PREFIX}${beneficioId}`;
   const [reclamoId, setReclamoId] = useState<string | null>(() => {
+    if (directFlow) {
+      return null;
+    }
+
     if (typeof window === "undefined") {
       return null;
     }
@@ -27,8 +55,11 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
   const [requiresNombre, setRequiresNombre] = useState(true);
   const [showGuestAccess, setShowGuestAccess] = useState(false);
   const [nombre, setNombre] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [canjeado, setCanjeado] = useState(false);
+  const [error, setError] = useState<string | null>(
+    initialDirectErrorCode ? getDirectFlowErrorMessage(initialDirectErrorCode) : null
+  );
+  const [canjeado, setCanjeado] = useState(initialDirectRedeemed);
+  const [orderNumber, setOrderNumber] = useState<string | null>(initialOrderNumber);
 
   const handleRedeemed = useCallback(() => {
     try {
@@ -43,7 +74,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
     let active = true;
 
     const checkRequirement = async () => {
-      if (reclamoId) {
+      if (!directFlow && reclamoId) {
         if (active) {
           setCheckingRequirement(false);
         }
@@ -82,7 +113,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
     return () => {
       active = false;
     };
-  }, [beneficioId, reclamoId]);
+  }, [beneficioId, reclamoId, directFlow]);
 
   async function handleObtenerQR() {
     const normalizedNombre = nombre.trim().replace(/\s+/g, " ");
@@ -101,6 +132,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
       body: JSON.stringify({
         beneficioId,
         nombre: requiresNombre ? normalizedNombre : undefined,
+        flow: directFlow ? DIRECT_QR_FLOW : undefined,
       }),
     });
 
@@ -112,6 +144,12 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
         setRequiresNombre(true);
       }
       setError(data.error);
+      return;
+    }
+
+    if (directFlow) {
+      setOrderNumber(typeof data.orderNumber === "string" ? data.orderNumber : null);
+      setCanjeado(true);
       return;
     }
 
@@ -133,24 +171,35 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
             ¡Beneficio canjeado!
           </p>
           <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
-            El local registró el canje exitosamente.
+            Mostrá esta confirmación en caja para validar tu canje.
           </p>
+          {orderNumber ? (
+            <p className="text-xs font-semibold tracking-wide text-text-primary lg:text-[11px] 2xl:text-xs">
+              Nro. de orden: {orderNumber}
+            </p>
+          ) : null}
         </div>
       </div>
     );
   }
 
-  if (reclamoId) {
+  if (!directFlow && reclamoId) {
     return <QRDisplay reclamoId={reclamoId} onRedeemed={handleRedeemed} />;
   }
 
   return (
     <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
       <div className="rounded-2xl border border-primary/20 bg-primary-soft/35 px-4 py-3 text-sm text-text-secondary lg:text-[13px] 2xl:text-sm">
-        Te recomendamos ingresar con Google para guardar tus cupones y ver tu historial en una cuenta.
+        {directFlow
+          ? "Ingresá con Google o seguí como invitado para confirmar el canje ahora."
+          : "Te recomendamos ingresar con Google para guardar tus cupones y ver tu historial en una cuenta."}
       </div>
 
-      <GoogleButton beneficioId={beneficioId} redirect="/mis-beneficios" />
+      <GoogleButton
+        beneficioId={beneficioId}
+        redirect={directFlow ? `/beneficio/${beneficioId}?flow=${DIRECT_QR_FLOW}` : "/mis-beneficios"}
+        flow={directFlow ? DIRECT_QR_FLOW : undefined}
+      />
 
       <div className="pt-1">
         {!showGuestAccess ? (
@@ -167,8 +216,12 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
           <div className="space-y-3 rounded-2xl border border-border-default/70 bg-surface-muted/50 p-4 lg:p-3.5 2xl:p-4">
             <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">
               {requiresNombre
-                ? "Ingresá tu nombre para generar el QR y presentarlo en el local."
-                : "Generá tu QR personal para presentarlo en el local y canjear tu beneficio."}
+                ? directFlow
+                  ? "Ingresá tu nombre para confirmar el canje ahora."
+                  : "Ingresá tu nombre para generar el QR y presentarlo en el local."
+                : directFlow
+                  ? "Confirmá el canje ahora y mostrá el comprobante al local."
+                  : "Generá tu QR personal para presentarlo en el local y canjear tu beneficio."}
             </p>
 
             {error ? <p className="text-sm text-danger">{error}</p> : null}
@@ -194,7 +247,7 @@ export default function ReclamarForm({ beneficioId }: { beneficioId: string }) {
               onClick={handleObtenerQR}
             >
               <Ticket className="mr-2 h-4 w-4" aria-hidden="true" />
-              Obtener QR
+              {directFlow ? "Canjear ahora" : "Obtener QR"}
             </Button>
           </div>
         )}

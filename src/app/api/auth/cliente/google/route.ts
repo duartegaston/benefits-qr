@@ -9,14 +9,24 @@ import {
   getGoogleRedirectUri,
   isGoogleOAuthConfigured,
 } from "@/lib/googleOAuth";
+import { DIRECT_QR_FLOW } from "@/lib/flows";
 
-const SAFE_REDIRECTS = new Set(["/mis-beneficios"]);
+const DEFAULT_REDIRECT = "/mis-beneficios";
 
 function getSafeRedirect(value: string | null): string {
-  if (value && SAFE_REDIRECTS.has(value)) {
+  if (!value) {
+    return DEFAULT_REDIRECT;
+  }
+
+  if (value === "/mis-beneficios") {
     return value;
   }
-  return "/mis-beneficios";
+
+  if (value.startsWith("/beneficio/")) {
+    return value;
+  }
+
+  return DEFAULT_REDIRECT;
 }
 
 export async function GET(req: NextRequest) {
@@ -26,6 +36,7 @@ export async function GET(req: NextRequest) {
 
   const beneficioId = req.nextUrl.searchParams.get("beneficioId");
   const redirect = getSafeRedirect(req.nextUrl.searchParams.get("redirect"));
+  const flow = req.nextUrl.searchParams.get("flow");
   const nonce = randomUUID();
   const pkceVerifier = generatePkceVerifier();
   const codeChallenge = buildPkceChallenge(pkceVerifier);
@@ -39,7 +50,13 @@ export async function GET(req: NextRequest) {
 
   response.cookies.set(
     GOOGLE_OAUTH_STATE_COOKIE,
-    JSON.stringify({ nonce, pkceVerifier, beneficioId: beneficioId ?? null, redirect }),
+    JSON.stringify({
+      nonce,
+      pkceVerifier,
+      beneficioId: beneficioId ?? null,
+      redirect,
+      flow: flow === DIRECT_QR_FLOW ? DIRECT_QR_FLOW : null,
+    }),
     {
       httpOnly: true,
       sameSite: "lax",
