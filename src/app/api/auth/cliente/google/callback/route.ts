@@ -7,14 +7,19 @@ import {
   exchangeGoogleCode,
   getGoogleRedirectUri,
 } from "@/lib/googleOAuth";
+import { DIRECT_QR_FLOW } from "@/lib/flows";
 import { loginClienteWithGoogle } from "@/server/services/googleAuthService";
-import { ensureReclamoForCliente } from "@/server/services/reclamosService";
+import {
+  ensureReclamoForCliente,
+  redeemBeneficioDirectForCliente,
+} from "@/server/services/reclamosService";
 
 type OAuthState = {
   nonce: string;
   pkceVerifier: string;
   beneficioId: string | null;
   redirect: string;
+  flow: string | null;
 };
 
 function parseState(raw: string | undefined): OAuthState | null {
@@ -33,6 +38,7 @@ function parseState(raw: string | undefined): OAuthState | null {
         typeof parsed.redirect === "string" && parsed.redirect.startsWith("/")
           ? parsed.redirect
           : "/mis-beneficios",
+      flow: parsed.flow === DIRECT_QR_FLOW ? DIRECT_QR_FLOW : null,
     };
   } catch {
     return null;
@@ -66,15 +72,29 @@ export async function GET(req: NextRequest) {
       return fail("invalid");
     }
 
-    if (cookieState.beneficioId) {
-      await ensureReclamoForCliente(cookieState.beneficioId, result.clienteId);
-    }
-
     const session = await createSession(result.clienteId, UserType.CLIENTE);
-
     const redirectUrl = new URL(cookieState.redirect, req.url);
-    if (result.isNew) {
-      redirectUrl.searchParams.set("welcome", "1");
+
+    if (cookieState.beneficioId && cookieState.flow === DIRECT_QR_FLOW) {
+      const directRedeem = await redeemBeneficioDirectForCliente(
+        cookieState.beneficioId,
+        result.clienteId
+      );
+
+      if (!directRedeem.ok) {
+        redirectUrl.searchParams.set("error", directRedeem.code);
+      } else {
+        redirectUrl.searchParams.set("redeemed", "1");
+        redirectUrl.searchParams.set("order", directRedeem.orderNumber);
+      }
+    } else {
+      if (cookieState.beneficioId) {
+        await ensureReclamoForCliente(cookieState.beneficioId, result.clienteId);
+      }
+
+      if (result.isNew) {
+        redirectUrl.searchParams.set("welcome", "1");
+      }
     }
 
     const response = NextResponse.redirect(redirectUrl);

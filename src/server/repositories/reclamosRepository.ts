@@ -51,6 +51,18 @@ export async function createReclamo(beneficioId: string, clienteId: string) {
   });
 }
 
+export async function markReclamoAsCanjeado(reclamoId: string) {
+  return prisma.reclamo.update({
+    where: { id: reclamoId },
+    data: {
+      estado: EstadoReclamo.CANJEADO,
+      fechaCanje: new Date(),
+      qrToken: null,
+      qrTokenExpira: null,
+    },
+  });
+}
+
 export async function createClienteAnonimo(data?: { nombre?: string }) {
   return prisma.cliente.create({ data: data ?? {} });
 }
