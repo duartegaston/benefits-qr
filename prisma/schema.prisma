@@ -47,7 +47,6 @@ model Beneficio {
   maxUsos         Int?
   diasValidos     Int[]     @default([])
   esPublico       Boolean   @default(false)
-  requiereDatos   Boolean   @default(true)
   localId         String
   local           Local     @relation(fields: [localId], references: [id], onDelete: Cascade)
   createdAt       DateTime  @default(now())

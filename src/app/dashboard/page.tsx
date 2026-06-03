@@ -1,16 +1,16 @@
-import { redirect } from "next/navigation";
-import { getSessionFromCookies } from "@/lib/auth";
-import { UserType } from "@/lib/enums";
-import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
 import ShareButtons from "@/components/local/dashboard/ShareButtons";
+import Badge from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { getSessionFromCookies } from "@/lib/auth";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
+import { UserType } from "@/lib/enums";
 import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
 import { getDashboardPageData } from "@/server/services/dashboardService";
+import { redirect } from "next/navigation";
 
 const PAGE_SIZE = 10;
 
@@ -44,7 +44,7 @@ export default async function DashboardPage({
       <Reveal y={10} amount={0.2} className="mb-5 sm:mb-6">
         <SectionHeader
           eyebrow="Negocio"
-          title="Dashboard del negocio"
+          title="Tus cupones"
           description="Gestioná tus cupones, seguí los reclamos y validá canjes desde un solo lugar."
           align="left"
           className="!mb-5 sm:!mb-6 lg:!mb-5 2xl:!mb-6"

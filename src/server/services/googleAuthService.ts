@@ -7,7 +7,7 @@ import {
 } from "@/server/repositories/reclamosRepository";
 
 type LoginClienteWithGoogleResult =
-  | { ok: true; clienteId: string }
+  | { ok: true; clienteId: string; isNew: boolean }
   | { ok: false; error: string };
 
 export async function loginClienteWithGoogle(
@@ -22,7 +22,7 @@ export async function loginClienteWithGoogle(
     if (!byGoogleId.nombre && profile.nombre) {
       await updateCliente(byGoogleId.id, { nombre: profile.nombre });
     }
-    return { ok: true, clienteId: byGoogleId.id };
+    return { ok: true, clienteId: byGoogleId.id, isNew: false };
   }
 
   const byEmail = await findClienteByEmail(profile.email);
@@ -34,7 +34,7 @@ export async function loginClienteWithGoogle(
       updates.nombre = profile.nombre;
     }
     await updateCliente(byEmail.id, updates);
-    return { ok: true, clienteId: byEmail.id };
+    return { ok: true, clienteId: byEmail.id, isNew: false };
   }
 
   const cliente = await createClienteWithGoogle({
@@ -43,5 +43,5 @@ export async function loginClienteWithGoogle(
     nombre: profile.nombre,
   });
 
-  return { ok: true, clienteId: cliente.id };
+  return { ok: true, clienteId: cliente.id, isNew: true };
 }

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import MisBeneficiosList from "@/components/cliente/beneficio/MisBeneficiosList";
+import WelcomeModal from "@/components/cliente/beneficio/WelcomeModal";
 import LinkButton from "@/components/ui/LinkButton";
 import MetricCard from "@/components/ui/MetricCard";
 import Card from "@/components/ui/Card";
@@ -104,9 +105,9 @@ async function ReclamosList({
 export default async function MisBeneficiosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; welcome?: string }>;
 }) {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, welcome } = await searchParams;
   const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
   const session = await getClienteSessionFromCookies();
@@ -117,6 +118,7 @@ export default async function MisBeneficiosPage({
 
   return (
     <main className="mx-auto max-w-3xl animate-[fade-in_0.3s_ease-out_both] px-4 pt-6 pb-12 sm:px-6 sm:pt-8 lg:max-w-2xl lg:pt-7 2xl:max-w-3xl 2xl:pt-8">
+      {welcome === "1" ? <WelcomeModal /> : null}
       <SectionHeader
         eyebrow="Cliente"
         title="Mis cupones"

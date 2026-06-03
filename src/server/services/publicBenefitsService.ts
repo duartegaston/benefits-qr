@@ -15,7 +15,6 @@ export type PublicBenefitCardData = {
   fechaExpiracion: Date;
   maxUsos: number | null;
   diasValidos: number[];
-  requiereDatos: boolean;
   createdAt: Date;
   canjeados: number;
   effectiveStatus: BeneficioEffectiveStatus;
