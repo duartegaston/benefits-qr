@@ -51,12 +51,30 @@ export async function getClienteSession(req: NextRequest) {
 
 export const getSessionFromCookies = cache(async () => {
   const cookieStore = await cookies();
-  return findSession(cookieStore.get(LOCAL_COOKIE)?.value);
+  const session = await findSession(cookieStore.get(LOCAL_COOKIE)?.value);
+  if (!session || session.userType !== UserType.LOCAL) return null;
+
+  const local = await prisma.local.findUnique({
+    where: { id: session.userId },
+    select: { id: true },
+  });
+  if (!local) return null;
+
+  return session;
 });
 
 export const getClienteSessionFromCookies = cache(async () => {
   const cookieStore = await cookies();
-  return findSession(cookieStore.get(CLIENTE_COOKIE)?.value);
+  const session = await findSession(cookieStore.get(CLIENTE_COOKIE)?.value);
+  if (!session || session.userType !== UserType.CLIENTE) return null;
+
+  const cliente = await prisma.cliente.findUnique({
+    where: { id: session.userId },
+    select: { id: true },
+  });
+  if (!cliente) return null;
+
+  return session;
 });
 
 export function setSessionCookie(
