@@ -122,9 +122,11 @@ function MapErrorState() {
 export default function LocalesMap({
   locales,
   userCoords,
+  heightClassName = "h-[70vh]",
 }: {
   locales: LocalConBeneficiosRaw[];
   userCoords: LatLng | null;
+  heightClassName?: string;
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const apiIsLoaded = useApiIsLoaded();
@@ -158,7 +160,7 @@ export default function LocalesMap({
 
   if (showError) {
     return (
-      <div className="relative h-[70vh] w-full overflow-hidden rounded-2xl border border-border-default bg-surface-muted shadow-sm">
+      <div className={`relative ${heightClassName} w-full overflow-hidden rounded-2xl border border-border-default bg-surface-muted shadow-sm`}>
         <MapErrorState />
       </div>
     );
@@ -175,14 +177,14 @@ export default function LocalesMap({
 
   if (locales.length === 0) {
     return (
-      <div className="flex h-[60vh] items-center justify-center rounded-2xl border border-border-default bg-surface-muted p-6 text-center text-sm text-text-muted">
+      <div className={`flex ${heightClassName} items-center justify-center rounded-2xl border border-border-default bg-surface-muted p-6 text-center text-sm text-text-muted`}>
         Todavía no hay locales ubicados en el mapa.
       </div>
     );
   }
 
   return (
-    <div className="relative h-[70vh] w-full overflow-hidden rounded-2xl border border-border-default bg-surface-muted shadow-sm">
+    <div className={`relative ${heightClassName} w-full overflow-hidden rounded-2xl border border-border-default bg-surface-muted shadow-sm`}>
       <Map
         defaultCenter={initialCenter}
         defaultZoom={DEFAULT_ZOOM}

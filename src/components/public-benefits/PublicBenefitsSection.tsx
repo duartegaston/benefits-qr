@@ -1,15 +1,20 @@
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
-import PublicBenefitsList from "@/components/public-benefits/PublicBenefitsList";
+import PublicBenefitCardCompact from "@/components/public-benefits/PublicBenefitCardCompact";
+import LandingLocalesMap from "@/components/public-benefits/LandingLocalesMap";
 import { getFeaturedPublicBenefits } from "@/server/services/publicBenefitsService";
+import { getTodosLocalesRaw } from "@/server/repositories/localesMapRepository";
 
 const FEATURED_LIMIT = 3;
 
 export default async function PublicBenefitsSection() {
-  const { beneficios } = await getFeaturedPublicBenefits(FEATURED_LIMIT);
+  const [{ beneficios }, locales] = await Promise.all([
+    getFeaturedPublicBenefits(FEATURED_LIMIT),
+    getTodosLocalesRaw(),
+  ]);
 
-  if (beneficios.length === 0) {
+  if (beneficios.length === 0 && locales.length === 0) {
     return null;
   }
 
@@ -24,8 +29,8 @@ export default async function PublicBenefitsSection() {
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeader
               eyebrow="Catálogo público"
-              title="Beneficios publicados"
-              description="Una selección abierta para explorar ahora."
+              title="Beneficios y locales adheridos"
+              description="Explorá cupones activos y descubrí los locales adheridos en el mapa."
               align="left"
               className="mb-0 max-w-2xl"
             />
@@ -37,7 +42,25 @@ export default async function PublicBenefitsSection() {
         </Reveal>
 
         <Reveal y={16} amount={0.2}>
-          <PublicBenefitsList benefits={beneficios} />
+          <div className="grid gap-5 lg:grid-cols-2 lg:items-stretch">
+            <div className="flex flex-col gap-3">
+              {beneficios.length > 0 ? (
+                beneficios.map((benefit) => (
+                  <PublicBenefitCardCompact key={benefit.id} benefit={benefit} />
+                ))
+              ) : (
+                <div className="rounded-2xl border border-border-default bg-surface/80 p-6 text-center text-sm text-text-muted">
+                  No hay beneficios publicados todavía.
+                </div>
+              )}
+
+              <LinkButton href="/beneficios" variant="secondary" size="sm" className="mt-1 w-full">
+                Ver todos los beneficios
+              </LinkButton>
+            </div>
+
+            <LandingLocalesMap locales={locales} />
+          </div>
         </Reveal>
       </div>
     </section>

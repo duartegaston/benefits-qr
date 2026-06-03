@@ -1,7 +1,7 @@
 import { evaluateBeneficioState, type BeneficioEffectiveStatus } from "@/lib/couponStatus";
 import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
 import {
-  getAvailableFeaturedPublicBenefitsRaw,
+  getFeaturedPublicBenefitsRaw,
   getPublicBenefitsCatalogRaw,
   type PublicBenefitsCatalogRaw,
   type PublicBenefitsFiltersInput,
@@ -64,7 +64,7 @@ export async function getPublicBenefitsPageData(page: number, pageSize: number, 
 }
 
 export async function getFeaturedPublicBenefits(limit: number) {
-  const raw = await getAvailableFeaturedPublicBenefitsRaw(limit);
+  const raw = await getFeaturedPublicBenefitsRaw(limit);
   const beneficios = hydratePublicBenefits(raw);
 
   return {

@@ -14,8 +14,8 @@ export default function Home() {
       <LandingHero />
       <LandingAudienceCtas />
 
-      <HowItWorks />
       <PublicBenefitsSection />
+      <HowItWorks />
       <Playbooks />
       {/* <Pricing /> */}
 

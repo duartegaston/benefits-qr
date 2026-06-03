@@ -147,7 +147,11 @@ export const getPublicBenefitsCatalogRaw = unstable_cache(
   { revalidate: 60 }
 );
 
-export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Promise<PublicBenefitsCatalogRaw> {
+export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<PublicBenefitsCatalogRaw> {
+  // Devolvemos hasta `limit` beneficios priorizando:
+  //   0 -> activos y aplicables hoy
+  //   1 -> activos pero no aplicables hoy (día no válido)
+  //   2 -> vencidos / agotados
   const [raw] = await prisma.$queryRaw<[PublicBenefitsCatalogRaw]>`
     WITH beneficio_stats_cte AS (
       SELECT
@@ -170,15 +174,23 @@ export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Prom
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
         l."logoUrl" AS "localLogoUrl",
-        ru.nombre AS "localRubroNombre"
+        ru.nombre AS "localRubroNombre",
+        CASE
+          WHEN (${AVAILABLE_CONDITION}) AND (
+            array_length(b."diasValidos", 1) IS NULL
+            OR array_length(b."diasValidos", 1) = 0
+            OR EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos")
+          ) THEN 0
+          WHEN (${AVAILABLE_CONDITION}) THEN 1
+          ELSE 2
+        END AS "priority"
       FROM "Beneficio" b
       JOIN "Local" l ON l.id = b."localId"
       LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
       LEFT JOIN beneficio_stats_cte bs ON bs."beneficioId" = b.id
       WHERE b."esPublico" = true
         AND b."deletedAt" IS NULL
-        AND ${AVAILABLE_CONDITION}
-      ORDER BY b."createdAt" DESC
+      ORDER BY "priority" ASC, b."createdAt" DESC
       LIMIT ${limit}
     )
     SELECT
@@ -199,7 +211,7 @@ export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Prom
                 'rubroNombre', b."localRubroNombre"
               )
             )
-            ORDER BY b."createdAt" DESC
+            ORDER BY b."priority" ASC, b."createdAt" DESC
           )
           FROM featured_beneficios_cte b
         ),
