@@ -17,7 +17,6 @@ export type PublicBenefitsCatalogRaw = {
     fechaExpiracion: string;
     maxUsos: number | null;
     diasValidos: number[];
-    requiereDatos: boolean;
     createdAt: string;
     canjeados: number;
     local: {
@@ -85,7 +84,6 @@ async function _getPublicBenefitsCatalogRaw(
         b."fechaExpiracion",
         b."maxUsos",
         b."diasValidos",
-        b."requiereDatos",
         b."createdAt",
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
@@ -120,7 +118,6 @@ async function _getPublicBenefitsCatalogRaw(
               'fechaExpiracion', b."fechaExpiracion",
               'maxUsos', b."maxUsos",
               'diasValidos', b."diasValidos",
-              'requiereDatos', b."requiereDatos",
               'createdAt', b."createdAt",
               'canjeados', b.canjeados,
               'local', json_build_object(
@@ -169,7 +166,6 @@ export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Prom
         b."fechaExpiracion",
         b."maxUsos",
         b."diasValidos",
-        b."requiereDatos",
         b."createdAt",
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
@@ -195,7 +191,6 @@ export async function getAvailableFeaturedPublicBenefitsRaw(limit: number): Prom
               'fechaExpiracion', b."fechaExpiracion",
               'maxUsos', b."maxUsos",
               'diasValidos', b."diasValidos",
-              'requiereDatos', b."requiereDatos",
               'createdAt', b."createdAt",
               'canjeados', b.canjeados,
               'local', json_build_object(

@@ -18,7 +18,6 @@ export async function createBeneficio(data: {
   maxUsos: number | null;
   diasValidos: number[];
   esPublico: boolean;
-  requiereDatos: boolean;
   localId: string;
 }) {
   return prisma.beneficio.create({ data });

@@ -108,7 +108,7 @@ export default function PublicBenefitCard({
           ) : null}
 
           <div className="mt-auto flex items-center justify-between pt-1 text-sm font-semibold text-primary transition-colors group-hover:text-accent">
-            <span>{benefit.requiereDatos ? "Ver beneficio" : "Abrir beneficio"}</span>
+            <span>Ver beneficio</span>
             <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
           </div>
         </div>

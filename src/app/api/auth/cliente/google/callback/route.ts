@@ -72,7 +72,12 @@ export async function GET(req: NextRequest) {
 
     const session = await createSession(result.clienteId, UserType.CLIENTE);
 
-    const response = NextResponse.redirect(new URL(cookieState.redirect, req.url));
+    const redirectUrl = new URL(cookieState.redirect, req.url);
+    if (result.isNew) {
+      redirectUrl.searchParams.set("welcome", "1");
+    }
+
+    const response = NextResponse.redirect(redirectUrl);
     setSessionCookie(response, session.token, UserType.CLIENTE);
     response.cookies.set(GOOGLE_OAUTH_STATE_COOKIE, "", { path: "/", maxAge: 0 });
 
