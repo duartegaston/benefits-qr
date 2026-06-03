@@ -53,10 +53,6 @@ export default async function PublicBenefitsSection() {
                   No hay beneficios publicados todavía.
                 </div>
               )}
-
-              <LinkButton href="/beneficios" variant="secondary" size="sm" className="mt-1 w-full">
-                Ver todos los beneficios
-              </LinkButton>
             </div>
 
             <LandingLocalesMap locales={locales} />
