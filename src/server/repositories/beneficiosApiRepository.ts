@@ -24,8 +24,16 @@ export async function createBeneficio(data: {
 }
 
 export async function findBeneficioPublicById(id: string) {
-  return prisma.beneficio.findUnique({
-    where: { id, deletedAt: null },
+  return prisma.beneficio.findFirst({
+    where: {
+      id,
+      deletedAt: null,
+      esPublico: true,
+      local: {
+        isTest: false,
+        active: true,
+      },
+    },
     include: { local: { select: { nombre: true, logoUrl: true } } },
   });
 }

@@ -2,8 +2,16 @@ import { prisma } from "@/lib/prisma";
 import { EstadoReclamo } from "@/generated/prisma/client";
 
 export async function findBeneficioForReclamo(beneficioId: string) {
-  return prisma.beneficio.findUnique({
-    where: { id: beneficioId, deletedAt: null },
+  return prisma.beneficio.findFirst({
+    where: {
+      id: beneficioId,
+      deletedAt: null,
+      esPublico: true,
+      local: {
+        isTest: false,
+        active: true,
+      },
+    },
     include: { reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } } },
   });
 }
