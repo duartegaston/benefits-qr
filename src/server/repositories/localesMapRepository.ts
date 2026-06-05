@@ -47,7 +47,10 @@ async function _getLocalesConBeneficiosVigentesRaw(): Promise<LocalConBeneficios
     FROM "Local" l
     JOIN beneficios_vigentes bv ON bv."localId" = l.id
     LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
-    WHERE l.lat IS NOT NULL AND l.lng IS NOT NULL
+    WHERE l.lat IS NOT NULL
+      AND l.lng IS NOT NULL
+      AND l."isTest" = false
+      AND l."active" = true
   `;
 
   return rows;
@@ -93,7 +96,10 @@ async function _getTodosLocalesRaw(): Promise<LocalConBeneficiosRaw[]> {
     FROM "Local" l
     LEFT JOIN beneficios_vigentes bv ON bv."localId" = l.id
     LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
-    WHERE l.lat IS NOT NULL AND l.lng IS NOT NULL
+    WHERE l.lat IS NOT NULL
+      AND l.lng IS NOT NULL
+      AND l."isTest" = false
+      AND l."active" = true
   `;
 
   return rows;

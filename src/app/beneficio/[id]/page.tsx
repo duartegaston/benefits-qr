@@ -34,8 +34,16 @@ export default async function BeneficioPublicoPage({
 
   const { id } = await params;
 
-  const beneficio = await prisma.beneficio.findUnique({
-    where: { id },
+  const beneficio = await prisma.beneficio.findFirst({
+    where: {
+      id,
+      deletedAt: null,
+      esPublico: true,
+      local: {
+        isTest: false,
+        active: true,
+      },
+    },
     include: {
       local: { select: { nombre: true, logoUrl: true } },
       reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
@@ -43,27 +51,6 @@ export default async function BeneficioPublicoPage({
   });
 
   if (!beneficio) notFound();
-
-  if (beneficio.deletedAt !== null) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center px-6 py-14">
-        <div className="w-full max-w-md text-center">
-          <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-soft">
-              <CircleAlert className="h-8 w-8 text-text-muted" aria-hidden="true" />
-            </div>
-          </div>
-          <h1 className="mb-2 text-xl font-bold text-text-primary">Cupón no disponible</h1>
-          <p className="mb-6 text-sm text-text-muted">
-            Este cupón fue eliminado o ya no se encuentra disponible.
-          </p>
-          <LinkButton href="/beneficios" variant="primary" size="sm">
-            Ver otros beneficios
-          </LinkButton>
-        </div>
-      </main>
-    );
-  }
 
   const diasValidos: number[] = beneficio.diasValidos as number[];
   const beneficioState = evaluateBeneficioState({

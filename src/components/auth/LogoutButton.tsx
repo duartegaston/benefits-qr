@@ -6,7 +6,10 @@ import { LogOut } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 interface LogoutButtonProps {
-  logoutEndpoint: "/api/auth/logout" | "/api/auth/cliente/logout";
+  logoutEndpoint:
+    | "/api/auth/logout"
+    | "/api/auth/cliente/logout"
+    | "/api/admin/logout";
 }
 
 export default function LogoutButton({ logoutEndpoint }: LogoutButtonProps) {

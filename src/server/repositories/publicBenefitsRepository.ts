@@ -96,6 +96,8 @@ async function _getPublicBenefitsCatalogRaw(
       LEFT JOIN beneficio_stats_cte bs ON bs."beneficioId" = b.id
       WHERE b."esPublico" = true
         AND b."deletedAt" IS NULL
+        AND l."isTest" = false
+        AND l."active" = true
         ${nombreFilter}
         ${rubroFilter}
         ${soloHoyFilter}
@@ -190,6 +192,8 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
       LEFT JOIN beneficio_stats_cte bs ON bs."beneficioId" = b.id
       WHERE b."esPublico" = true
         AND b."deletedAt" IS NULL
+        AND l."isTest" = false
+        AND l."active" = true
       ORDER BY "priority" ASC, b."createdAt" DESC
       LIMIT ${limit}
     )

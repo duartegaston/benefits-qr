@@ -21,7 +21,13 @@ export async function updateLocalGoogleId(id: string, googleId: string) {
 }
 
 export async function createLocalByEmail(email: string) {
-  return prisma.local.create({ data: { email } });
+  return prisma.local.create({
+    data: {
+      email,
+      isTest: false,
+      active: true,
+    },
+  });
 }
 
 export async function upsertLocalOtp(

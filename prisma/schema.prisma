@@ -17,6 +17,8 @@ model Local {
   id         String      @id @default(cuid())
   nombre     String?
   email      String      @unique
+  isTest     Boolean     @default(false)
+  active     Boolean     @default(true)
   password   String?
   googleId   String?     @unique
   logoUrl    String?
@@ -111,4 +113,18 @@ model Session {
   createdAt DateTime @default(now())
 
   @@index([expiresAt])
+}
+
+model SitePageview {
+  id          String   @id @default(cuid())
+  path        String
+  visitorHash String
+  userAgent   String?
+  referrer    String?
+  visitedOn   DateTime @db.Date
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path, createdAt])
+  @@index([visitorHash, visitedOn])
 }
