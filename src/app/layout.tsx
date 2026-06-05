@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans } from "next/font/google";
+import { Suspense } from "react";
 import PageviewTracker from "@/components/analytics/PageviewTracker";
 import "./globals.css";
 
@@ -36,7 +37,9 @@ export default function RootLayout({
       <body
         className={`${dmSans.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
       >
-        <PageviewTracker />
+        <Suspense fallback={null}>
+          <PageviewTracker />
+        </Suspense>
         {children}
       </body>
     </html>
