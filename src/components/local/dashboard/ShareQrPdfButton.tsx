@@ -1,9 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { QrCode } from "lucide-react";
+import { Printer } from "lucide-react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/AlertDialog";
 import {
   Select,
   SelectContent,
@@ -23,6 +33,7 @@ interface ShareQrPdfButtonProps {
 
 export default function ShareQrPdfButton({ url }: ShareQrPdfButtonProps) {
   const [open, setOpen] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [size, setSize] = useState<ShareQrPdfSize>("mediano");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,16 +58,46 @@ export default function ShareQrPdfButton({ url }: ShareQrPdfButtonProps) {
         type="button"
         onClick={() => {
           setError(null);
-          setOpen(true);
+          setShowConfirm(true);
         }}
-        title="Descargar QR en PDF"
-        aria-label="Descargar QR en PDF"
+        title="Generar QR para imprimir"
+        aria-label="Generar QR para imprimir"
         variant="outline"
         size="icon-2xs"
-        className="rounded-lg bg-warning-soft transition-[background-color,transform,box-shadow] duration-200 hover:bg-warning-soft/95 hover:shadow-md hover:shadow-warning/20 hover:-translate-y-0.5 active:translate-y-0 active:shadow-none"
+        className="rounded-lg bg-info-soft transition-[background-color,transform,box-shadow] duration-200 hover:bg-info-soft/95 hover:shadow-md hover:shadow-info/20 hover:-translate-y-0.5 active:translate-y-0 active:shadow-none"
       >
-        <QrCode aria-hidden="true" className="size-4 text-warning" />
+        <Printer aria-hidden="true" className="size-4 text-info" />
       </Button>
+
+      <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
+        <AlertDialogContent showCloseButton={false}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Para imprimir en tu local?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Este QR es para que los clientes lo escaneen <strong>físicamente en tu negocio</strong>.
+              <br /><br />
+              <strong>No sirve para enviar por WhatsApp o email</strong> — para eso usá los botones de compartir arriba.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel asChild>
+              <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+                Cancelar
+              </Button>
+            </AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button
+                onClick={() => {
+                  setShowConfirm(false);
+                  setOpen(true);
+                }}
+              >
+                Entiendo, continuar
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Modal
         open={open}
@@ -64,8 +105,8 @@ export default function ShareQrPdfButton({ url }: ShareQrPdfButtonProps) {
           setError(null);
           setOpen(false);
         }}
-        title="Descargar QR en PDF"
-        description="Elegí el tamaño del QR para exportar un PDF listo para imprimir o compartir."
+        title="Imprimir QR para local"
+        description="Elegí el tamaño del QR para exportar un PDF listo para imprimir y usar en tu negocio."
       >
         <div className="space-y-5">
           <div className="space-y-2">
