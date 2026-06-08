@@ -8,8 +8,8 @@ const AUDIENCE_CTAS = [
     eyebrow: "Entrada dedicada",
     title: "Para locales",
     description:
-      "Creá campañas, publicá beneficios y escaneá canjes con una operación ordenada desde el dashboard.",
-    bullets: ["Alta rápida", "Control de usos", "Canje inmediato"],
+      "Creá cupónes, publicá beneficios y escaneálos desde un solo lugar.",
+    bullets: ["Rápido y simple", "Control de usos", "Canje inmediato"],
     href: "/login",
     action: "Ingresar como negocio",
     icon: <Building2 className="h-5 w-5" aria-hidden="true" />,
@@ -26,7 +26,7 @@ const AUDIENCE_CTAS = [
     eyebrow: "Entrada dedicada",
     title: "Para clientes",
     description:
-      "Accedé a todos tus beneficios desde el mail, guardalos y mostrá el QR cuando llegás al local.",
+      "Accedé a todos tus cupones desde tu mail, guardalos y mostrá el QR cuando llegás al local.",
     bullets: ["Sin contraseña", "Sin app extra", "Todo en un lugar"],
     href: "/acceso",
     action: "Ingresar como cliente",

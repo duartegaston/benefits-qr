@@ -30,7 +30,7 @@ export default async function PublicBenefitsSection() {
             <SectionHeader
               eyebrow="Catálogo público"
               title="Beneficios y locales adheridos"
-              description="Explorá cupones activos y descubrí los locales adheridos en el mapa."
+              description="Explorá cupones activos y descubrí los locales adheridos en el mapa cerca tuyo."
               align="left"
               className="mb-0 max-w-2xl"
             />

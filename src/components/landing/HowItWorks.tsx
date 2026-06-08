@@ -39,7 +39,7 @@ export default function HowItWorks() {
           <SectionHeader
             eyebrow="Cómo funciona"
             title="Tres pasos, sin complicaciones"
-            description="Mostrale al cliente una experiencia clara: crear, mostrar el QR y validarlo sin fricción."
+            description="Una experiencia clara: crear, mostrar el QR y validarlo sin fricción."
             className="max-w-2xl lg:mb-10 lg:text-left 2xl:mb-12 [&>span]:lg:mb-2 [&>span]:lg:text-xs [&>h2]:lg:text-3xl [&>p]:lg:text-sm"
             align="left"
           />
