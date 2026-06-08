@@ -9,7 +9,7 @@ export type MetricCardVariant = Extract<
 
 interface MetricCardProps {
   label: string;
-  value: number;
+  value: number | string;
   variant?: MetricCardVariant;
 }
 

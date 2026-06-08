@@ -9,7 +9,6 @@ export async function getBeneficioDetailPageData(
 ) {
   const raw = await getBeneficioDetailRaw(beneficioId, localId, page, pageSize);
   const rawStats = raw.stats ?? { total: 0, canjeados: 0, pendientes: 0 };
-  let beneficioCanRedeemToday = false;
 
   const beneficio = raw.beneficio
     ? (() => {
@@ -22,7 +21,6 @@ export async function getBeneficioDetailPageData(
           canjeados: raw.stats?.canjeados ?? 0,
           diasValidos: raw.beneficio.diasValidos,
         });
-        beneficioCanRedeemToday = beneficioState.canRedeemToday;
 
         return {
           ...raw.beneficio,
@@ -33,9 +31,10 @@ export async function getBeneficioDetailPageData(
       })()
     : null;
 
+  const maxUsos = raw.beneficio?.maxUsos ?? null;
   const stats = {
     ...rawStats,
-    canjeablesHoy: beneficioCanRedeemToday ? rawStats.pendientes : 0,
+    usosDisponibles: maxUsos !== null ? Math.max(0, maxUsos - rawStats.canjeados) : null,
   };
   const reclamos = (raw.reclamos ?? []).map((r) => {
     const fechaReclamo = new Date(r.fechaReclamo);

@@ -10,6 +10,7 @@ export type BeneficioDetailRaw = {
     diasValidos: number[];
     deletedAt: string | null;
     localId: string;
+    esPublico: boolean;
   } | null;
   stats: {
     total: number;
@@ -37,7 +38,7 @@ export async function getBeneficioDetailRaw(
   const [raw] = await prisma.$queryRaw<[BeneficioDetailRaw]>`
     WITH
       beneficio_cte AS (
-        SELECT id, descripcion, "fechaExpiracion", "maxUsos", "diasValidos", "deletedAt", "localId"
+        SELECT id, descripcion, "fechaExpiracion", "maxUsos", "diasValidos", "deletedAt", "localId", "esPublico"
         FROM "Beneficio"
         WHERE id = ${beneficioId}
           AND "localId" = ${localId}

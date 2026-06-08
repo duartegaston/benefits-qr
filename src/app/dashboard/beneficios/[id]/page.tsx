@@ -75,6 +75,9 @@ export default async function BeneficioStatsPage({
                 ) : (
                   <Badge variant={benefitStatus.badgeVariant}>{benefitStatus.label}</Badge>
                 )}
+                <Badge variant={beneficio.esPublico ? "primary" : "secondary"}>
+                  {beneficio.esPublico ? "Público" : "Privado"}
+                </Badge>
               </div>
               <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
                 Vence: {formatDateAR(beneficio.fechaExpiracion)}
@@ -99,7 +102,11 @@ export default async function BeneficioStatsPage({
             <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-2.5 2xl:gap-3">
               <MetricCard label="Reclamos" value={stats.total} variant="secondary" />
               <MetricCard label="Canjeados" value={stats.canjeados} variant="light" />
-              <MetricCard label="Canjeables hoy" value={stats.canjeablesHoy} variant="warning" />
+              <MetricCard
+                label="Usos disponibles"
+                value={stats.usosDisponibles ?? "∞"}
+                variant="warning"
+              />
             </div>
           </div>
         </div>
