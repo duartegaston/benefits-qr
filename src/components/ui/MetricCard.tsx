@@ -11,6 +11,9 @@ interface MetricCardProps {
   label: string;
   value: number | string;
   variant?: MetricCardVariant;
+  className?: string;
+  labelClassName?: string;
+  valueClassName?: string;
 }
 
 const metricCardStyles: Record<
@@ -48,26 +51,37 @@ export default function MetricCard({
   label,
   value,
   variant = "secondary",
+  className,
+  labelClassName,
+  valueClassName,
 }: MetricCardProps) {
   const styles = metricCardStyles[variant];
 
   return (
     <Card
       className={cn(
-        "rounded-xl p-3 sm:p-4 lg:p-3.5 2xl:p-4",
-        styles.wrapper
+        "h-full rounded-xl p-3 sm:p-4 lg:p-3.5 2xl:p-4",
+        styles.wrapper,
+        className
       )}
       data-variant={variant}
     >
       <p
         className={cn(
           "mb-1 text-[10px] font-semibold uppercase tracking-wide sm:text-xs lg:text-[11px] 2xl:text-xs",
-          styles.label
+          styles.label,
+          labelClassName
         )}
       >
         {label}
       </p>
-      <p className={cn("text-xl font-bold sm:text-2xl lg:text-xl 2xl:text-2xl", styles.value)}>
+      <p
+        className={cn(
+          "text-lg font-bold leading-tight sm:text-2xl lg:text-xl 2xl:text-2xl",
+          styles.value,
+          valueClassName
+        )}
+      >
         {value}
       </p>
     </Card>

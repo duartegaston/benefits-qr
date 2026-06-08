@@ -50,34 +50,83 @@ export default async function DashboardStatsPage() {
         />
       </Reveal>
 
-      <div className="mb-6 grid grid-cols-2 gap-2 sm:mb-8 sm:grid-cols-3 sm:gap-3 lg:mb-7 lg:grid-cols-4 lg:gap-2.5 2xl:mb-8 2xl:gap-3">
-        <Reveal y={14} amount={0.25}>
-          <MetricCard label="Cupones" value={totalBeneficios} variant="light" />
+      <div className="mb-6 grid grid-cols-4 gap-2 sm:mb-8 sm:grid-cols-3 sm:gap-3 lg:mb-7 lg:grid-cols-4 lg:gap-2.5 2xl:mb-8 2xl:gap-3">
+        <Reveal y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="Cupones"
+            value={totalBeneficios}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.03} y={14} amount={0.25}>
-          <MetricCard label="Vencen en 7 días" value={proximosAVencer} variant="light" />
+        <Reveal delay={0.03} y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="Vencen en 7 días"
+            value={proximosAVencer}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.06} y={14} amount={0.25}>
-          <MetricCard label="Reclamos" value={totalReclamos} variant="light" />
+        <Reveal delay={0.06} y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="Reclamos"
+            value={totalReclamos}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.09} y={14} amount={0.25}>
-          <MetricCard label="Canjeados" value={totalCanjeados} variant="light" />
+        <Reveal delay={0.09} y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="Canjeados"
+            value={totalCanjeados}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.12} y={14} amount={0.25}>
-          <MetricCard label="Tasa canje (%)" value={tasaCanje} variant="light" />
+        <Reveal delay={0.12} y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="Tasa canje (%)"
+            value={tasaCanje}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.15} y={14} amount={0.25}>
-          <MetricCard label="Clientes únicos" value={clientesUnicos} variant="light" />
+        <Reveal delay={0.15} y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="Clientes únicos"
+            value={clientesUnicos}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.18} y={14} amount={0.25}>
-          <MetricCard label="% Recurrencia" value={stats.recurrence.porcentajeRecurrencia} variant="light" />
+        <Reveal delay={0.18} y={14} amount={0.25} className="h-full">
+          <MetricCard
+            label="% Recurrencia"
+            value={stats.recurrence.porcentajeRecurrencia}
+            variant="light"
+            className="h-full bg-surface p-2.5"
+            labelClassName="text-[8px] leading-tight tracking-[0.06em]"
+            valueClassName="text-base sm:text-2xl lg:text-xl 2xl:text-2xl"
+          />
         </Reveal>
-        <Reveal delay={0.21} y={14} amount={0.25}>
-          <Card className="rounded-xl border-accent-soft/80 bg-accent-soft p-3 sm:p-4 lg:p-3.5 2xl:p-4">
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-accent-foreground/80 sm:text-xs lg:text-[11px] 2xl:text-xs">
+        <Reveal delay={0.21} y={14} amount={0.25} className="h-full">
+          <Card className="flex h-full flex-col rounded-xl border-accent-soft/80 bg-surface p-2.5 sm:p-4 lg:p-3.5 2xl:p-4">
+            <p className="mb-1 text-[8px] font-semibold uppercase leading-tight tracking-[0.06em] text-accent-foreground/80 sm:text-xs lg:text-[11px] 2xl:text-xs">
               Tiempo medio a canje
             </p>
-            <p className="text-xl font-bold text-accent-foreground sm:text-2xl lg:text-xl 2xl:text-2xl">
+            <p className="text-sm font-bold leading-tight text-accent-foreground sm:text-2xl lg:text-xl 2xl:text-2xl">
               {stats.avgRedeemTimeFormatted}
             </p>
           </Card>
