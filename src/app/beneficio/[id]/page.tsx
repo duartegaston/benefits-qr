@@ -38,7 +38,6 @@ export default async function BeneficioPublicoPage({
     where: {
       id,
       deletedAt: null,
-      esPublico: true,
       local: {
         isTest: false,
         active: true,
