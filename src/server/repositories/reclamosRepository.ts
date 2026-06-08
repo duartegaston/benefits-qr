@@ -6,7 +6,6 @@ export async function findBeneficioForReclamo(beneficioId: string) {
     where: {
       id: beneficioId,
       deletedAt: null,
-      esPublico: true,
       local: {
         isTest: false,
         active: true,

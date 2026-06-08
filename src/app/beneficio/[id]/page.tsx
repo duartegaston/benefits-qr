@@ -18,6 +18,7 @@ import {
 import { evaluateBeneficioState } from "@/lib/couponStatus";
 import { DIRECT_QR_FLOW } from "@/lib/flows";
 import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
+import { getClienteSessionFromCookies } from "@/lib/auth";
 
 export default async function BeneficioPublicoPage({
   params,
@@ -50,6 +51,24 @@ export default async function BeneficioPublicoPage({
   });
 
   if (!beneficio) notFound();
+
+  // Check for existing cliente session and reclamo
+  const clienteSession = await getClienteSessionFromCookies();
+  let existingReclamoId: string | null = null;
+  
+  if (clienteSession) {
+    const existingReclamo = await prisma.reclamo.findFirst({
+      where: {
+        beneficioId: id,
+        clienteId: clienteSession.userId,
+        estado: EstadoReclamo.PENDIENTE,
+      },
+      select: { id: true },
+    });
+    if (existingReclamo) {
+      existingReclamoId = existingReclamo.id;
+    }
+  }
 
   const diasValidos: number[] = beneficio.diasValidos as number[];
   const beneficioState = evaluateBeneficioState({
@@ -208,6 +227,8 @@ export default async function BeneficioPublicoPage({
                     initialDirectRedeemed={directRedeemed}
                     initialOrderNumber={directOrderNumber}
                     initialDirectErrorCode={directErrorCode}
+                    initialReclamoId={existingReclamoId}
+                    isLoggedIn={!!clienteSession}
                   />
                 </div>
               )}

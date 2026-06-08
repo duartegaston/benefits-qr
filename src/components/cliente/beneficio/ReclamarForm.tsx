@@ -16,6 +16,8 @@ type ReclamarFormProps = {
   initialDirectRedeemed?: boolean;
   initialOrderNumber?: string | null;
   initialDirectErrorCode?: string | null;
+  initialReclamoId?: string | null;
+  isLoggedIn?: boolean;
 };
 
 function getDirectFlowErrorMessage(code: string): string {
@@ -33,9 +35,14 @@ export default function ReclamarForm({
   initialDirectRedeemed = false,
   initialOrderNumber = null,
   initialDirectErrorCode = null,
+  initialReclamoId = null,
+  isLoggedIn = false,
 }: ReclamarFormProps) {
   const storageKey = `${STORAGE_KEY_PREFIX}${beneficioId}`;
   const [reclamoId, setReclamoId] = useState<string | null>(() => {
+    if (initialReclamoId) {
+      return initialReclamoId;
+    }
     if (directFlow) {
       return null;
     }
@@ -50,6 +57,7 @@ export default function ReclamarForm({
       return null;
     }
   });
+  const [claiming, setClaiming] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checkingRequirement, setCheckingRequirement] = useState(true);
   const [requiresNombre, setRequiresNombre] = useState(true);
@@ -60,6 +68,7 @@ export default function ReclamarForm({
   );
   const [canjeado, setCanjeado] = useState(initialDirectRedeemed);
   const [orderNumber, setOrderNumber] = useState<string | null>(initialOrderNumber);
+  const [claimedSuccess, setClaimedSuccess] = useState(false);
 
   const handleRedeemed = useCallback(() => {
     try {
@@ -74,9 +83,11 @@ export default function ReclamarForm({
     let active = true;
 
     const checkRequirement = async () => {
-      if (!directFlow && reclamoId) {
+      // Skip check if we already have a reclamoId from server
+      if (!directFlow && (reclamoId || initialReclamoId)) {
         if (active) {
           setCheckingRequirement(false);
+          setRequiresNombre(false);
         }
         return;
       }
@@ -113,7 +124,7 @@ export default function ReclamarForm({
     return () => {
       active = false;
     };
-  }, [beneficioId, reclamoId, directFlow]);
+  }, [beneficioId, reclamoId, directFlow, initialReclamoId]);
 
   async function handleObtenerQR() {
     const normalizedNombre = nombre.trim().replace(/\s+/g, " ");
@@ -183,8 +194,68 @@ export default function ReclamarForm({
     );
   }
 
-  if (!directFlow && reclamoId) {
-    return <QRDisplay reclamoId={reclamoId} onRedeemed={handleRedeemed} />;
+  if (!directFlow && (reclamoId || initialReclamoId)) {
+    return <QRDisplay reclamoId={reclamoId || initialReclamoId!} onRedeemed={handleRedeemed} />;
+  }
+
+  // Logged in user without reclamo - show claim button
+  async function handleClaimForLoggedIn() {
+    setClaiming(true);
+    setError(null);
+    
+    try {
+      const res = await fetch("/api/reclamos/anonimo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          beneficioId,
+          flow: undefined,
+        }),
+      });
+
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || "No pudimos reclamar el cupón.");
+        return;
+      }
+
+      setReclamoId(data.reclamoId);
+      setClaimedSuccess(true);
+      
+      try {
+        sessionStorage.setItem(storageKey, data.reclamoId);
+      } catch {
+        // sessionStorage no disponible
+      }
+    } catch {
+      setError("No pudimos reclamar el cupón. Intentá de nuevo.");
+    } finally {
+      setClaiming(false);
+    }
+  }
+
+  if (isLoggedIn && !reclamoId && !claimedSuccess) {
+    return (
+      <div className="space-y-4 lg:space-y-3.5 2xl:space-y-4">
+        <div className="rounded-2xl border border-primary/20 bg-primary-soft/35 px-4 py-3 text-sm text-text-secondary lg:text-[13px] 2xl:text-sm">
+          Ya tenés sesión iniciada. Reclamá este cupón para guardarlo en tu cuenta.
+        </div>
+        
+        {error ? <p className="text-sm text-danger">{error}</p> : null}
+        
+        <Button
+          type="button"
+          className="w-full"
+          size="lg"
+          loading={claiming}
+          onClick={handleClaimForLoggedIn}
+        >
+          <Ticket className="mr-2 h-4 w-4" aria-hidden="true" />
+          Reclamar cupón
+        </Button>
+      </div>
+    );
   }
 
   return (
