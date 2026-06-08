@@ -8,7 +8,7 @@ export default function NuevoBeneficioPage() {
       <SectionHeader
         eyebrow="Nuevo cupón"
         title="Creá un beneficio"
-        description="Definí la vigencia y las condiciones del cupón para publicarlo en tu dashboard."
+        description="Definí la vigencia y las condiciones del cupón para publicarlo."
         align="left"
         className="mb-5 sm:mb-6 lg:mb-5 2xl:mb-6"
       />

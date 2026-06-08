@@ -116,7 +116,7 @@ export default async function BeneficioStatsPage({
             className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-border-default bg-surface-muted px-3 py-1.5 text-sm font-medium text-text-primary shadow-sm transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:text-[13px] 2xl:text-sm"
           >
             <Download className="h-3.5 w-3.5" aria-hidden="true" />
-            Descargar CSV
+            Descargar datos
           </a>
         )}
       </div>

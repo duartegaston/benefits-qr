@@ -76,7 +76,7 @@ export default function ShareQrPdfButton({ url }: ShareQrPdfButtonProps) {
             <AlertDialogDescription>
               Este QR es para que los clientes lo escaneen <strong>físicamente en tu negocio</strong>.
               <br /><br />
-              <strong>No sirve para enviar por WhatsApp o email</strong> — para eso usá los botones de compartir arriba.
+              <strong>No sirve para enviar por WhatsApp o email</strong> — para eso usá los botones de compartir de al lado.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
