@@ -197,7 +197,7 @@ export default function ReclamarForm({
 
       <GoogleButton
         beneficioId={beneficioId}
-        redirect={directFlow ? `/beneficio/${beneficioId}?flow=${DIRECT_QR_FLOW}` : "/mis-beneficios"}
+        redirect={directFlow ? `/beneficio/${beneficioId}?flow=${DIRECT_QR_FLOW}` : `/beneficio/${beneficioId}`}
         flow={directFlow ? DIRECT_QR_FLOW : undefined}
       />
 
