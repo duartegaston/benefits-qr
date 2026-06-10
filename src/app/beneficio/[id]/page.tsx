@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, CalendarDays, CircleAlert, Store, Ticket } from "lucide-react";
+import { ArrowLeft, CalendarDays, CircleAlert, Store, Ticket, MapPinned } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { EstadoReclamo } from "@/generated/prisma/client";
 export const revalidate = 60;
@@ -45,7 +45,7 @@ export default async function BeneficioPublicoPage({
       },
     },
     include: {
-      local: { select: { nombre: true, logoUrl: true } },
+      local: { select: { nombre: true, logoUrl: true, direccion: true } },
       reclamos: { where: { estado: EstadoReclamo.CANJEADO }, select: { id: true } },
     },
   });
@@ -185,6 +185,15 @@ export default async function BeneficioPublicoPage({
                   </div>
                 </div>
               </div>
+
+              {beneficio.local.direccion && (
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="muted" className="gap-1.5 px-3 py-1">
+                    <MapPinned className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span className="line-clamp-1 max-w-[240px]">{beneficio.local.direccion}</span>
+                  </Badge>
+                </div>
+              )}
 
               <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
                 <div className="flex flex-wrap gap-2">

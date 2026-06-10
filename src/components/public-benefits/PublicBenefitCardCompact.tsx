@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, Ticket } from "lucide-react";
+import { ArrowRight, CalendarDays, Ticket, MapPinned } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import { formatDateAR } from "@/lib/dates";
@@ -40,9 +40,9 @@ export default function PublicBenefitCardCompact({
             )}
           </div>
 
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 space-y-0.5">
             <div className="flex items-start justify-between gap-2">
-              <p className="min-w-0 line-clamp-2 text-xs font-medium text-text-muted">{localName}</p>
+              <p className="min-w-0 line-clamp-1 text-xs font-medium text-primary">{localName}</p>
               <Badge
                 variant={benefit.availability.badgeVariant}
                 className="shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]"
@@ -53,7 +53,13 @@ export default function PublicBenefitCardCompact({
             <h3 className="line-clamp-1 text-sm font-semibold tracking-tight text-text-primary">
               {benefit.descripcion}
             </h3>
-            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-text-muted">
+            {benefit.local.direccion && (
+              <p className="flex items-center gap-1 text-[11px] text-text-muted/80">
+                <MapPinned className="h-3 w-3" aria-hidden="true" />
+                <span className="line-clamp-1 max-w-[200px]">{benefit.local.direccion}</span>
+              </p>
+            )}
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-text-muted">
               <p className="flex items-center gap-1">
                 <CalendarDays className="h-3 w-3" aria-hidden="true" />
                 Vence {formatDateAR(benefit.fechaExpiracion)}

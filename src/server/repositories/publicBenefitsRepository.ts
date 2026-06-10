@@ -23,6 +23,7 @@ export type PublicBenefitsCatalogRaw = {
       nombre: string | null;
       logoUrl: string | null;
       rubroNombre: string | null;
+      direccion: string | null;
     };
   }> | null;
   total: number;
@@ -92,6 +93,7 @@ async function _getPublicBenefitsCatalogRaw(
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
         l."logoUrl" AS "localLogoUrl",
+        l.direccion AS "localDireccion",
         ru.nombre AS "localRubroNombre",
         (${AVAILABLE_CONDITION}) AS "isAvailable",
         CASE
@@ -138,7 +140,8 @@ async function _getPublicBenefitsCatalogRaw(
               'local', json_build_object(
                 'nombre', b."localNombre",
                 'logoUrl', b."localLogoUrl",
-                'rubroNombre', b."localRubroNombre"
+                'rubroNombre', b."localRubroNombre",
+                'direccion', b."localDireccion"
               )
             )
             ORDER BY b."sortRank" ASC, b."createdAt" DESC
@@ -207,6 +210,7 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
         COALESCE(bs.canjeados, 0) AS canjeados,
         l.nombre AS "localNombre",
         l."logoUrl" AS "localLogoUrl",
+        l.direccion AS "localDireccion",
         ru.nombre AS "localRubroNombre",
         CASE
           WHEN (${AVAILABLE_CONDITION}) AND (
@@ -243,7 +247,8 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
               'local', json_build_object(
                 'nombre', b."localNombre",
                 'logoUrl', b."localLogoUrl",
-                'rubroNombre', b."localRubroNombre"
+                'rubroNombre', b."localRubroNombre",
+                'direccion', b."localDireccion"
               )
             )
             ORDER BY b."priority" ASC, b."createdAt" DESC

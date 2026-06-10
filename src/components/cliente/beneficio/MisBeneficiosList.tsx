@@ -22,7 +22,7 @@ type Reclamo = {
   beneficio: {
     descripcion: string;
     fechaExpiracion: Date | string;
-    local: { nombre: string | null; id: string; logoV: string; rubroNombre: string | null };
+    local: { nombre: string | null; id: string; logoV: string; rubroNombre: string | null; direccion: string | null };
   };
 };
 
@@ -87,6 +87,11 @@ export default function MisBeneficiosList({
                       <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
                         Reclamo: {formatDateAR(r.fechaReclamo)}
                       </p>
+                      {r.beneficio.local.direccion && (
+                        <p className="line-clamp-2 text-xs text-text-muted/80 lg:text-[11px] 2xl:text-xs">
+                          {r.beneficio.local.direccion}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-1.5">

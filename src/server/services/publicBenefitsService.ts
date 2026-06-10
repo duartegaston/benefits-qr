@@ -23,6 +23,7 @@ export type PublicBenefitCardData = {
     nombre: string | null;
     logoUrl: string | null;
     rubroNombre: string | null;
+    direccion: string | null;
   };
 };
 
