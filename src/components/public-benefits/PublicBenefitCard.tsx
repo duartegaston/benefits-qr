@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, MapPin, Store, Ticket, MapPinned } from "lucide-react";
+import { ArrowRight, CalendarDays, MapPin, Store, Ticket, MapPinned, Clock } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import { formatDateAR } from "@/lib/dates";
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import type { PublicBenefitCardData } from "@/server/services/publicBenefitsService";
 
 export default function PublicBenefitCard({
@@ -67,6 +68,17 @@ export default function PublicBenefitCard({
               </Badge>
             ) : null}
           </div>
+
+          {benefit.diasValidos?.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="muted" className="gap-1.5 px-3 py-1">
+                <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                <span className="line-clamp-1 max-w-[260px]">
+                  {formatDiasValidosSentence(benefit.diasValidos, { style: "short" })}
+                </span>
+              </Badge>
+            </div>
+          )}
 
           {benefit.availability.message ? (
             <div

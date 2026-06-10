@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, Ticket, MapPinned } from "lucide-react";
+import { ArrowRight, CalendarDays, Ticket, MapPinned, Clock } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import { formatDateAR } from "@/lib/dates";
+import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import type { PublicBenefitCardData } from "@/server/services/publicBenefitsService";
 
 function getInitials(localName: string) {
@@ -71,6 +72,14 @@ export default function PublicBenefitCardCompact({
                 </p>
               ) : null}
             </div>
+            {benefit.diasValidos?.length > 0 && (
+              <p className="flex items-center gap-1 text-[11px] text-text-muted/80">
+                <Clock className="h-3 w-3" aria-hidden="true" />
+                <span className="line-clamp-1 max-w-[220px]">
+                  {formatDiasValidosSentence(benefit.diasValidos, { style: "short" })}
+                </span>
+              </p>
+            )}
           </div>
 
           <ArrowRight

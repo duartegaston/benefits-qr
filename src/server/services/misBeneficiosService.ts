@@ -37,6 +37,7 @@ function mapReclamoRow(r: ReclamoStatusRow) {
     beneficio: {
       descripcion: r.beneficioDescripcion,
       fechaExpiracion: r.beneficioFechaExpiracion,
+      diasValidos: r.beneficioDiasValidos,
       local: { nombre: r.localNombre, id: r.localId, logoV: r.localLogoV, rubroNombre: r.localRubroNombre, direccion: r.localDireccion },
     },
   };
