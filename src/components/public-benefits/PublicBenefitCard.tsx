@@ -37,10 +37,10 @@ export default function PublicBenefitCard({
 
         <div className="flex h-full flex-col gap-4 p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 space-y-1.5">
+            <div className="min-w-0 flex-1 space-y-1.5">
               <p className="flex items-center gap-1.5 text-xs font-medium text-text-muted">
                 <Store className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="min-w-0 truncate">{localName}</span>
+                <span className="min-w-0 line-clamp-2">{localName}</span>
               </p>
               <h3 className="line-clamp-2 text-lg font-semibold tracking-tight text-text-primary sm:text-xl">
                 {benefit.descripcion}
