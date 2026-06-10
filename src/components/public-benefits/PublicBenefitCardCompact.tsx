@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays } from "lucide-react";
+import { ArrowRight, CalendarDays, Ticket } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import { formatDateAR } from "@/lib/dates";
@@ -53,10 +53,18 @@ export default function PublicBenefitCardCompact({
             <h3 className="line-clamp-1 text-sm font-semibold tracking-tight text-text-primary">
               {benefit.descripcion}
             </h3>
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-text-muted">
-              <CalendarDays className="h-3 w-3" aria-hidden="true" />
-              Vence {formatDateAR(benefit.fechaExpiracion)}
-            </p>
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-text-muted">
+              <p className="flex items-center gap-1">
+                <CalendarDays className="h-3 w-3" aria-hidden="true" />
+                Vence {formatDateAR(benefit.fechaExpiracion)}
+              </p>
+              {benefit.maxUsos !== null ? (
+                <p className="flex items-center gap-1">
+                  <Ticket className="h-3 w-3" aria-hidden="true" />
+                  {benefit.canjeados}/{benefit.maxUsos} usos
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <ArrowRight
