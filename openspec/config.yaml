@@ -1,0 +1,37 @@
+schema: spec-driven
+
+project: benefits-qr
+product: Qupon
+
+context: |
+  Tech stack: Next.js 16 (App Router), React 19, TypeScript 5 (strict), Tailwind CSS v4, Prisma 7, Neon Postgres
+  Architecture: Server-first fullstack monolith; layered (src/app, src/components, src/lib, src/server/services, src/server/repositories)
+  Auth: Two-actor cookie sessions (LOCAL merchant / CLIENTE customer) via src/lib/auth.ts
+  Testing: No test runner detected
+  Style: ESLint 9 + eslint-config-next (core-web-vitals + typescript), strict TS, path alias @/*
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    - Follow existing code patterns (Spanish domain terms expected)
+    - Respect mobile performance rules (blur, overflow, justify-center)
+    - Preserve auth checks and security headers
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: "npm run build"
+    lint_command: "npm run lint"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
