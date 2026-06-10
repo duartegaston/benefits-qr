@@ -76,6 +76,13 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    background-color: var(--color-bg-gradient-from);
+    background-image: linear-gradient(
+      to bottom right,
+      var(--color-bg-gradient-from),
+      var(--color-bg-gradient-via),
+      var(--color-bg-gradient-to)
+    );
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -15,6 +15,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#eadcf7",
 };
 
 export const metadata: Metadata = {
@@ -33,9 +34,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" data-scroll-behavior="smooth">
       <body
-        className={`${dmSans.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
+        className={`${dmSans.className} min-h-screen antialiased`}
       >
         <Suspense fallback={null}>
           <PageviewTracker />

@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, CalendarDays, CircleAlert, Store } from "lucide-react";
+import { ArrowLeft, CalendarDays, CircleAlert, Store, Ticket } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { EstadoReclamo } from "@/generated/prisma/client";
 export const revalidate = 60;
@@ -192,6 +192,12 @@ export default async function BeneficioPublicoPage({
                     <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
                     Vence {formatDateAR(beneficio.fechaExpiracion)}
                   </Badge>
+                  {beneficio.maxUsos !== null ? (
+                    <Badge variant="secondary" className="gap-1.5 px-3 py-1">
+                      <Ticket className="h-3.5 w-3.5" aria-hidden="true" />
+                      {beneficio.reclamos.length}/{beneficio.maxUsos} usos
+                    </Badge>
+                  ) : null}
                   {tieneRestriccion ? (
                     <Badge variant="muted" className="px-3 py-1">
                       {formatDiasValidosSentence(diasValidosOrdenados, {
