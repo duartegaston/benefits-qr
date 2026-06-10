@@ -46,11 +46,11 @@ export async function createBeneficioFlow(
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
   const { descripcion, fechaExpiracion, maxUsos, diasValidos, esPublico } = input;
 
-  if (typeof descripcion !== "string" || descripcion.trim().length === 0 || descripcion.length > 500) {
+  if (typeof descripcion !== "string" || descripcion.trim().length === 0 || descripcion.trim().length > 40) {
     return {
       ok: false,
       status: 400,
-      error: "Descripción inválida (máx. 500 caracteres)",
+      error: "Descripción inválida (máx. 40 caracteres)",
       code: "INVALID_DESCRIPCION",
     };
   }

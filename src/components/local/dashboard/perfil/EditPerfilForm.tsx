@@ -122,6 +122,7 @@ export default function EditPerfilForm({
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           placeholder="Ej: La Panadería de Juan"
+          maxLength={50}
           required
         />
 

@@ -95,6 +95,7 @@ export default function NuevoBeneficioForm() {
             value={descripcion}
             onChange={(event) => setDescripcion(event.target.value)}
             placeholder="Ej: 20% de descuento en todos los productos"
+            maxLength={40}
             required
           />
         </div>

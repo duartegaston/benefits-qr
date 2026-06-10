@@ -111,6 +111,7 @@ export default function OnboardingForm({ email, logoUrl }: OnboardingFormProps) 
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           placeholder="Ej: La Panadería de Juan"
+          maxLength={50}
           required
         />
 

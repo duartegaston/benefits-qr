@@ -42,7 +42,7 @@ export default function PublicBenefitCardCompact({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
-              <p className="truncate text-xs font-medium text-text-muted">{localName}</p>
+              <p className="min-w-0 line-clamp-2 text-xs font-medium text-text-muted">{localName}</p>
               <Badge
                 variant={benefit.availability.badgeVariant}
                 className="shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em]"

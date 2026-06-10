@@ -81,6 +81,10 @@ export async function updateLocalMeFlow(
     return { ok: false, status: 400, error: "El nombre es requerido", code: "NOMBRE_REQUIRED" };
   }
 
+  if (nombre.trim().length > 50) {
+    return { ok: false, status: 400, error: "El nombre no puede superar 50 caracteres", code: "NOMBRE_TOO_LONG" };
+  }
+
   if (!direccion || typeof direccion !== "string" || direccion.trim() === "") {
     return { ok: false, status: 400, error: "La dirección es requerida", code: "DIRECCION_REQUIRED" };
   }

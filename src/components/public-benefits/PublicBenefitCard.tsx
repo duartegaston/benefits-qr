@@ -40,7 +40,7 @@ export default function PublicBenefitCard({
             <div className="min-w-0 space-y-1.5">
               <p className="flex items-center gap-1.5 text-xs font-medium text-text-muted">
                 <Store className="h-3.5 w-3.5" aria-hidden="true" />
-                <span className="truncate">{localName}</span>
+                <span className="min-w-0 truncate">{localName}</span>
               </p>
               <h3 className="line-clamp-2 text-lg font-semibold tracking-tight text-text-primary sm:text-xl">
                 {benefit.descripcion}
@@ -64,7 +64,7 @@ export default function PublicBenefitCard({
 
             <div className="min-w-0 space-y-1">
               <div className="flex flex-wrap items-center gap-1.5">
-                <p className="text-sm font-semibold text-text-primary">{localName}</p>
+                <p className="min-w-0 line-clamp-2 text-sm font-semibold text-text-primary">{localName}</p>
                 {benefit.local.rubroNombre && (
                   <Badge variant="muted" className="shrink-0 px-2 py-0 text-[10px]">
                     {benefit.local.rubroNombre}
