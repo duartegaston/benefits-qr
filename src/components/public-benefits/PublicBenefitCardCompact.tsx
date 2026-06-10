@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, Ticket, MapPinned, Clock } from "lucide-react";
+import { ArrowRight, CalendarDays, Ticket, MapPinned, Clock, MapPin } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import { formatDateAR } from "@/lib/dates";
@@ -18,8 +18,10 @@ function getInitials(localName: string) {
 
 export default function PublicBenefitCardCompact({
   benefit,
+  distanceLabel,
 }: {
   benefit: PublicBenefitCardData;
+  distanceLabel?: string | null;
 }) {
   const localName = benefit.local.nombre ?? "Local adherido";
   const initials = getInitials(localName);
@@ -61,6 +63,12 @@ export default function PublicBenefitCardCompact({
               </p>
             )}
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-text-muted">
+              {distanceLabel && (
+                <p className="flex items-center gap-1 font-medium text-primary">
+                  <MapPin className="h-3 w-3" aria-hidden="true" />
+                  {distanceLabel}
+                </p>
+              )}
               <p className="flex items-center gap-1">
                 <CalendarDays className="h-3 w-3" aria-hidden="true" />
                 Vence {formatDateAR(benefit.fechaExpiracion)}
