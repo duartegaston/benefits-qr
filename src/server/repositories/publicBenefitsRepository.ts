@@ -66,6 +66,11 @@ async function _getPublicBenefitsCatalogRaw(
     ? Prisma.sql`AND b."localId" = ${filters.localId}`
     : Prisma.empty;
 
+  // Optimización: cuando filtramos por local específico, limitamos los stats a beneficios de ese local
+  const beneficioStatsFilter = filters.localId
+    ? Prisma.sql`b."localId" = ${filters.localId}`
+    : Prisma.sql`b."esPublico" = true AND b."deletedAt" IS NULL`;
+
   const [raw] = await prisma.$queryRaw<[PublicBenefitsCatalogRaw]>`
     WITH beneficio_stats_cte AS (
       SELECT
@@ -73,8 +78,7 @@ async function _getPublicBenefitsCatalogRaw(
         COUNT(*) FILTER (WHERE r.estado = 'CANJEADO')::int AS canjeados
       FROM "Reclamo" r
       JOIN "Beneficio" b ON b.id = r."beneficioId"
-      WHERE b."esPublico" = true
-        AND b."deletedAt" IS NULL
+      WHERE ${beneficioStatsFilter}
       GROUP BY r."beneficioId"
     ),
     filtered_beneficios_cte AS (
@@ -152,11 +156,29 @@ async function _getPublicBenefitsCatalogRaw(
 // Cached version: 60s TTL, keyed by (page, pageSize, filters).
 // The raw response is fully JSON-serializable (DB returns dates as ISO strings).
 // Hydration (string → Date) happens in the service layer after cache hit.
-export const getPublicBenefitsCatalogRaw = unstable_cache(
-  _getPublicBenefitsCatalogRaw,
-  ["public-benefits-catalog-raw"],
-  { revalidate: 60 }
-);
+// Cache key includes filter params for better granularity and hit rate.
+export const getPublicBenefitsCatalogRaw = (
+  page: number,
+  pageSize: number,
+  filters: PublicBenefitsFiltersInput = {}
+) => {
+  const cacheKey = [
+    "public-benefits-catalog",
+    String(page),
+    String(pageSize),
+    filters.q ?? "",
+    filters.rubroId ?? "",
+    filters.localId ?? "",
+    filters.soloHoy ? "1" : "0",
+    filters.soloDisponibles ? "1" : "0",
+  ];
+
+  return unstable_cache(
+    async () => _getPublicBenefitsCatalogRaw(page, pageSize, filters),
+    cacheKey,
+    { revalidate: 60 }
+  )();
+};
 
 export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<PublicBenefitsCatalogRaw> {
   // Devolvemos hasta `limit` beneficios priorizando:

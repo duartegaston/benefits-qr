@@ -6,7 +6,7 @@ import LandingLocalesMap from "@/components/public-benefits/LandingLocalesMap";
 import { getFeaturedPublicBenefits } from "@/server/services/publicBenefitsService";
 import { getTodosLocalesRaw } from "@/server/repositories/localesMapRepository";
 
-const FEATURED_LIMIT = 3;
+const FEATURED_LIMIT = 5;
 
 export default async function PublicBenefitsSection() {
   const [{ beneficios }, locales] = await Promise.all([
