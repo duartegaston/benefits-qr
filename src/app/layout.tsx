@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${dmSans.className} bg-linear-to-br from-bg-gradient-from via-bg-gradient-via to-bg-gradient-to bg-fixed min-h-screen antialiased`}
+        className={`${dmSans.className} min-h-screen antialiased`}
       >
         <Suspense fallback={null}>
           <PageviewTracker />
