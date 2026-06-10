@@ -89,7 +89,16 @@ async function _getPublicBenefitsCatalogRaw(
         l.nombre AS "localNombre",
         l."logoUrl" AS "localLogoUrl",
         ru.nombre AS "localRubroNombre",
-        (${AVAILABLE_CONDITION}) AS "isAvailable"
+        (${AVAILABLE_CONDITION}) AS "isAvailable",
+        CASE
+          WHEN NOT (${AVAILABLE_CONDITION}) THEN 2
+          WHEN (
+            array_length(b."diasValidos", 1) IS NOT NULL
+            AND array_length(b."diasValidos", 1) > 0
+            AND NOT (EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos"))
+          ) THEN 1
+          ELSE 0
+        END AS "sortRank"
       FROM "Beneficio" b
       JOIN "Local" l ON l.id = b."localId"
       LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
@@ -107,7 +116,7 @@ async function _getPublicBenefitsCatalogRaw(
     paged_beneficios_cte AS (
       SELECT *
       FROM filtered_beneficios_cte
-      ORDER BY "isAvailable" DESC, "createdAt" DESC
+      ORDER BY "sortRank" ASC, "createdAt" DESC
       LIMIT ${pageSize} OFFSET ${offset}
     )
     SELECT
@@ -128,7 +137,7 @@ async function _getPublicBenefitsCatalogRaw(
                 'rubroNombre', b."localRubroNombre"
               )
             )
-            ORDER BY b."isAvailable" DESC, b."createdAt" DESC
+            ORDER BY b."sortRank" ASC, b."createdAt" DESC
           )
           FROM paged_beneficios_cte b
         ),

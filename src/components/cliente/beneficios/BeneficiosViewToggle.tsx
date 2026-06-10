@@ -41,7 +41,7 @@ export default function BeneficiosViewToggle({
     if (hasLocalFilter) {
       setView("lista");
     }
-  }, [hasLocalFilter]);
+  }, [hasLocalFilter, filterParamsString]);
 
   const localCoordsByName: LocalCoordsByName = useMemo(() => {
     const map: LocalCoordsByName = {};
