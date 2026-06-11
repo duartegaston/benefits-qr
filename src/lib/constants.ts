@@ -7,4 +7,4 @@ export const SESSION_DURATION = {
   LOCAL_ONBOARDING: 2,
 } as const;
 
-export const QR_EXPIRY_MINUTES = 2;
+export const QR_EXPIRY_MINUTES = 10;
