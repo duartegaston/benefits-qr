@@ -25,17 +25,17 @@ export type DashboardNavItem = {
 export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
   { href: "/dashboard", label: "Inicio", key: "inicio", icon: House },
   {
+    href: "/dashboard/beneficios/nuevo",
+    label: "Crear",
+    key: "crear",
+    icon: PlusCircle,
+  },
+  {
     href: "/dashboard/escanear",
     label: "QR",
     key: "escanear",
     icon: QrCode,
     primary: true,
-  },
-  {
-    href: "/dashboard/beneficios/nuevo",
-    label: "Crear",
-    key: "crear",
-    icon: PlusCircle,
   },
   {
     href: "/dashboard/estadisticas",
