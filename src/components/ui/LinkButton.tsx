@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { getButtonClasses } from "@/components/ui/buttonStyles";
+import { ButtonVisualSize, ButtonVisualVariant, getButtonClasses } from "@/components/ui/buttonStyles";
 import { ComponentPropsWithoutRef } from "react";
 
 type LinkButtonProps = ComponentPropsWithoutRef<typeof Link> & {
-  variant?: "primary" | "muted" | "secondary" | "light" | "subtle" | "outline";
-  size?: "sm" | "md" | "lg";
+  variant?: ButtonVisualVariant;
+  size?: ButtonVisualSize;
 };
 
 export default function LinkButton({

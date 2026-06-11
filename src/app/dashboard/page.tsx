@@ -4,7 +4,7 @@ import Card from "@/components/ui/Card";
 import LinkButton from "@/components/ui/LinkButton";
 import LogoFrame from "@/components/ui/LogoFrame";
 import Reveal from "@/components/ui/Reveal";
-import SectionHeader from "@/components/ui/SectionHeader";
+import { Eye, PencilLine } from "lucide-react";
 import { getSessionFromCookies } from "@/lib/auth";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
@@ -135,10 +135,32 @@ export default async function DashboardPage({
                 amount={0.15}
               >
                 <Card
-                   className={`border border-surface/80 border-l-4 ${status.dashboardCardToneClassName} ${status.dashboardCardSurfaceClassName} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5 lg:p-4 2xl:p-5`}
+                   className={`relative border border-surface/80 border-l-4 ${status.dashboardCardToneClassName} ${status.dashboardCardSurfaceClassName} p-3 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5 lg:p-4 2xl:p-5`}
                 >
+                  <div className="absolute top-3 right-3 flex flex-col gap-2 sm:hidden">
+                    <LinkButton
+                      href={`/dashboard/beneficios/${b.id}`}
+                      variant="muted"
+                      size="icon-sm"
+                      aria-label="Ver detalle del cupón"
+                      title="Ver detalle"
+                    >
+                      <Eye className="h-4 w-4" aria-hidden="true" />
+                      <span className="sr-only">Ver detalle</span>
+                    </LinkButton>
+                    <LinkButton
+                      href={`/dashboard/beneficios/${b.id}/editar`}
+                      variant="outline"
+                      size="icon-sm"
+                      aria-label="Editar cupón"
+                      title="Editar cupón"
+                    >
+                      <PencilLine className="h-4 w-4" aria-hidden="true" />
+                      <span className="sr-only">Editar</span>
+                    </LinkButton>
+                  </div>
                    <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-between sm:gap-4 lg:gap-3 2xl:gap-4">
-                    <div className="min-w-0 flex-1">
+                     <div className="min-w-0 flex-1 pr-14 sm:pr-0">
                        <div className="mb-1.5 flex flex-wrap items-center gap-1.5 sm:mb-2 sm:gap-2 lg:mb-1.5 2xl:mb-2">
                          <h3 className="truncate text-base font-semibold text-text-primary sm:text-lg lg:text-base 2xl:text-lg">
                           {b.descripcion}
@@ -174,24 +196,36 @@ export default async function DashboardPage({
                       </div>
                     </div>
 
-                     <div className="flex w-full shrink-0 items-center justify-between gap-2 sm:w-auto sm:self-stretch sm:flex-col sm:items-end sm:justify-between sm:gap-1.5 2xl:gap-2">
-                      <ShareButtons
-                        url={shareUrl}
-                        descripcion={b.descripcion}
-                        nombreLocal={local.nombre!}
-                        fechaExpiracion={b.fechaExpiracion}
-                      />
-                      <LinkButton
-                        href={`/dashboard/beneficios/${b.id}`}
-                        variant="muted"
-                        size="sm"
-                         className="min-h-8 w-auto px-2.5 py-1.5 text-xs sm:mt-auto sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm lg:min-h-8 lg:px-2.5 lg:text-xs 2xl:min-h-9 2xl:px-3 2xl:text-sm"
-                       >
-                        Ver detalle
-                      </LinkButton>
-                    </div>
-                  </div>
-                </Card>
+                     <div className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:self-stretch sm:items-end sm:justify-between sm:gap-1.5 2xl:gap-2">
+                        <div className="flex items-start justify-between gap-2 sm:justify-end">
+                          <ShareButtons
+                            url={shareUrl}
+                            descripcion={b.descripcion}
+                            nombreLocal={local.nombre!}
+                            fechaExpiracion={b.fechaExpiracion}
+                          />
+                        </div>
+                       <div className="hidden w-full grid-cols-2 gap-2 sm:mt-auto sm:flex sm:w-auto sm:grid-cols-none">
+                         <LinkButton
+                           href={`/dashboard/beneficios/${b.id}/editar`}
+                           variant="outline"
+                           size="sm"
+                           className="min-h-10 justify-center px-3 text-sm sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm lg:min-h-8 lg:px-2.5 lg:text-xs 2xl:min-h-9 2xl:px-3 2xl:text-sm"
+                         >
+                           Editar
+                         </LinkButton>
+                         <LinkButton
+                           href={`/dashboard/beneficios/${b.id}`}
+                           variant="muted"
+                           size="sm"
+                           className="min-h-10 justify-center px-3 text-sm sm:min-h-9 sm:w-auto sm:px-3 sm:py-2 sm:text-sm lg:min-h-8 lg:px-2.5 lg:text-xs 2xl:min-h-9 2xl:px-3 2xl:text-sm"
+                         >
+                           Ver detalle
+                         </LinkButton>
+                       </div>
+                     </div>
+                   </div>
+                 </Card>
               </Reveal>
             );
           })}

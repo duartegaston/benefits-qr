@@ -16,7 +16,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/AlertDialog";
 
-export default function DeleteBeneficioButton({ id }: { id: string }) {
+type DeleteBeneficioButtonProps = {
+  id: string;
+  iconOnly?: boolean;
+  className?: string;
+};
+
+export default function DeleteBeneficioButton({ id, iconOnly = false, className }: DeleteBeneficioButtonProps) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,13 +36,20 @@ export default function DeleteBeneficioButton({ id }: { id: string }) {
 
   return (
     <>
-      <AlertDialog open={confirming} onOpenChange={(nextOpen) => !loading && setConfirming(nextOpen)}>
-        <AlertDialogTrigger asChild>
-          <Button onClick={() => setConfirming(true)} variant="danger" size="sm">
+        <AlertDialog open={confirming} onOpenChange={(nextOpen) => !loading && setConfirming(nextOpen)}>
+          <AlertDialogTrigger asChild>
+          <Button
+            onClick={() => setConfirming(true)}
+            variant="danger"
+            size={iconOnly ? "icon-sm" : "sm"}
+            className={iconOnly ? `p-0 ${className ?? ""}`.trim() : className}
+            aria-label="Eliminar cupón"
+            title="Eliminar cupón"
+          >
             <Trash2 className="h-4 w-4" aria-hidden="true" />
-            <span className="hidden sm:inline">Eliminar cupón</span>
+            {iconOnly ? <span className="sr-only">Eliminar cupón</span> : <span className="hidden sm:inline">Eliminar cupón</span>}
           </Button>
-        </AlertDialogTrigger>
+          </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Eliminar cupón</AlertDialogTitle>

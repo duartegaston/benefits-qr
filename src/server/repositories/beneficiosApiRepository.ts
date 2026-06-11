@@ -1,5 +1,17 @@
+import { EstadoReclamo, Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { EstadoReclamo } from "@/generated/prisma/client";
+
+type BeneficioTxClient = Prisma.TransactionClient;
+
+export type BeneficioEditRecord = {
+  id: string;
+  descripcion: string;
+  fechaExpiracion: Date;
+  maxUsos: number | null;
+  diasValidos: number[];
+  esPublico: boolean;
+  localId: string;
+};
 
 export async function findBeneficiosByLocal(localId: string) {
   return prisma.beneficio.findMany({
@@ -41,6 +53,69 @@ export async function findBeneficioPublicById(id: string) {
 export async function findBeneficioOwnedByLocal(id: string, localId: string) {
   return prisma.beneficio.findFirst({
     where: { id, localId, deletedAt: null },
+  });
+}
+
+export async function findBeneficioEditByLocal(id: string, localId: string) {
+  return prisma.beneficio.findFirst({
+    where: { id, localId, deletedAt: null },
+    select: {
+      id: true,
+      descripcion: true,
+      fechaExpiracion: true,
+      maxUsos: true,
+      diasValidos: true,
+      esPublico: true,
+      reclamos: {
+        select: {
+          id: true,
+          estado: true,
+        },
+      },
+    },
+  });
+}
+
+export async function findBeneficioOwnedByLocalForUpdate(
+  tx: BeneficioTxClient,
+  id: string,
+  localId: string,
+) {
+  return tx.beneficio.findFirst({
+    where: { id, localId, deletedAt: null },
+    select: {
+      id: true,
+      descripcion: true,
+      fechaExpiracion: true,
+      maxUsos: true,
+      diasValidos: true,
+      esPublico: true,
+      localId: true,
+    },
+  });
+}
+
+export async function countBeneficioReclamosByEstados(
+  tx: BeneficioTxClient,
+  beneficioId: string,
+  estados: EstadoReclamo[],
+) {
+  return tx.reclamo.count({
+    where: {
+      beneficioId,
+      estado: { in: estados },
+    },
+  });
+}
+
+export async function updateBeneficioPartial(
+  tx: BeneficioTxClient,
+  id: string,
+  data: Partial<Pick<BeneficioEditRecord, "descripcion" | "fechaExpiracion" | "maxUsos" | "diasValidos" | "esPublico">>,
+) {
+  return tx.beneficio.update({
+    where: { id },
+    data,
   });
 }
 

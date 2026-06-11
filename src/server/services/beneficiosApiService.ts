@@ -1,12 +1,17 @@
-import { EstadoReclamo } from "@/generated/prisma/client";
+import { EstadoReclamo, Prisma } from "@/generated/prisma/client";
 import { getCurrentISODateInArgentina } from "@/lib/argentinaTime";
+import { prisma } from "@/lib/prisma";
 import {
+  countBeneficioReclamosByEstados,
   createBeneficio,
+  findBeneficioEditByLocal,
   findBeneficioOwnedByLocal,
+  findBeneficioOwnedByLocalForUpdate,
   findBeneficioPublicById,
   findBeneficioStatsByLocal,
   findBeneficiosByLocal,
   softDeleteBeneficioAndDeleteReclamos,
+  updateBeneficioPartial,
 } from "@/server/repositories/beneficiosApiRepository";
 
 type ServiceError = {
@@ -14,7 +19,131 @@ type ServiceError = {
   status: number;
   error: string;
   code: string;
+  message?: string;
+  field?: string;
 };
+
+type BeneficioWritableInput = {
+  descripcion?: unknown;
+  fechaExpiracion?: unknown;
+  maxUsos?: unknown;
+  diasValidos?: unknown;
+  esPublico?: unknown;
+};
+
+type NormalizedBeneficioInput = Partial<{
+  descripcion: string;
+  fechaExpiracion: Date;
+  maxUsos: number | null;
+  diasValidos: number[];
+  esPublico: boolean;
+}>;
+
+function createServiceError(status: number, code: string, message: string, field?: string): ServiceError {
+  return {
+    ok: false,
+    status,
+    error: message,
+    code,
+    message,
+    field,
+  };
+}
+
+function hasOwnInputField(input: BeneficioWritableInput, key: keyof BeneficioWritableInput) {
+  return Object.prototype.hasOwnProperty.call(input, key);
+}
+
+function normalizeDiasValidos(value: unknown) {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter(
+    (day): day is number => typeof day === "number" && Number.isInteger(day) && day >= 0 && day <= 6,
+  );
+}
+
+function normalizeBeneficioInput(
+  input: BeneficioWritableInput,
+  options?: {
+    requireDescripcion?: boolean;
+    requireFechaExpiracion?: boolean;
+  },
+): { ok: true; data: NormalizedBeneficioInput } | ServiceError {
+  const normalized: NormalizedBeneficioInput = {};
+
+  if (hasOwnInputField(input, "descripcion")) {
+    if (typeof input.descripcion !== "string") {
+      return createServiceError(400, "INVALID_DESCRIPCION", "Descripción inválida (máx. 40 caracteres)", "descripcion");
+    }
+
+    const descripcion = input.descripcion.trim();
+    if (descripcion.length === 0 || descripcion.length > 40) {
+      return createServiceError(400, "INVALID_DESCRIPCION", "Descripción inválida (máx. 40 caracteres)", "descripcion");
+    }
+
+    normalized.descripcion = descripcion;
+  } else if (options?.requireDescripcion) {
+    return createServiceError(400, "INVALID_DESCRIPCION", "Descripción inválida (máx. 40 caracteres)", "descripcion");
+  }
+
+  if (hasOwnInputField(input, "fechaExpiracion")) {
+    if (typeof input.fechaExpiracion !== "string" || input.fechaExpiracion.length === 0) {
+      return createServiceError(400, "INVALID_FECHA_EXPIRACION", "Fecha de expiración requerida", "fechaExpiracion");
+    }
+
+    const expiryDate = new Date(`${input.fechaExpiracion}T23:59:59-03:00`);
+    if (Number.isNaN(expiryDate.getTime())) {
+      return createServiceError(400, "INVALID_FECHA_EXPIRACION", "Fecha de expiración inválida", "fechaExpiracion");
+    }
+
+    const todayAR = getCurrentISODateInArgentina();
+    if (input.fechaExpiracion < todayAR) {
+      return createServiceError(
+        400,
+        "PAST_FECHA_EXPIRACION",
+        "La fecha de expiración no puede ser anterior a hoy",
+        "fechaExpiracion",
+      );
+    }
+
+    normalized.fechaExpiracion = expiryDate;
+  } else if (options?.requireFechaExpiracion) {
+    return createServiceError(400, "INVALID_FECHA_EXPIRACION", "Fecha de expiración requerida", "fechaExpiracion");
+  }
+
+  if (hasOwnInputField(input, "maxUsos")) {
+    if (input.maxUsos === null) {
+      normalized.maxUsos = null;
+    } else if (
+      typeof input.maxUsos !== "number" ||
+      !Number.isInteger(input.maxUsos) ||
+      input.maxUsos < 1
+    ) {
+      return createServiceError(
+        400,
+        "INVALID_MAX_USOS",
+        "La cantidad máxima de usos debe ser un número entero positivo",
+        "maxUsos",
+      );
+    } else {
+      normalized.maxUsos = input.maxUsos;
+    }
+  }
+
+  if (hasOwnInputField(input, "diasValidos")) {
+    normalized.diasValidos = normalizeDiasValidos(input.diasValidos);
+  }
+
+  if (hasOwnInputField(input, "esPublico")) {
+    normalized.esPublico = input.esPublico === true;
+  }
+
+  return { ok: true, data: normalized };
+}
+
+function isSerializableTransactionError(error: unknown) {
+  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034";
+}
 
 export async function listBeneficiosByLocal(localId: string) {
   const beneficios = await findBeneficiosByLocal(localId);
@@ -36,79 +165,139 @@ export async function listBeneficiosByLocal(localId: string) {
 
 export async function createBeneficioFlow(
   localId: string,
-  input: {
-    descripcion?: unknown;
-    fechaExpiracion?: unknown;
-    maxUsos?: unknown;
-    diasValidos?: unknown;
-    esPublico?: unknown;
-  }
+  input: BeneficioWritableInput,
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
-  const { descripcion, fechaExpiracion, maxUsos, diasValidos, esPublico } = input;
-
-  if (typeof descripcion !== "string" || descripcion.trim().length === 0 || descripcion.trim().length > 40) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Descripción inválida (máx. 40 caracteres)",
-      code: "INVALID_DESCRIPCION",
-    };
+  const normalized = normalizeBeneficioInput(input, {
+    requireDescripcion: true,
+    requireFechaExpiracion: true,
+  });
+  if (!normalized.ok) {
+    return normalized;
   }
-
-  if (!fechaExpiracion || typeof fechaExpiracion !== "string") {
-    return {
-      ok: false,
-      status: 400,
-      error: "Fecha de expiración requerida",
-      code: "INVALID_FECHA_EXPIRACION",
-    };
-  }
-
-  const expiryDate = new Date(`${fechaExpiracion}T23:59:59-03:00`);
-  if (isNaN(expiryDate.getTime())) {
-    return {
-      ok: false,
-      status: 400,
-      error: "Fecha de expiración inválida",
-      code: "INVALID_FECHA_EXPIRACION",
-    };
-  }
-
-  const todayAR = getCurrentISODateInArgentina();
-  if (fechaExpiracion < todayAR) {
-    return {
-      ok: false,
-      status: 400,
-      error: "La fecha de expiración no puede ser anterior a hoy",
-      code: "PAST_FECHA_EXPIRACION",
-    };
-  }
-
-  if (maxUsos !== undefined && maxUsos !== null) {
-    if (typeof maxUsos !== "number" || !Number.isInteger(maxUsos) || maxUsos < 1) {
-      return {
-        ok: false,
-        status: 400,
-        error: "La cantidad máxima de usos debe ser un número entero positivo",
-        code: "INVALID_MAX_USOS",
-      };
-    }
-  }
-
-  const dias: number[] = Array.isArray(diasValidos)
-    ? diasValidos.filter((d: unknown) => typeof d === "number" && d >= 0 && d <= 6)
-    : [];
 
   const beneficio = await createBeneficio({
-    descripcion: descripcion.trim(),
-    fechaExpiracion: expiryDate,
-    maxUsos: (maxUsos as number | null) || null,
-    diasValidos: dias,
-    esPublico: esPublico === true,
+    descripcion: normalized.data.descripcion!,
+    fechaExpiracion: normalized.data.fechaExpiracion!,
+    maxUsos: normalized.data.maxUsos ?? null,
+    diasValidos: normalized.data.diasValidos ?? [],
+    esPublico: normalized.data.esPublico ?? false,
     localId,
   });
 
   return { ok: true, status: 201, data: beneficio };
+}
+
+export async function getBeneficioEditPageData(id: string, localId: string) {
+  const beneficio = await findBeneficioEditByLocal(id, localId);
+
+  if (!beneficio) {
+    return null;
+  }
+
+  const canjeados = beneficio.reclamos.filter((reclamo) => reclamo.estado === EstadoReclamo.CANJEADO).length;
+  const activeReclamos = beneficio.reclamos.filter(
+    (reclamo) => reclamo.estado === EstadoReclamo.CANJEADO || reclamo.estado === EstadoReclamo.PENDIENTE,
+  ).length;
+
+  return {
+    id: beneficio.id,
+    initialData: {
+      descripcion: beneficio.descripcion,
+      fechaExpiracion: getCurrentISODateInArgentina(beneficio.fechaExpiracion),
+      maxUsos: beneficio.maxUsos,
+      diasValidos: beneficio.diasValidos,
+      esPublico: beneficio.esPublico,
+    },
+    constraints: {
+      canjeados,
+      activeReclamos,
+      maxUsos: beneficio.maxUsos,
+      isUnlimited: beneficio.maxUsos === null,
+    },
+  };
+}
+
+export async function updateBeneficioFlow(
+  localId: string,
+  id: string,
+  input: BeneficioWritableInput,
+): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
+  const normalized = normalizeBeneficioInput(input);
+  if (!normalized.ok) {
+    return normalized;
+  }
+
+  const runAttempt = async () => {
+    return prisma.$transaction(
+      async (tx) => {
+        const beneficio = await findBeneficioOwnedByLocalForUpdate(tx, id, localId);
+
+        if (!beneficio) {
+          return createServiceError(404, "BENEFICIO_NOT_FOUND", "Cupón no encontrado");
+        }
+
+        if (
+          normalized.data.fechaExpiracion &&
+          normalized.data.fechaExpiracion.getTime() < beneficio.fechaExpiracion.getTime()
+        ) {
+          const activeReclamos = await countBeneficioReclamosByEstados(tx, id, [
+            EstadoReclamo.PENDIENTE,
+            EstadoReclamo.CANJEADO,
+          ]);
+
+          if (activeReclamos > 0) {
+            return createServiceError(
+              400,
+              "ACTIVE_RECLAMOS_BLOCK_EXPIRY_SHORTEN",
+              "No podés acortar la vigencia mientras existan reclamos activos o ya canjeados.",
+              "fechaExpiracion",
+            );
+          }
+        }
+
+        if (normalized.data.maxUsos !== undefined && normalized.data.maxUsos !== null) {
+          const canjeados = await countBeneficioReclamosByEstados(tx, id, [EstadoReclamo.CANJEADO]);
+
+          if (normalized.data.maxUsos < canjeados) {
+            return createServiceError(
+              400,
+              "MAX_USOS_BELOW_CANJEADOS",
+              `No podés definir menos de ${canjeados} usos porque ya fueron canjeados.`,
+              "maxUsos",
+            );
+          }
+        }
+
+        if (Object.keys(normalized.data).length === 0) {
+          return { ok: true as const, status: 200, data: beneficio };
+        }
+
+        const updatedBeneficio = await updateBeneficioPartial(tx, id, normalized.data);
+        return { ok: true as const, status: 200, data: updatedBeneficio };
+      },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+      },
+    );
+  };
+
+  try {
+    return await runAttempt();
+  } catch (error) {
+    if (!isSerializableTransactionError(error)) {
+      throw error;
+    }
+  }
+
+  try {
+    return await runAttempt();
+  } catch (error) {
+    if (isSerializableTransactionError(error)) {
+      return createServiceError(500, "BENEFICIO_UPDATE_RETRY_FAILED", "No pudimos guardar el cupón. Intentá de nuevo.");
+    }
+
+    throw error;
+  }
 }
 
 export async function getBeneficioById(

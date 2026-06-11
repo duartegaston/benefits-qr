@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download, PencilLine } from "lucide-react";
 import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
@@ -64,36 +64,61 @@ export default async function BeneficioStatsPage({
 
       <Card className="relative mb-6 border-surface/80 bg-surface/95 p-4 shadow-sm shadow-accent-soft/25 sm:bg-surface/85 sm:p-6 lg:p-5 2xl:p-6">
         <div className="flex flex-col gap-5 lg:gap-4 2xl:gap-5">
-          <div className="flex flex-col gap-4 lg:gap-3 2xl:gap-4">
-            <div className="min-w-0 flex-1 space-y-2 pr-12 sm:pr-36">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
-                  {beneficio.descripcion}
-                </h1>
-                {isDeleted ? (
-                  <Badge variant="danger">Eliminado</Badge>
-                ) : (
-                  <Badge variant={benefitStatus.badgeVariant}>{benefitStatus.label}</Badge>
-                )}
-                <Badge variant={beneficio.esPublico ? "primary" : "secondary"}>
-                  {beneficio.esPublico ? "Público" : "Privado"}
-                </Badge>
+          <div className="flex flex-col gap-4 pr-14 sm:pr-0 lg:gap-3 2xl:gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
+                    {beneficio.descripcion}
+                  </h1>
+                  {isDeleted ? (
+                    <Badge variant="danger">Eliminado</Badge>
+                  ) : (
+                    <Badge variant={benefitStatus.badgeVariant}>{benefitStatus.label}</Badge>
+                  )}
+                  <Badge variant={beneficio.esPublico ? "primary" : "secondary"}>
+                    {beneficio.esPublico ? "Público" : "Privado"}
+                  </Badge>
+                </div>
+                <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
+                  Vence: {formatDateAR(beneficio.fechaExpiracion)}
+                  {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
+                </p>
+                <p className="text-xs font-medium text-text-muted sm:text-sm lg:text-[13px] 2xl:text-sm">
+                  {formatDiasValidosSentence(beneficio.diasValidos)}
+                </p>
               </div>
-              <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
-                Vence: {formatDateAR(beneficio.fechaExpiracion)}
-                {beneficio.maxUsos && ` · Máx. ${beneficio.maxUsos} usos`}
-              </p>
-              <p className="text-xs font-medium text-text-muted sm:text-sm lg:text-[13px] 2xl:text-sm">
-                {formatDiasValidosSentence(beneficio.diasValidos)}
-              </p>
-            </div>
 
-            {!isDeleted && (
-              <div className="absolute right-4 top-4 sm:right-6 sm:top-6">
-                <DeleteBeneficioButton id={beneficio.id} />
-              </div>
-            )}
+              {!isDeleted ? (
+                <div className="hidden shrink-0 sm:flex sm:items-start sm:justify-end sm:gap-2">
+                  <DeleteBeneficioButton id={beneficio.id} />
+                  <LinkButton
+                    href={`/dashboard/beneficios/${beneficio.id}/editar`}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Editar
+                  </LinkButton>
+                </div>
+              ) : null}
+            </div>
           </div>
+
+          {!isDeleted ? (
+            <div className="absolute top-4 right-4 flex flex-col items-end gap-2 sm:hidden">
+              <DeleteBeneficioButton id={beneficio.id} iconOnly />
+              <LinkButton
+                href={`/dashboard/beneficios/${beneficio.id}/editar`}
+                variant="outline"
+                size="icon-sm"
+                aria-label="Editar cupón"
+                title="Editar cupón"
+              >
+                <PencilLine className="h-4 w-4" aria-hidden="true" />
+                <span className="sr-only">Editar cupón</span>
+              </LinkButton>
+            </div>
+          ) : null}
 
           <div className="space-y-2">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-text-muted lg:text-[10px] 2xl:text-[11px]">
