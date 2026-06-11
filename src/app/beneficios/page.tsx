@@ -64,7 +64,7 @@ export default async function BeneficiosPage({
         <SectionHeader
           eyebrow="Catálogo público"
           title="Beneficios"
-          description="Todos los cupones públicos, priorizando primero los que todavía están disponibles."
+          description="Encontrá descuentos cerca tuyo, reclamalos hoy y canjealos en el local presentando el QR."
           align="left"
           className="mb-6 max-w-2xl"
         />
