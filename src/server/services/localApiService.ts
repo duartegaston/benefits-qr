@@ -57,6 +57,10 @@ type ServiceError = {
   code: string;
 };
 
+export type UploadLogoSuccess = {
+  url: string;
+};
+
 export async function getLocalMeFlow(localId: string) {
   const local = await findLocalById(localId);
   if (!local) return { ok: false as const, status: 404, error: "Local no encontrado", code: "NOT_FOUND" };
@@ -73,9 +77,10 @@ export async function updateLocalMeFlow(
     placeId?: unknown;
     telefono?: unknown;
     rubroId?: unknown;
+    logo?: unknown;
   }
 ): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
-  const { nombre, direccion, lat, lng, placeId, telefono, rubroId } = input;
+  const { nombre, direccion, lat, lng, placeId, telefono, rubroId, logo } = input;
 
   if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
     return { ok: false, status: 400, error: "El nombre es requerido", code: "NOMBRE_REQUIRED" };
@@ -115,6 +120,22 @@ export async function updateLocalMeFlow(
     return { ok: false, status: 400, error: "El rubro es requerido", code: "RUBRO_REQUIRED" };
   }
 
+  let logoUrl: string | undefined;
+
+  if (logo != null) {
+    if (!(logo instanceof File)) {
+      return { ok: false, status: 400, error: "Archivo inválido", code: "INVALID_FILE" };
+    }
+
+    const logoResult = await uploadLogoFlow(localId, logo);
+
+    if (!logoResult.ok) {
+      return logoResult;
+    }
+
+    logoUrl = logoResult.data.url;
+  }
+
   const local = await updateLocalProfile(localId, {
     nombre: nombre.trim(),
     direccion: direccion.trim(),
@@ -123,6 +144,7 @@ export async function updateLocalMeFlow(
     placeId: typeof placeId === "string" && placeId.trim() !== "" ? placeId.trim() : null,
     telefono: telefono.trim() || null,
     rubroId,
+    ...(logoUrl ? { logoUrl } : {}),
   });
 
   return { ok: true, status: 200, data: { ok: true, local } };
@@ -131,7 +153,7 @@ export async function updateLocalMeFlow(
 export async function uploadLogoFlow(
   localId: string,
   file: File | null
-): Promise<{ ok: true; status: number; data: unknown } | ServiceError> {
+): Promise<{ ok: true; status: number; data: UploadLogoSuccess } | ServiceError> {
   if (!file) {
     return { ok: false, status: 400, error: "Archivo requerido", code: "FILE_REQUIRED" };
   }
