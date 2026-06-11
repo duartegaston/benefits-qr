@@ -13,13 +13,20 @@ const STEPS = [
   },
   {
     number: "02",
+    title: "Compartilo donde quieras",
+    description: "Difundilo por WhatsApp, Instagram o con un link directo para que llegue rápido a tus clientes.",
+    imageSrc: "/Fotos-iphone/dashboard.jpeg",
+    imageAlt: "Opciones para compartir un cupón de BenefitQR",
+  },
+  {
+    number: "03",
     title: "El cliente genera su QR",
     description: "Abre el beneficio, completa sus datos y genera el QR para mostrarlo en el local.",
     imageSrc: "/Fotos-iphone/cuponCliente.jpeg",
     imageAlt: "Cliente generando su QR para mostrar en el negocio",
   },
   {
-    number: "03",
+    number: "04",
     title: "El negocio lo escanea",
     description: "Desde la app del negocio escaneás el QR del cliente y validás el canje en el momento.",
     imageSrc: "/Fotos-iphone/qrScann.jpeg",
@@ -38,8 +45,8 @@ export default function HowItWorks() {
         <Reveal y={20} amount={0.35}>
           <SectionHeader
             eyebrow="Cómo funciona"
-            title="Tres pasos, sin complicaciones"
-            description="Una experiencia clara: crear, mostrar el QR y validarlo sin fricción."
+            title="Cuatro pasos, de punta a punta"
+            description="Desde crear el cupón hasta escanear el QR, el recorrido completo se entiende de un vistazo."
             className="max-w-2xl lg:mb-10 lg:text-left 2xl:mb-12 [&>span]:lg:mb-2 [&>span]:lg:text-xs [&>h2]:lg:text-3xl [&>p]:lg:text-sm"
             align="left"
           />
@@ -47,7 +54,7 @@ export default function HowItWorks() {
 
         <HowItWorksMobileCarousel steps={STEPS} />
 
-        <div className="hidden lg:grid lg:grid-cols-3 lg:gap-5 2xl:gap-6">
+        <div className="hidden lg:grid lg:grid-cols-2 lg:gap-5 xl:grid-cols-4 2xl:gap-6">
           {STEPS.map((step, index) => (
             <Reveal
               key={step.number}

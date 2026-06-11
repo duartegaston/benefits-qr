@@ -25,12 +25,6 @@ export type DashboardNavItem = {
 export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
   { href: "/dashboard", label: "Inicio", key: "inicio", icon: House },
   {
-    href: "/dashboard/estadisticas",
-    label: "Estadísticas",
-    key: "estadisticas",
-    icon: BarChart3,
-  },
-  {
     href: "/dashboard/escanear",
     label: "QR",
     key: "escanear",
@@ -44,6 +38,12 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
     icon: PlusCircle,
   },
   {
+    href: "/dashboard/estadisticas",
+    label: "Estadísticas",
+    key: "estadisticas",
+    icon: BarChart3,
+  },
+  {
     href: "/dashboard/perfil",
     label: "Perfil",
     key: "perfil",
@@ -53,8 +53,9 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
 
 export function getDashboardActiveKey(
   pathname: string,
-  _hash: string
+  hash: string
 ): DashboardNavKey {
+  void hash;
   if (pathname === "/dashboard/escanear") return "escanear";
   if (pathname === "/dashboard/beneficios/nuevo") return "crear";
   if (pathname.startsWith("/dashboard/beneficios/")) return "inicio";
