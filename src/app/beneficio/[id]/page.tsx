@@ -82,6 +82,9 @@ export default async function BeneficioPublicoPage({
   const tieneRestriccion = diasValidos.length > 0;
   const diasValidosOrdenados = sortDiasValidos(diasValidos);
   const localName = beneficio.local.nombre ?? "Local adherido";
+  const mapsUrl = beneficio.local.direccion
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(beneficio.local.direccion)}`
+    : null;
   const availability = getBeneficioAvailabilityPresentation({
     status: beneficioState.status,
     isWrongDay: beneficioState.isWrongDay,
@@ -177,10 +180,18 @@ export default async function BeneficioPublicoPage({
 
               {beneficio.local.direccion && (
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="muted" className="gap-1.5 px-3 py-1">
-                    <MapPinned className="h-3.5 w-3.5" aria-hidden="true" />
-                    <span className="line-clamp-1 max-w-[240px]">{beneficio.local.direccion}</span>
-                  </Badge>
+                  <a
+                    href={mapsUrl ?? undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex max-w-full rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    aria-label={`Abrir ${beneficio.local.direccion} en Google Maps`}
+                  >
+                    <Badge variant="muted" className="gap-1.5 px-3 py-1 transition-colors hover:bg-border-default">
+                      <MapPinned className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span className="line-clamp-1 max-w-[240px]">{beneficio.local.direccion}</span>
+                    </Badge>
+                  </a>
                 </div>
               )}
 
