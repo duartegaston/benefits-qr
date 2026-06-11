@@ -2,12 +2,14 @@ import ShareButtons from "@/components/local/dashboard/ShareButtons";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
 import LinkButton from "@/components/ui/LinkButton";
+import LogoFrame from "@/components/ui/LogoFrame";
 import Reveal from "@/components/ui/Reveal";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getSessionFromCookies } from "@/lib/auth";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import { formatDateAR } from "@/lib/dates";
 import { UserType } from "@/lib/enums";
+import { getLocalLogoDisplayUrl } from "@/lib/localLogoSource";
 import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
 import { getDashboardPageData } from "@/server/services/dashboardService";
 import { redirect } from "next/navigation";
@@ -38,6 +40,11 @@ export default async function DashboardPage({
   if (local.nombre === null) redirect("/onboarding");
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const localName = local.nombre ?? "Local adherido";
+  const localLogoDisplayUrl = getLocalLogoDisplayUrl({
+    localId: local.id,
+    logoUrl: local.logoUrl,
+  });
 
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16 lg:max-w-4xl lg:pt-7 lg:pb-14 2xl:max-w-5xl 2xl:pt-8 2xl:pb-16">
@@ -54,25 +61,18 @@ export default async function DashboardPage({
           <div className="flex items-start justify-between gap-4 lg:gap-3 2xl:gap-4">
             <div className="flex min-w-0 items-start gap-4">
               <div className="shrink-0">
-                {local.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={local.logoUrl}
-                    alt={`Logo de ${local.nombre}`}
-                   className="h-16 w-16 rounded-2xl object-cover sm:h-20 sm:w-20 lg:h-[4.5rem] lg:w-[4.5rem] 2xl:h-20 2xl:w-20"
-                  />
-                ) : (
-                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-soft sm:h-20 sm:w-20 lg:h-[4.5rem] lg:w-[4.5rem] 2xl:h-20 2xl:w-20">
-                     <span className="text-2xl font-bold text-primary sm:text-3xl lg:text-[1.625rem] 2xl:text-3xl">
-                      {local.nombre!.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
-                    </span>
-                  </div>
-                )}
+                <LogoFrame
+                  src={localLogoDisplayUrl}
+                  alt={`Logo de ${localName}`}
+                  name={localName}
+                  className="h-16 w-16 sm:h-20 sm:w-20 lg:h-[4.5rem] lg:w-[4.5rem] 2xl:h-20 2xl:w-20"
+                  fallbackClassName="text-2xl sm:text-3xl lg:text-[1.625rem] 2xl:text-3xl"
+                />
               </div>
                 <div className="min-w-0 space-y-0.5 lg:space-y-0">
                   <h1 className="text-lg font-bold leading-tight text-text-primary sm:text-xl lg:text-lg 2xl:text-xl">
-                   {local.nombre}
-                 </h1>
+                    {localName}
+                  </h1>
                   <p className="break-all text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
                    {local.email}
                  </p>

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Map, AdvancedMarker, useMap, InfoWindow, useApiIsLoaded } from "@vis.gl/react-google-maps";
 import { Store, AlertCircle } from "lucide-react";
+import LogoFrame from "@/components/ui/LogoFrame";
 import type { LocalConBeneficiosRaw } from "@/server/repositories/localesMapRepository";
 import type { LatLng } from "@/lib/geo/distance";
 import { formatDistance, haversineKm } from "@/lib/geo/distance";
@@ -80,11 +81,13 @@ function LocalMarker({
         }`}
       >
         {local.logoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <LogoFrame
             src={local.logoUrl}
-            alt={name}
-            className="h-full w-full rounded-full object-cover"
+            alt={`Logo de ${name}`}
+            name={name}
+            shape="circle"
+            className="h-full w-full rounded-full bg-transparent shadow-none"
+            fallbackClassName="text-sm"
           />
         ) : (
           <span className="text-sm font-bold">{initials}</span>

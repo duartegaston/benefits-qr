@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getSessionFromCookies } from "@/lib/auth";
+import { getLocalLogoDisplayUrl } from "@/lib/localLogoSource";
 import { prisma } from "@/lib/prisma";
 import { UserType } from "@/lib/enums";
 import OnboardingForm from "@/components/local/onboarding/OnboardingForm";
@@ -19,6 +20,11 @@ export default async function OnboardingPage() {
     redirect("/dashboard");
   }
 
+  const initialLogoSrc = getLocalLogoDisplayUrl({
+    localId: local.id,
+    logoUrl: local.logoUrl,
+  });
+
   return (
     <main className="relative min-h-screen overflow-x-hidden px-4 py-10 sm:py-14">
       <div className="pointer-events-none absolute -top-32 -left-32 hidden h-120 w-120 rounded-full bg-primary/25 blur-3xl sm:block" />
@@ -30,7 +36,7 @@ export default async function OnboardingPage() {
         </Reveal>
 
         <Reveal delay={0.06} y={14} amount={0.25} className="w-full">
-          <OnboardingForm localId={local.id} email={local.email} logoUrl={local.logoUrl} />
+          <OnboardingForm email={local.email} initialLogoSrc={initialLogoSrc} />
         </Reveal>
       </div>
     </main>

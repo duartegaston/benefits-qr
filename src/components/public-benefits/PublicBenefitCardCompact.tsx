@@ -2,19 +2,10 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays, Ticket, MapPinned, Clock, MapPin } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
+import LogoFrame from "@/components/ui/LogoFrame";
 import { formatDateAR } from "@/lib/dates";
 import { formatDiasValidosSentence } from "@/lib/beneficioSchedule";
 import type { PublicBenefitCardData } from "@/server/services/publicBenefitsService";
-
-function getInitials(localName: string) {
-  return localName
-    .split(" ")
-    .map((word) => word[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-}
 
 export default function PublicBenefitCardCompact({
   benefit,
@@ -24,7 +15,6 @@ export default function PublicBenefitCardCompact({
   distanceLabel?: string | null;
 }) {
   const localName = benefit.local.nombre ?? "Local adherido";
-  const initials = getInitials(localName);
 
   return (
     <Link
@@ -34,14 +24,12 @@ export default function PublicBenefitCardCompact({
     >
       <Card className="overflow-hidden border-surface/80 bg-surface/95 shadow-sm shadow-primary-soft/25 transition-[transform,box-shadow,border-color] duration-200 group-hover:-translate-y-0.5 group-hover:border-primary/25 group-hover:shadow-md sm:bg-surface/85 sm:backdrop-blur-md">
         <div className="flex items-center gap-3 p-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
-            {benefit.local.logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={benefit.local.logoUrl} alt={localName} className="h-full w-full object-cover" />
-            ) : (
-              <span className="text-sm font-bold">{initials || "LO"}</span>
-            )}
-          </div>
+          <LogoFrame
+            src={benefit.local.logoUrl}
+            alt={`Logo de ${localName}`}
+            name={localName}
+            className="h-11 w-11 rounded-xl"
+          />
 
           <div className="min-w-0 flex-1 space-y-0.5">
             <div className="flex items-start justify-between gap-2">

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { requireLocalAuth } from "@/lib/auth";
 import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { getLocalLogoDisplayUrl } from "@/lib/localLogoSource";
 import { uploadLogoFlow } from "@/server/services/localApiService";
 
 export async function POST(req: NextRequest) {
@@ -16,5 +17,14 @@ export async function POST(req: NextRequest) {
     return apiError(result.error, result.status, result.code);
   }
 
-  return apiSuccess(result.data, result.status);
+  return apiSuccess(
+    {
+      ...result.data,
+      displayUrl: getLocalLogoDisplayUrl({
+        localId: session!.userId,
+        logoUrl: result.data.url,
+      }),
+    },
+    result.status
+  );
 }

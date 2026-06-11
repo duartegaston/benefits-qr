@@ -28,6 +28,7 @@ export async function updateLocalProfile(
     placeId: string | null;
     telefono: string | null;
     rubroId: number;
+    logoUrl?: string;
   }
 ) {
   return prisma.local.update({
