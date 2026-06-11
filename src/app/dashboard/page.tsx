@@ -49,14 +49,6 @@ export default async function DashboardPage({
   return (
     <main className="mx-auto max-w-5xl px-4 pt-6 pb-32 sm:px-6 sm:pt-8 sm:pb-16 lg:max-w-4xl lg:pt-7 lg:pb-14 2xl:max-w-5xl 2xl:pt-8 2xl:pb-16">
       <Reveal y={10} amount={0.2} className="mb-5 sm:mb-6">
-        <SectionHeader
-          eyebrow="Negocio"
-          title="Tus cupones"
-          description="Gestioná tus cupones, seguí los reclamos y validá canjes desde un solo lugar."
-          align="left"
-          className="!mb-5 sm:!mb-6 lg:!mb-5 2xl:!mb-6"
-        />
-
         <div className="rounded-2xl border border-surface/80 bg-surface/95 p-3 shadow-sm shadow-primary-soft/40 sm:bg-surface/85 sm:p-4 lg:p-3.5 2xl:p-4">
           <div className="flex items-start justify-between gap-4 lg:gap-3 2xl:gap-4">
             <div className="flex min-w-0 items-start gap-4">

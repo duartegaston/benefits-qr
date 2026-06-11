@@ -1,4 +1,4 @@
-import ClienteHeader from "@/components/cliente/mis-beneficios/ClienteHeader";
+import AuthenticatedNavbar from "@/components/auth/AuthenticatedNavbar";
 import { getClienteSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
 import { redirect } from "next/navigation";
@@ -16,8 +16,8 @@ export default async function MisBeneficiosLayout({
 
   return (
     <div className="min-h-screen">
-      <ClienteHeader />
-      <div className="px-0 lg:px-0">{children}</div>
+      <AuthenticatedNavbar logoutEndpoint="/api/auth/cliente/logout" />
+      <div className="px-0 pt-20 sm:pt-24 lg:px-0 lg:pt-24">{children}</div>
     </div>
   );
 }
