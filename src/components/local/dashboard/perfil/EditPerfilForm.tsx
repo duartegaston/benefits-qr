@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import LogoUpload from "@/components/local/LogoUpload";
+import LogoUpload, { type LogoFieldState } from "@/components/local/LogoUpload";
 import Input from "@/components/ui/Input";
 import PhoneInput from "@/components/ui/PhoneInput";
 import Button from "@/components/ui/Button";
@@ -20,6 +20,24 @@ interface EditPerfilFormProps {
   lat?: number | null;
   lng?: number | null;
   placeId?: string | null;
+}
+
+const LOGO_ERROR_CODES = new Set([
+  "INVALID_FILE",
+  "INVALID_FILE_TYPE",
+  "FILE_TOO_LARGE",
+  "IMAGE_PROCESSING_FAILED",
+  "IMAGE_TOO_HEAVY_AFTER_OPTIMIZATION",
+]);
+
+function createInitialLogoFieldState(src: string | null | undefined): LogoFieldState {
+  return {
+    src: src ?? null,
+    persistedSrc: src ?? null,
+    status: "idle",
+    message: null,
+    file: null,
+  };
 }
 
 export default function EditPerfilForm({
@@ -47,9 +65,21 @@ export default function EditPerfilForm({
   );
   const [telefono, setTelefono] = useState(initialTelefono ?? "+54");
   const [rubroId, setRubroId] = useState(initialRubroId ? String(initialRubroId) : "");
-  const [logoUrl, setLogoUrl] = useState(initialLogoUrl);
+  const [logoField, setLogoField] = useState<LogoFieldState>(() => createInitialLogoFieldState(initialLogoUrl));
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const submitDisabled = loading || logoField.status === "error";
+
+  const logoFeedback =
+    logoField.status === "error"
+      ? {
+          tone: "text-danger",
+          text: "Resolvé el logo para guardar los cambios.",
+        }
+      : {
+          tone: "text-text-muted",
+          text: "",
+        };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,24 +92,40 @@ export default function EditPerfilForm({
 
     setLoading(true);
 
+    const form = new FormData();
+    form.append("nombre", nombre);
+    form.append("direccion", address.direccion);
+    form.append("lat", String(address.lat));
+    form.append("lng", String(address.lng));
+    form.append("telefono", telefono);
+    form.append("rubroId", rubroId);
+
+    if (address.placeId) {
+      form.append("placeId", address.placeId);
+    }
+
+    if (logoField.file) {
+      form.append("logo", logoField.file);
+    }
+
     const res = await fetch("/api/local/me", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nombre,
-        direccion: address.direccion,
-        lat: address.lat,
-        lng: address.lng,
-        placeId: address.placeId,
-        telefono,
-        rubroId: Number(rubroId),
-      }),
+      body: form,
     });
 
-    const data = await res.json();
+    const data = (await res.json()) as { error?: string; code?: string };
     setLoading(false);
 
     if (!res.ok) {
+      if (data.code && LOGO_ERROR_CODES.has(data.code)) {
+        setLogoField((current) => ({
+          ...current,
+          status: "error",
+          message: data.error ?? "No se pudo guardar el logo. Elegí otra imagen.",
+          file: null,
+        }));
+      }
+
       setError(data.error ?? "Error al guardar");
       return;
     }
@@ -94,13 +140,19 @@ export default function EditPerfilForm({
       <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 lg:space-y-4 2xl:space-y-5">
         <div className="mb-1.5 flex flex-col items-center gap-1 lg:mb-1 2xl:mb-1.5">
           <LogoUpload
-            currentLogoUrl={logoUrl}
+            currentLogoUrl={logoField.persistedSrc}
             nombre={nombre || "?"}
-            onUploaded={(url) => setLogoUrl(url)}
+            value={logoField}
+            onChange={(state) => {
+              setError("");
+              setLogoField(state);
+            }}
           />
-          <p className="text-center text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
-            Logo del local. Podés cambiarlo cuando quieras.
-          </p>
+          {logoFeedback.text && (
+            <p aria-live="polite" className={`text-center text-xs ${logoFeedback.tone} lg:text-[11px] 2xl:text-xs`}>
+              {logoFeedback.text}
+            </p>
+          )}
         </div>
 
         <Input
@@ -151,7 +203,7 @@ export default function EditPerfilForm({
           </p>
         )}
 
-        <Button type="submit" loading={loading} className="w-full" size="lg">
+        <Button type="submit" loading={loading} disabled={submitDisabled} className="w-full" size="lg">
           Guardar cambios
         </Button>
       </form>

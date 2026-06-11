@@ -4,10 +4,10 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import LogoutButton from "@/components/auth/LogoutButton";
 import { getSessionFromCookies } from "@/lib/auth";
 import { UserType } from "@/lib/enums";
+import { getLocalLogoDisplayUrl } from "@/lib/localLogoSource";
 import { findLocalById } from "@/server/repositories/localApiRepository";
 
 import EditPerfilForm from "@/components/local/dashboard/perfil/EditPerfilForm";
-import { logoVersion } from "@/lib/logoVersion";
 
 export default async function EditPerfilPage() {
   const session = await getSessionFromCookies();
@@ -41,7 +41,7 @@ export default async function EditPerfilPage() {
           <EditPerfilForm
             email={local.email}
             nombre={local.nombre ?? ""}
-            logoUrl={local.logoUrl ? `/api/locales/${local.id}/logo?v=${logoVersion(local.logoUrl)}` : null}
+            logoUrl={getLocalLogoDisplayUrl({ localId: local.id, logoUrl: local.logoUrl })}
             direccion={local.direccion}
             telefono={local.telefono}
             rubroId={local.rubro?.id ?? null}
