@@ -95,6 +95,7 @@ async function _getPublicBenefitsCatalogRaw(
         l."logoUrl" AS "localLogoUrl",
         l.direccion AS "localDireccion",
         ru.nombre AS "localRubroNombre",
+        l.id AS "localId",
         (${AVAILABLE_CONDITION}) AS "isAvailable",
         CASE
           WHEN NOT (${AVAILABLE_CONDITION}) THEN 2
@@ -104,7 +105,18 @@ async function _getPublicBenefitsCatalogRaw(
             AND NOT (EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos"))
           ) THEN 1
           ELSE 0
-        END AS "sortRank"
+        END AS "sortRank",
+        ROW_NUMBER() OVER (PARTITION BY l.id ORDER BY
+          CASE
+            WHEN NOT (${AVAILABLE_CONDITION}) THEN 2
+            WHEN (
+              array_length(b."diasValidos", 1) IS NOT NULL
+              AND array_length(b."diasValidos", 1) > 0
+              AND NOT (EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos"))
+            ) THEN 1
+            ELSE 0
+          END ASC, b."createdAt" DESC
+        ) AS "localPriorityIndex"
       FROM "Beneficio" b
       JOIN "Local" l ON l.id = b."localId"
       LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
@@ -122,7 +134,7 @@ async function _getPublicBenefitsCatalogRaw(
     paged_beneficios_cte AS (
       SELECT *
       FROM filtered_beneficios_cte
-      ORDER BY "sortRank" ASC, "createdAt" DESC
+      ORDER BY "localPriorityIndex" ASC, "sortRank" ASC, "createdAt" DESC
       LIMIT ${pageSize} OFFSET ${offset}
     )
     SELECT
@@ -144,7 +156,7 @@ async function _getPublicBenefitsCatalogRaw(
                 'direccion', b."localDireccion"
               )
             )
-            ORDER BY b."sortRank" ASC, b."createdAt" DESC
+            ORDER BY b."localPriorityIndex" ASC, b."sortRank" ASC, b."createdAt" DESC
           )
           FROM paged_beneficios_cte b
         ),
@@ -199,7 +211,7 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
         AND b."deletedAt" IS NULL
       GROUP BY r."beneficioId"
     ),
-    featured_beneficios_cte AS (
+    all_featured_cte AS (
       SELECT
         b.id,
         b.descripcion,
@@ -220,7 +232,18 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
           ) THEN 0
           WHEN (${AVAILABLE_CONDITION}) THEN 1
           ELSE 2
-        END AS "priority"
+        END AS "priority",
+        ROW_NUMBER() OVER (PARTITION BY l.id ORDER BY
+          CASE
+            WHEN (${AVAILABLE_CONDITION}) AND (
+              array_length(b."diasValidos", 1) IS NULL
+              OR array_length(b."diasValidos", 1) = 0
+              OR EXTRACT(DOW FROM CURRENT_TIMESTAMP AT TIME ZONE 'America/Argentina/Buenos_Aires')::int = ANY(b."diasValidos")
+            ) THEN 0
+            WHEN (${AVAILABLE_CONDITION}) THEN 1
+            ELSE 2
+          END ASC, b."createdAt" DESC
+        ) AS "localPriorityIndex"
       FROM "Beneficio" b
       JOIN "Local" l ON l.id = b."localId"
       LEFT JOIN "Rubro" ru ON ru.id = l."rubroId"
@@ -229,7 +252,11 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
         AND b."deletedAt" IS NULL
         AND l."isTest" = false
         AND l."active" = true
-      ORDER BY "priority" ASC, b."createdAt" DESC
+    ),
+    featured_beneficios_cte AS (
+      SELECT *
+      FROM all_featured_cte
+      ORDER BY "localPriorityIndex" ASC, "priority" ASC, "createdAt" DESC
       LIMIT ${limit}
     )
     SELECT
@@ -251,7 +278,7 @@ export async function getFeaturedPublicBenefitsRaw(limit: number): Promise<Publi
                 'direccion', b."localDireccion"
               )
             )
-            ORDER BY b."priority" ASC, b."createdAt" DESC
+            ORDER BY b."localPriorityIndex" ASC, b."priority" ASC, b."createdAt" DESC
           )
           FROM featured_beneficios_cte b
         ),
