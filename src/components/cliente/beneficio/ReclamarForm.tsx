@@ -274,13 +274,15 @@ export default function ReclamarForm({
 
       <div className="pt-1">
         {!showGuestAccess ? (
-          <button
+          <Button
             type="button"
+            variant="muted"
+            size="sm"
+            className="w-full"
             onClick={() => setShowGuestAccess(true)}
-            className="text-xs text-text-muted underline-offset-2 transition-colors hover:text-text-secondary hover:underline"
           >
             Continuar como invitado
-          </button>
+          </Button>
         ) : checkingRequirement ? (
           <p className="text-sm text-text-muted lg:text-[13px] 2xl:text-sm">Preparando tu canje...</p>
         ) : (

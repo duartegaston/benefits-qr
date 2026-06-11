@@ -1,4 +1,5 @@
-import { ChevronDown, QrCode, Smartphone, Store } from "lucide-react";
+import LinkButton from "@/components/ui/LinkButton";
+import { QrCode, Smartphone, Store } from "lucide-react";
 import IPhoneMockup from "@/components/landing/IPhoneMockup";
 import Reveal from "@/components/ui/Reveal";
 
@@ -58,18 +59,25 @@ export default function LandingHero() {
             </Reveal>
 
             <Reveal
+              delay={0.32}
+              y={10}
+              amount={0.2}
+              className="mt-6 flex w-full justify-center lg:hidden"
+            >
+              <LinkButton href="#perfil" size="lg" variant="primary" className="w-full max-w-xl">
+                Ingresar
+              </LinkButton>
+            </Reveal>
+
+            <Reveal
               delay={0.38}
               y={16}
               amount={0.2}
-              className="mt-6 hidden items-center gap-2 text-text-muted lg:flex"
+              className="mt-6 hidden lg:flex lg:w-full lg:max-w-md"
             >
-              <span className="text-xs font-medium uppercase tracking-[0.28em]">
-                Más información abajo
-              </span>
-              <ChevronDown
-                aria-hidden="true"
-                className="h-4 w-4 animate-bounce motion-reduce:animate-none"
-              />
+              <LinkButton href="#perfil" size="lg" variant="primary" className="w-full">
+                Ingresar
+              </LinkButton>
             </Reveal>
           </div>
 
@@ -101,20 +109,6 @@ export default function LandingHero() {
           </Reveal>
         </div>
 
-        <Reveal
-          delay={0.42}
-          y={14}
-          amount={0.15}
-          className="flex flex-col items-center gap-1 text-text-muted lg:hidden"
-        >
-          <span className="text-[11px] font-medium uppercase tracking-[0.24em]">
-            Más información abajo
-          </span>
-          <ChevronDown
-            aria-hidden="true"
-            className="h-4 w-4 animate-bounce motion-reduce:animate-none"
-          />
-        </Reveal>
       </div>
     </section>
   );
