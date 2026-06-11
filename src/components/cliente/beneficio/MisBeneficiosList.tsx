@@ -5,6 +5,7 @@ import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import QRDisplay from "@/components/cliente/beneficio/QRDisplay";
 import Button from "@/components/ui/Button";
+import LogoFrame from "@/components/ui/LogoFrame";
 import {
   ReclamoEffectiveStatus,
   type ReclamoEffectiveStatus as ReclamoEffectiveStatusType,
@@ -47,13 +48,8 @@ export default function MisBeneficiosList({
     <div className="space-y-3 lg:space-y-2.5 2xl:space-y-3">
       {reclamos.map((r) => {
         const status = getReclamoStatusPresentation(r.effectiveStatus);
-        const initials = (r.beneficio.local.nombre ?? "")
-          .split(" ")
-          .map((w) => w[0])
-          .slice(0, 2)
-          .join("")
-          .toUpperCase();
         const isExpanded = expandedId === r.id;
+        const localName = r.beneficio.local.nombre ?? "Local adherido";
 
         return (
           <Card
@@ -65,20 +61,17 @@ export default function MisBeneficiosList({
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1 space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm">
-                      <span className="text-xs font-bold">{initials || "LO"}</span>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`/api/locales/${r.beneficio.local.id}/logo?v=${r.beneficio.local.logoV}`}
-                        alt={r.beneficio.local.nombre ?? ""}
-                        className="absolute inset-0 h-full w-full object-cover"
-                        onError={(e) => { e.currentTarget.style.display = "none"; }}
-                      />
-                    </div>
+                    <LogoFrame
+                      src={`/api/locales/${r.beneficio.local.id}/logo?v=${r.beneficio.local.logoV}`}
+                      alt={`Logo de ${localName}`}
+                      name={localName}
+                      className="h-9 w-9 rounded-xl bg-primary-soft"
+                      fallbackClassName="text-xs"
+                    />
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <p className="truncate text-sm font-semibold text-primary lg:text-[13px] 2xl:text-sm">
-                          {r.beneficio.local.nombre ?? "Local adherido"}
+                          {localName}
                         </p>
                         {r.beneficio.local.rubroNombre && (
                           <Badge variant="muted" className="shrink-0 px-2 py-0 text-[10px]">

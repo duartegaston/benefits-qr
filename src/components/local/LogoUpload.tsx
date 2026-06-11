@@ -2,7 +2,6 @@
 import { useId, useRef, useState } from "react";
 import { Camera } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { getContainedLogoPaddingClass } from "@/lib/logoPresentation";
 
 const ALLOWED_MIME_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
 const MAX_INPUT_LOGO_BYTES = 10 * 1024 * 1024;
@@ -65,10 +64,14 @@ export default function LogoUpload({
   const messageId = useId();
   const hintId = useId();
   const [internalState, setInternalState] = useState<LogoFieldState>(() => createLogoFieldState(currentLogoUrl));
-  const [previewPaddingClass, setPreviewPaddingClass] = useState("p-1");
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const fieldState = value ?? internalState;
 
   function commitState(nextState: LogoFieldState) {
+    if (nextState.src !== failedSrc) {
+      setFailedSrc(null);
+    }
+
     if (!value) {
       setInternalState(nextState);
     }
@@ -126,27 +129,21 @@ export default function LogoUpload({
       <Button
         type="button"
         variant="ghost"
+        size="icon-lg"
         onClick={() => inputRef.current?.click()}
         title="Cambiar logo"
         aria-label="Cambiar logo"
         aria-describedby={`${hintId} ${messageId}`}
         className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl bg-primary-soft p-0 focus-visible:ring-primary-soft focus-visible:ring-offset-surface disabled:cursor-not-allowed active:scale-100"
       >
-        {fieldState.src ? (
-          <span className={`h-full w-full overflow-hidden rounded-[inherit] transition-[padding] duration-150 ${previewPaddingClass}`}>
+        {fieldState.src && fieldState.src !== failedSrc ? (
+          <span className="h-full w-full overflow-hidden rounded-[inherit]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={fieldState.src}
               alt="Logo del local"
-              onLoad={(event) => {
-                setPreviewPaddingClass(
-                  getContainedLogoPaddingClass(
-                    event.currentTarget.naturalWidth,
-                    event.currentTarget.naturalHeight,
-                  ),
-                );
-              }}
-              className="h-full w-full rounded-[inherit] object-contain"
+              className="h-full w-full rounded-[inherit] object-cover"
+              onError={() => setFailedSrc(fieldState.src)}
             />
           </span>
         ) : (

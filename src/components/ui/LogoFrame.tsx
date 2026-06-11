@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { getContainedLogoPaddingClass } from "@/lib/logoPresentation";
 
 type LogoFrameProps = {
   src?: string | null;
@@ -34,7 +33,7 @@ export default function LogoFrame({
   fallbackClassName,
 }: LogoFrameProps) {
   const initials = getInitials(name) || "LO";
-  const [paddingClass, setPaddingClass] = useState("p-1");
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
   return (
     <div
@@ -44,23 +43,16 @@ export default function LogoFrame({
         className,
       )}
     >
-      {src ? (
-        <span className={cn("h-full w-full overflow-hidden rounded-[inherit] transition-[padding] duration-150", paddingClass)}>
+      {src && src !== failedSrc ? (
+        <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt={alt}
-            onLoad={(event) => {
-              setPaddingClass(
-                getContainedLogoPaddingClass(
-                  event.currentTarget.naturalWidth,
-                  event.currentTarget.naturalHeight,
-                ),
-              );
-            }}
-            className={cn("h-full w-full rounded-[inherit] object-contain", imageClassName)}
+            className={cn("h-full w-full rounded-[inherit] object-cover", imageClassName)}
+            onError={() => setFailedSrc(src)}
           />
-        </span>
+        </>
       ) : (
         <span className={cn("text-sm font-bold", fallbackClassName)}>{initials}</span>
       )}
