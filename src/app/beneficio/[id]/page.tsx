@@ -6,6 +6,7 @@ export const revalidate = 60;
 import Badge from "@/components/ui/Badge";
 import BrandLogo from "@/components/ui/BrandLogo";
 import Card from "@/components/ui/Card";
+import LogoFrame from "@/components/ui/LogoFrame";
 import ReclamarForm from "@/components/cliente/beneficio/ReclamarForm";
 import LinkButton from "@/components/ui/LinkButton";
 import Reveal from "@/components/ui/Reveal";
@@ -87,13 +88,6 @@ export default async function BeneficioPublicoPage({
     diasValidos,
   });
 
-  const initials = localName
-    .split(" ")
-    .map((w: string) => w[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
   const isDirectFlow = flow === DIRECT_QR_FLOW;
   const directRedeemed = isDirectFlow && redeemed === "1";
   const directOrderNumber = typeof order === "string" && order.trim() ? order.trim() : null;
@@ -161,18 +155,13 @@ export default async function BeneficioPublicoPage({
 
               <div className="rounded-2xl border border-border-default/70 bg-surface-muted/70 p-4 lg:p-3.5 2xl:p-4">
                 <div className="flex items-start gap-3 lg:gap-2.5 2xl:gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary-soft text-primary shadow-sm lg:h-10 lg:w-10 2xl:h-11 2xl:w-11">
-                    {beneficio.local.logoUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={beneficio.local.logoUrl}
-                        alt={localName}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-sm font-bold lg:text-[13px] 2xl:text-sm">{initials || "LO"}</span>
-                    )}
-                  </div>
+                  <LogoFrame
+                    src={beneficio.local.logoUrl}
+                    alt={`Logo de ${localName}`}
+                    name={localName}
+                    className="h-11 w-11 rounded-xl lg:h-10 lg:w-10 2xl:h-11 2xl:w-11"
+                    fallbackClassName="text-sm lg:text-[13px] 2xl:text-sm"
+                  />
 
                   <div className="min-w-0 space-y-1">
                     <div className="flex items-center gap-2 text-xs font-medium text-text-muted lg:text-[11px] 2xl:text-xs">
