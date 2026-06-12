@@ -1,4 +1,5 @@
 import { evaluateBeneficioState, evaluateReclamoState } from "@/lib/couponStatus";
+import { parseRawDbTimestamp } from "@/lib/dates";
 import { getBeneficioDetailRaw } from "@/server/repositories/beneficioDetailRepository";
 
 export async function getBeneficioDetailPageData(
@@ -12,8 +13,8 @@ export async function getBeneficioDetailPageData(
 
   const beneficio = raw.beneficio
     ? (() => {
-        const fechaExpiracion = new Date(raw.beneficio.fechaExpiracion);
-        const deletedAt = raw.beneficio.deletedAt ? new Date(raw.beneficio.deletedAt) : null;
+        const fechaExpiracion = parseRawDbTimestamp(raw.beneficio.fechaExpiracion);
+        const deletedAt = raw.beneficio.deletedAt ? parseRawDbTimestamp(raw.beneficio.deletedAt) : null;
         const beneficioState = evaluateBeneficioState({
           fechaExpiracion,
           deletedAt,
@@ -37,8 +38,8 @@ export async function getBeneficioDetailPageData(
     usosDisponibles: maxUsos !== null ? Math.max(0, maxUsos - rawStats.canjeados) : null,
   };
   const reclamos = (raw.reclamos ?? []).map((r) => {
-    const fechaReclamo = new Date(r.fechaReclamo);
-    const fechaCanje = r.fechaCanje ? new Date(r.fechaCanje) : null;
+    const fechaReclamo = parseRawDbTimestamp(r.fechaReclamo);
+    const fechaCanje = r.fechaCanje ? parseRawDbTimestamp(r.fechaCanje) : null;
     const reclamoState = beneficio
       ? evaluateReclamoState({
           estado: r.estado,

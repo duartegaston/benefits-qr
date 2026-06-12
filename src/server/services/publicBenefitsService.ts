@@ -1,4 +1,5 @@
 import { evaluateBeneficioState, type BeneficioEffectiveStatus } from "@/lib/couponStatus";
+import { parseRawDbTimestamp } from "@/lib/dates";
 import { getBeneficioAvailabilityPresentation } from "@/lib/statusPresentation";
 import {
   getFeaturedPublicBenefitsRaw,
@@ -29,8 +30,8 @@ export type PublicBenefitCardData = {
 
 function hydratePublicBenefits(raw: PublicBenefitsCatalogRaw) {
   return (raw.beneficios ?? []).map((beneficio) => {
-    const fechaExpiracion = new Date(beneficio.fechaExpiracion);
-    const createdAt = new Date(beneficio.createdAt);
+    const fechaExpiracion = parseRawDbTimestamp(beneficio.fechaExpiracion);
+    const createdAt = parseRawDbTimestamp(beneficio.createdAt);
     const benefitState = evaluateBeneficioState({
       fechaExpiracion,
       maxUsos: beneficio.maxUsos,

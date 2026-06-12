@@ -1,5 +1,6 @@
 import { getDashboardRaw } from "@/server/repositories/dashboardRepository";
 import { evaluateBeneficioState, type BeneficioEffectiveStatus } from "@/lib/couponStatus";
+import { parseRawDbTimestamp } from "@/lib/dates";
 
 export type BeneficioRow = {
   id: string;
@@ -30,7 +31,7 @@ export async function getDashboardPageData(
   const tasaCanje = totalReclamos > 0 ? Math.round((totalCanjeados / totalReclamos) * 100) : 0;
 
   const beneficios: BeneficioRow[] = (raw.beneficios ?? []).map((b) => {
-    const fechaExpiracion = new Date(b.fechaExpiracion);
+    const fechaExpiracion = parseRawDbTimestamp(b.fechaExpiracion);
     const beneficioState = evaluateBeneficioState({
       fechaExpiracion,
       deletedAt: null,

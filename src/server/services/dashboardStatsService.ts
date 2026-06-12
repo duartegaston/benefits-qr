@@ -4,6 +4,7 @@ import {
   type TrendDay,
 } from "@/server/repositories/dashboardStatsRepository";
 import { evaluateBeneficioState } from "@/lib/couponStatus";
+import { parseRawDbTimestamp } from "@/lib/dates";
 import { getBeneficioStatusPresentation } from "@/lib/statusPresentation";
 import type { BadgeVariant } from "@/components/ui/Badge";
 
@@ -60,8 +61,8 @@ function formatAvgRedeemTime(seconds: number | null | undefined): string {
 
 function mapTopCupon(raw: TopCuponRaw): TopCupon {
   const beneficioState = evaluateBeneficioState({
-    fechaExpiracion: new Date(raw.fechaExpiracion),
-    deletedAt: raw.deletedAt ? new Date(raw.deletedAt) : null,
+    fechaExpiracion: parseRawDbTimestamp(raw.fechaExpiracion),
+    deletedAt: raw.deletedAt ? parseRawDbTimestamp(raw.deletedAt) : null,
     maxUsos: raw.maxUsos,
     canjeados: raw.canjeados,
     diasValidos: raw.diasValidos,
