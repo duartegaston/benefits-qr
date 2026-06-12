@@ -1,3 +1,4 @@
+import DashboardRefreshButton from "@/components/local/dashboard/DashboardRefreshButton";
 import ShareButtons from "@/components/local/dashboard/ShareButtons";
 import Badge from "@/components/ui/Badge";
 import Card from "@/components/ui/Card";
@@ -91,12 +92,17 @@ export default async function DashboardPage({
       <div id="mis-cupones" className="scroll-mt-24">
         <Reveal y={8} amount={0.2} className="mb-4">
           <div className="flex flex-col gap-3 rounded-2xl border border-surface/80 bg-surface/95 p-4 sm:bg-surface/85 sm:p-5 lg:gap-2.5 lg:p-4 2xl:gap-3 2xl:p-5">
-           <div>
-             <h2 className="text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">Mis cupones</h2>
-             <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
-              Gestioná estado, vigencia y acciones de cada cupón.
-            </p>
-          </div>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-bold text-text-primary lg:text-lg 2xl:text-xl">Mis cupones</h2>
+                <p className="text-sm font-medium text-text-muted lg:text-[13px] 2xl:text-sm">
+                  Gestioná estado, vigencia y acciones de cada cupón.
+                </p>
+              </div>
+              <div className="self-center">
+                <DashboardRefreshButton />
+              </div>
+            </div>
           </div>
         </Reveal>
       </div>

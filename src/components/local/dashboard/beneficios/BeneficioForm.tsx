@@ -51,6 +51,12 @@ type BeneficioFormProps = {
   }>;
 };
 
+const FIELD_ERROR_KEYS = ["descripcion", "fechaExpiracion", "maxUsos"] as const;
+
+function isFieldErrorKey(value: string): value is (typeof FIELD_ERROR_KEYS)[number] {
+  return FIELD_ERROR_KEYS.includes(value as (typeof FIELD_ERROR_KEYS)[number]);
+}
+
 const DEFAULT_CONSTRAINT_COPY: Required<BeneficioFormConstraintCopy> = {
   emptyDaysLabel: "Aplica todos los días.",
   daysPrefix: "Aplica los",
@@ -135,11 +141,15 @@ export default function BeneficioForm({
     setLoading(false);
 
     if (!response.ok) {
-      if (data.field && typeof data.field === "string") {
-        setFieldErrors({ [data.field]: data.message ?? data.error ?? "No pudimos guardar el cupón." });
+      const message = data.message ?? data.error ?? "No pudimos guardar el cupón.";
+
+      if (typeof data.field === "string" && isFieldErrorKey(data.field)) {
+        setFieldErrors({ [data.field]: message });
+        setError("");
+        return;
       }
 
-      setError(data.message ?? data.error ?? "No pudimos guardar el cupón.");
+      setError(message);
       return;
     }
 

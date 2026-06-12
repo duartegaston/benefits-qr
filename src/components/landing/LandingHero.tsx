@@ -1,6 +1,7 @@
 import LinkButton from "@/components/ui/LinkButton";
 import { QrCode, Smartphone, Store } from "lucide-react";
 import IPhoneMockup from "@/components/landing/IPhoneMockup";
+import LandingHeroPhoneReveal from "@/components/landing/LandingHeroPhoneReveal";
 import Reveal from "@/components/ui/Reveal";
 
 const FEATURES = [
@@ -81,12 +82,7 @@ export default function LandingHero() {
             </Reveal>
           </div>
 
-          <Reveal
-            delay={0.18}
-            y={20}
-            amount={0.18}
-            className="mx-auto w-full max-w-[20rem] sm:max-w-[22rem] lg:mx-0 lg:max-w-none 2xl:justify-self-end"
-          >
+          <LandingHeroPhoneReveal className="mx-auto w-full max-w-[20rem] sm:max-w-[22rem] lg:mx-0 lg:max-w-none 2xl:justify-self-end">
             <div className="relative isolate">
               <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[31rem] w-[31rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.24),rgba(96,165,250,0.14)_26%,rgba(191,219,254,0.08)_42%,rgba(59,130,246,0)_72%)] blur-3xl sm:block lg:h-[34rem] lg:w-[34rem]" />
               <div className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[27rem] w-[27rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/80 sm:block lg:h-[29rem] lg:w-[29rem]" />
@@ -106,7 +102,7 @@ export default function LandingHero() {
                 frameClassName="relative z-10 max-w-[24rem] lg:max-w-[17.5rem] 2xl:max-w-[20rem]"
               />
             </div>
-          </Reveal>
+          </LandingHeroPhoneReveal>
         </div>
 
       </div>
