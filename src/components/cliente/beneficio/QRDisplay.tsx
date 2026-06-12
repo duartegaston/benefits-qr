@@ -11,7 +11,7 @@ interface QRDisplayProps {
   onRedeemed?: () => void;
 }
 
-const QR_DURATION_SECONDS = 120;
+const QR_DURATION_SECONDS = 600;
 const STATUS_POLL_INTERVAL_MS = 2500;
 
 export default function QRDisplay({ reclamoId, onRedeemed }: QRDisplayProps) {
@@ -230,7 +230,7 @@ export default function QRDisplay({ reclamoId, onRedeemed }: QRDisplayProps) {
         <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">
           {isExpired
             ? "El QR venció. Presioná \"Renovar ahora\" para generar uno nuevo."
-            : 'Este QR vence en 2 minutos. Si se vence, presioná "Renovar ahora" para generar uno nuevo.'}
+            : 'Este QR vence en 10 minutos. Si se vence, presioná "Renovar ahora" para generar uno nuevo.'}
         </p>
         {error ? <p className="text-xs text-text-muted lg:text-[11px] 2xl:text-xs">{error}</p> : null}
       </div>
