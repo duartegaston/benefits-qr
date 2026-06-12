@@ -6,30 +6,34 @@ import StepShowcaseCard from "@/components/landing/StepShowcaseCard";
 const STEPS = [
   {
     number: "01",
+    actorLabel: "Negocio",
     title: "Creá tu cupón",
     description: "Definí descripción, días válidos, fecha de vencimiento y cantidad de usos.",
-    imageSrc: "/Fotos-iphone/nuevo-cupon.jpeg",
+    imageSrc: "/Fotos-iphone/compressed/Crear.webp",
     imageAlt: "Pantalla para crear un nuevo cupón en BenefitQR",
   },
   {
     number: "02",
+    actorLabel: "Negocio",
     title: "Compartilo donde quieras",
     description: "Difundilo por WhatsApp, Instagram o con un link directo para que llegue rápido a tus clientes.",
-    imageSrc: "/Fotos-iphone/dashboard.jpeg",
+    imageSrc: "/Fotos-iphone/compressed/Compartir.webp",
     imageAlt: "Opciones para compartir un cupón de BenefitQR",
   },
   {
     number: "03",
+    actorLabel: "Cliente",
     title: "El cliente genera su QR",
     description: "Abre el beneficio, completa sus datos y genera el QR para mostrarlo en el local.",
-    imageSrc: "/Fotos-iphone/cuponCliente.jpeg",
+    imageSrc: "/Fotos-iphone/compressed/QR.webp",
     imageAlt: "Cliente generando su QR para mostrar en el negocio",
   },
   {
     number: "04",
+    actorLabel: "Negocio",
     title: "El negocio lo escanea",
     description: "Desde la app del negocio escaneás el QR del cliente y validás el canje en el momento.",
-    imageSrc: "/Fotos-iphone/qrScann.jpeg",
+    imageSrc: "/Fotos-iphone/compressed/Scann.webp",
     imageAlt: "Escaneo del QR del cliente desde el celular del negocio",
   },
 ];

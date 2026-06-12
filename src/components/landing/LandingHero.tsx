@@ -99,7 +99,7 @@ export default function LandingHero() {
               <div className="pointer-events-none absolute inset-x-[8%] top-[6%] hidden h-[88%] rounded-[4rem] bg-linear-to-b from-white/16 via-transparent to-transparent sm:block" />
 
               <IPhoneMockup
-                imageSrc="/Fotos-iphone/dashboard.jpeg"
+                imageSrc="/Fotos-iphone/compressed/Hero.webp"
                 imageAlt="Vista del dashboard de BenefitQR en un iPhone"
                 priority
                 sizes="(min-width: 1536px) 20rem, (min-width: 1024px) 18rem, 85vw"

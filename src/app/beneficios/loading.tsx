@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <main className="relative px-4 pt-20 pb-14 sm:px-6 sm:pt-24 lg:px-8 lg:pb-16">
+    <main className="relative px-4 pt-24 pb-14 sm:px-6 lg:px-8 lg:pb-16">
       <div className="mx-auto max-w-6xl 2xl:max-w-7xl">
         {/* Header skeleton */}
         <div className="mb-6 space-y-2">

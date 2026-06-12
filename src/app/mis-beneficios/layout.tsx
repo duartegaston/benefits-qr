@@ -17,7 +17,7 @@ export default async function MisBeneficiosLayout({
   return (
     <div className="min-h-screen">
       <AuthenticatedNavbar logoutEndpoint="/api/auth/cliente/logout" />
-      <div className="px-0 pt-20 sm:pt-24 lg:px-0 lg:pt-24">{children}</div>
+      <div className="px-0 pt-24 lg:px-0 lg:pt-24">{children}</div>
     </div>
   );
 }

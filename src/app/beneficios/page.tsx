@@ -49,7 +49,7 @@ export default async function BeneficiosPage({
   const rubros = await getRubros();
 
   return (
-    <main className="relative px-4 pt-20 pb-14 sm:px-6 sm:pt-24 lg:px-8 lg:pb-16">
+    <main className="relative px-4 pt-24 pb-14 sm:px-6 lg:px-8 lg:pb-16">
       <LinkButton
         href="/"
         variant="subtle"

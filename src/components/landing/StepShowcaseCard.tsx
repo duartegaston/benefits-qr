@@ -3,6 +3,7 @@ import Card from "@/components/ui/Card";
 
 export type StepShowcaseItem = {
   number: string;
+  actorLabel: string;
   title: string;
   description: string;
   imageSrc: string;
@@ -11,6 +12,7 @@ export type StepShowcaseItem = {
 
 export default function StepShowcaseCard({
   number,
+  actorLabel,
   title,
   description,
   imageSrc,
@@ -21,7 +23,11 @@ export default function StepShowcaseCard({
       className="h-full overflow-hidden p-4 duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-5 lg:p-4 2xl:p-5"
       style={{ transitionProperty: "transform, box-shadow" }}
     >
-      <div className="flex items-center gap-3">
+      <span className="block text-xs font-semibold uppercase tracking-widest text-primary">
+        {actorLabel}
+      </span>
+
+      <div className="mt-3 flex items-center gap-3">
         <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary-soft text-sm font-semibold tracking-[0.16em] text-primary">
           {number}
         </span>
